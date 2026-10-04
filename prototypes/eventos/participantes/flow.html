@@ -1,0 +1,1200 @@
+<!-- docqui: 4.1.0 | prompt: PROMPT_PROTOTYPE_FLOW_FULL | atualizado: 2026-10-04 -->
+<!DOCTYPE html>
+<!--
+  ⚠️ PROTÓTIPO NAVEGÁVEL — treino, não jogo.
+  Fonte de verdade de LAYOUT, COMPORTAMENTO e ESTADOS — NUNCA de implementação.
+  Não copie este HTML/CSS/JS para o código de produção: aqui tudo é autocontido
+  e procedural DE PROPÓSITO (simulação). A implementação real segue outra
+  estratégia: componentes do design system do projeto (mapa de equivalência no
+  README do tema), catálogo global/PATTERNS.md e convenções do global/MASTER.md.
+  Classes .dsc-* são EXCLUSIVAS de protótipo — proibidas em código de produção.
+-->
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Protótipo: Participantes — Eventos</title>
+  <!-- Biblioteca de componentes + camada de tema do GPE (visual recuperado do código-fonte) -->
+  <link rel="stylesheet" href="../../_biblioteca-ds/ds.css">
+  <link rel="stylesheet" href="../../_biblioteca-ds/tema-gpe.css">
+  <style>
+    /* candidato a tema-gpe.css — seleção múltipla (p-multiSelect): gatilho com cara de select e painel com caixas de marcar */
+    .gpe-ms { position: relative; }
+    .gpe-ms-trigger { text-align: left; cursor: pointer; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: var(--dsc-content-neutral-4); }
+    .gpe-ms-panel { display: none; position: absolute; left: 0; right: 0; top: calc(100% + 4px); z-index: 120; background: #fff; border-radius: 6px; box-shadow: var(--dsc-elevation-2); }
+    .gpe-ms.is-open .gpe-ms-panel { display: block; }
+
+    /* candidato a tema-gpe.css — mesa principal: setor A no alto, B e C nas laterais, D embaixo e o texto "Mesa Principal" no centro */
+    .gpe-map-stack { display: grid; gap: 28px; justify-items: center; align-content: start; }
+    .gpe-main-table { display: grid; grid-template-columns: repeat(5, 92px); gap: 6px; align-content: start; }
+    .gpe-main-table-center { grid-column: span 3; display: grid; place-items: center; border: 1px dashed var(--gpe-seat-border); border-radius: 6px; background: #f7f8fa; color: #8a96a3; font-size: 18px; font-weight: 600; }
+    .gpe-seat[draggable="true"] { cursor: grab; }
+
+    /* candidato a tema-gpe.css — camada "Carregando dados da mesa..." sobre o mapa */
+    .gpe-map-wrap { position: relative; }
+    .gpe-map-overlay { position: absolute; inset: 0; z-index: 20; display: flex; align-items: center; justify-content: center; gap: 12px; background: rgba(255, 255, 255, 0.72); border-radius: 8px; font-size: 16px; color: var(--dsc-content-neutral-4); }
+
+    /* candidato a tema-gpe.css — lista de opções clicáveis (janela de legenda, Selecionar Pessoa, resultados da busca na mesa) */
+    .gpe-option-list { border: 1px solid var(--dsc-border-neutral-3); border-radius: 6px; max-height: 300px; overflow-y: auto; }
+    .gpe-option-list-head { padding: 8px 16px; font-size: 13px; color: var(--dsc-grayscale-90); background: var(--dsc-bg-neutral-2); }
+    .gpe-option { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 16px; background: #fff; border: 0; border-top: 1px solid var(--dsc-border-neutral-3); font: inherit; color: inherit; text-align: left; cursor: pointer; }
+    .gpe-option:first-child { border-top: 0; }
+    .gpe-option:hover { background: var(--dsc-bg-neutral-3); }
+    .gpe-option.is-selected { background: var(--dsc-primary-10); box-shadow: inset 3px 0 0 var(--dsc-primary-90); }
+    .gpe-option small { display: block; font-size: 12px; color: var(--dsc-grayscale-90); }
+
+    /* candidato a tema-gpe.css — etiqueta "Check in não identificado" (amarela) do cartão do Administrador */
+    .gpe-tag-check--pendente { background: #f5b301; color: #3b2a00; }
+  </style>
+</head>
+<body>
+
+  <div class="dsc-proto-badge">🎨 PROTÓTIPO — não é o sistema real</div>
+
+  <div class="dsc-app">
+    <div class="dsc-shell-main">
+
+      <!-- Topbar: título do sistema à esquerda, usuário à direita (topbar.component) -->
+      <header class="dsc-header">
+        <div class="dsc-header-start">
+          <span class="dsc-header-logo">Gestão de Participantes em Eventos</span>
+        </div>
+        <div class="dsc-header-actions">
+          <div class="gpe-user-menu" id="user-menu">
+            <button class="dsc-header-item" onclick="toggleUserMenu(event)" aria-haspopup="true">
+              <span class="dsc-hi-body"><span class="dsc-hi-title">Ana Costa</span><span class="dsc-hi-sub dsc-text-primary" id="hi-perfil">Administrador</span></span>
+              <span class="dsc-avatar">AC</span>
+            </button>
+            <ul class="gpe-user-dropdown">
+              <li class="gpe-ud-info">Nome: <strong>Ana Costa</strong></li>
+              <li class="gpe-ud-info">Login: <strong>ana.costa</strong></li>
+              <li class="gpe-ud-info">Perfil: <strong id="ud-perfil">Administrador</strong></li>
+              <li class="gpe-ud-info">Email: <strong>ana.costa@cni.com.br</strong></li>
+              <li class="gpe-ud-sep"></li>
+              <li><a href="../../acesso-usuarios/autenticacao/flow.html#foto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="12" cy="12" r="3"/></svg>Alterar Foto do Perfil</a></li>
+              <li><a href="../../acesso-usuarios/autenticacao/flow.html#alterar-senha"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Alterar Senha</a></li>
+              <li><a href="../../acesso-usuarios/autenticacao/flow.html#login"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>Logout</a></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+
+      <!-- Menu horizontal do Administrador (p-menubar montado com o menu que o login devolve) -->
+      <nav class="gpe-menubar" aria-label="Menu principal" id="menu-admin">
+        <div class="gpe-menu-item"><a class="gpe-menu-link" href="../../acesso-usuarios/autenticacao/flow.html#inicio"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" opacity=".35"/><path d="M12 12l5-5" stroke="#fff" stroke-width="2"/></svg>Dashboard</a></div>
+        <div class="gpe-menu-item">
+          <button class="gpe-menu-link" onclick="toggleSubmenu(this, event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Administração<svg class="gpe-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+          <ul class="gpe-submenu">
+            <li><a href="../../acesso-usuarios/usuarios/flow.html">Usuários</a></li>
+            <li><a href="../../pessoas/cadastro-pessoas/flow.html">Pessoas</a></li>
+            <li><a href="../../eventos/legendas/flow.html#catalogo">Catálogo de legendas</a></li>
+          </ul>
+        </div>
+        <div class="gpe-menu-item">
+          <button class="gpe-menu-link is-active" onclick="toggleSubmenu(this, event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Eventos<svg class="gpe-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+          <ul class="gpe-submenu">
+            <li><a href="../../eventos/cadastro-eventos/flow.html">Cadastro</a></li>
+          </ul>
+        </div>
+      </nav>
+
+      <!-- Menu horizontal das secretarias: só "Evento", que leva ao evento principal (captura GPE005, image7) -->
+      <nav class="gpe-menubar" aria-label="Menu principal" id="menu-secretaria" style="display:none">
+        <div class="gpe-menu-item"><a class="gpe-menu-link is-active" href="#" onclick="irTelaInicial(); return false;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Evento</a></div>
+      </nav>
+
+      <main class="dsc-main">
+        <nav class="dsc-breadcrumb" id="breadcrumb"></nav>
+
+        <!-- ═══════════════ Cabeçalho do evento (comum às visões; o que aparece depende do perfil) ═══════════════ -->
+        <div class="dsc-card" style="margin-bottom:24px">
+          <div class="gpe-event-header">
+            <div>
+              <h1 class="gpe-event-title">Reunião do Conselho de Política Industrial</h1>
+              <div id="ev-autorefresh" style="display:none;margin-top:6px">
+                <div class="gpe-autorefresh"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M21 12a9 9 0 0 1-15.5 6.2L3 16"/><path d="M3 21v-5h5"/><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8"/><path d="M21 3v5h-5"/></svg>Atualização automática ativa</div>
+                <div class="gpe-autorefresh-time" id="ev-verificacao" title="Última verificação em: —"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> Última verificação: há alguns instantes</div>
+              </div>
+              <p class="gpe-event-type">Tipo: Reunião</p>
+              <div class="gpe-event-meta">
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>Edifício Roberto Simonsen — Brasília</span>
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>20/10/2026 09:00</span>
+              </div>
+              <div id="ev-cadastrar" style="margin-top:22px">
+                <button class="dsc-btn" onclick="abrirCadastro()">Cadastrar Pessoa</button>
+              </div>
+            </div>
+            <div class="gpe-view-switch" id="ev-alternar">
+              <button class="dsc-btn" id="btn-ver-lista" onclick="irPara('screen-lista')">Participantes</button>
+              <button class="dsc-btn dsc-btn--outline" id="btn-ver-mapa" onclick="irPara('screen-mapa')">Mapa de Assentos</button>
+            </div>
+            <button class="dsc-icon-action" id="ev-atualizar" style="display:none;color:var(--dsc-primary-90)" aria-label="Atualizar agora" title="Atualizar agora" onclick="atualizarAgora()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 3v6h-6"/></svg></button>
+          </div>
+        </div>
+
+        <!-- ═══════════════ Tela 1: Participantes — Administrador (EVT-PAR-01 · 03 · 13 · 14 · atalho de 04) ═══════════════ -->
+        <div id="screen-lista" class="dsc-screen is-active">
+          <div class="dsc-card">
+            <form class="dsc-row" id="a-form" onsubmit="pesquisar('a'); return false;">
+              <div class="dsc-col-6 dsc-field"><label class="dsc-field-label" for="a-busca">Busca</label><input class="dsc-input" id="a-busca" type="text" placeholder="Buscar por nome, codinome, organização ou cargo" oninput="pesquisar('a')"></div>
+              <div class="dsc-col-6 dsc-field"><span class="dsc-field-label">Legendas</span><div id="a-ms-leg"></div></div>
+              <div class="dsc-col-4 dsc-field"><span class="dsc-field-label">Temas</span><div id="a-ms-tema"></div></div>
+              <div class="dsc-col-4 dsc-field"><span class="dsc-field-label">Grupos de Trabalho</span><div id="a-ms-gt"></div></div>
+              <div class="dsc-col-4 dsc-field"><span class="dsc-field-label">Cargo</span><div id="a-ms-cargo"></div></div>
+              <div class="dsc-col-4 dsc-field"><span class="dsc-field-label">Convidado</span>
+                <div class="gpe-radio-group"><label><input type="radio" class="dsc-radio" name="a-conv" value="todos" checked>Todos</label><label><input type="radio" class="dsc-radio" name="a-conv" value="sim">Sim</label><label><input type="radio" class="dsc-radio" name="a-conv" value="nao">Não</label></div></div>
+              <div class="dsc-col-4 dsc-field"><span class="dsc-field-label">Confirmado</span>
+                <div class="gpe-radio-group"><label><input type="radio" class="dsc-radio" name="a-conf" value="todos" checked>Todos</label><label><input type="radio" class="dsc-radio" name="a-conf" value="sim">Sim</label><label><input type="radio" class="dsc-radio" name="a-conf" value="nao">Não</label></div></div>
+              <div class="dsc-col-4 dsc-field"><span class="dsc-field-label">Check-In</span>
+                <div class="gpe-radio-group"><label><input type="radio" class="dsc-radio" name="a-ci" value="todos" checked>Todos</label><label><input type="radio" class="dsc-radio" name="a-ci" value="sim">Sim</label><label><input type="radio" class="dsc-radio" name="a-ci" value="nao">Não</label></div></div>
+              <div class="dsc-col-12 dsc-field"><span class="dsc-field-label">Foto</span>
+                <label class="gpe-inline-check"><input type="checkbox" class="dsc-check" id="a-foto">Somente pessoas sem foto</label></div>
+              <div class="dsc-col-12 gpe-form-actions" style="margin-top:4px">
+                <button type="submit" class="dsc-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>Pesquisar</button>
+                <button type="button" class="dsc-btn" onclick="limpar('a')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>Limpar</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="dsc-card">
+            <div class="dsc-table-wrap">
+              <div class="gpe-table-caption"><span>Lista de Participantes</span><span id="a-total">Total: 12</span></div>
+              <table class="dsc-table" id="a-tabela">
+                <thead>
+                  <tr>
+                    <th style="width:8px;padding:0"></th>
+                    <th>Nome</th><th>Organização</th><th>Cargo</th><th>Legenda</th>
+                    <th>Convidado</th><th>Confirmado</th><th>Check-In</th><th>Assento</th>
+                  </tr>
+                </thead>
+                <tbody id="a-corpo"></tbody>
+              </table>
+              <div id="a-vazia" class="dsc-table-empty" style="display:none">Nenhum participante encontrado.</div>
+            </div>
+            <div class="gpe-paginator" id="a-pag"></div>
+            <div class="gpe-form-actions gpe-form-actions--end">
+              <button type="button" class="dsc-btn" onclick="exportarParticipantes()"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 7V3.5L18.5 9H13z"/></svg>Download</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══════════════ Tela 2: Mapa de Assentos — Administrador (EVT-PAR-07 · 08 · 09 · 11 · 12 · 15) ═══════════════ -->
+        <div id="screen-mapa" class="dsc-screen">
+          <div class="gpe-map-layout" style="margin-top:0">
+            <!-- Pessoas Disponíveis: participantes do mapa sem assento, arrastáveis -->
+            <aside class="gpe-panel">
+              <div class="gpe-panel-title" id="adm-disp-titulo">Pessoas Disponíveis (4)</div>
+              <input class="dsc-input" id="disp-busca" placeholder="Buscar pessoa..." aria-label="Buscar pessoa disponível" oninput="filtrarDisponiveis(this.value)" style="margin-bottom:14px">
+              <div id="adm-disponiveis"></div>
+            </aside>
+
+            <div class="gpe-map-center" style="grid-template-columns:minmax(0,1fr)">
+              <div class="gpe-panel">
+                <div class="dsc-field-action">
+                  <input class="dsc-input" id="busca-mesa-adm" placeholder="Buscar pessoa na mesa..." aria-label="Buscar pessoa na mesa" oninput="buscarNaMesa('adm')">
+                  <button type="button" id="limpar-mesa-adm" style="display:none" aria-label="Limpar busca" title="Limpar busca" onclick="limparBuscaMesa('adm')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+                </div>
+                <div class="gpe-option-list" id="res-mesa-adm" style="display:none;margin-top:10px"></div>
+              </div>
+
+              <div class="gpe-panel">
+                <div class="gpe-panel-title gpe-panel-title--line">Gerenciar Pessoas Alocadas na Mesa</div>
+                <div class="dsc-flex dsc-gap-1 dsc-items-center" style="flex-wrap:wrap">
+                  <button class="dsc-btn" id="btn-salvar-alocacoes" onclick="salvarAlocacoes()"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7l-4-4zm-5 16a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm3-10H5V5h10v4z"/></svg><span id="rot-salvar-alocacoes">Salvar Alocações (6)</span></button>
+                  <button class="dsc-btn gpe-btn--secondary" id="btn-limpar-todas" onclick="limparTodas()"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>Limpar Todas</button>
+                  <span class="dsc-text-muted" id="adm-autosave" style="display:none">Salvando composição automaticamente...</span>
+                </div>
+                <div class="gpe-panel-soft" style="margin-top:16px">
+                  <div style="font-weight:600;margin-bottom:10px">Controles de Zoom</div>
+                  <div class="gpe-zoom">
+                    <button type="button" aria-label="Diminuir zoom" title="Diminuir zoom" onclick="mudarZoom(-10)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M8 11h6"/></svg></button>
+                    <strong id="zoom-rotulo">80%</strong>
+                    <button type="button" aria-label="Aumentar zoom" title="Aumentar zoom" onclick="mudarZoom(10)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M8 11h6M11 8v6"/></svg></button>
+                    <button type="button" class="gpe-zoom-reset" title="Resetar zoom" onclick="mudarZoom(0)">100%</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="gpe-map-wrap">
+                <div class="gpe-map" id="mapa-adm"></div>
+                <div class="gpe-map-overlay" id="overlay-adm" style="display:none"><span class="dsc-spinner"></span>Carregando dados da mesa...</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="gpe-panel" style="margin-top:22px">
+            <div style="font-size:18px;font-weight:600;margin-bottom:16px">Legenda das Categorias</div>
+            <div id="leg-adm"></div>
+          </div>
+
+          <div class="gpe-panel" style="margin-top:22px">
+            <div style="font-size:18px;font-weight:600;margin-bottom:6px">Exportações</div>
+            <div class="gpe-export-row"><span>Mapa Completo:</span>
+              <button class="dsc-btn dsc-btn--sm gpe-btn--help" title="Exportar mapa completo em PDF" onclick="exportarMapa('completo','PDF')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 7V3.5L18.5 9H13z"/></svg>PDF</button>
+              <button class="dsc-btn dsc-btn--sm gpe-btn--help" title="Exportar mapa completo em PNG" onclick="exportarMapa('completo','PNG')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2zM8.5 13.5l2.5 3 3.5-4.5 4.5 6H5l3.5-4.5z"/></svg>PNG</button>
+            </div>
+            <div class="gpe-export-row"><span>Mesa do Presidente:</span>
+              <button class="dsc-btn dsc-btn--sm gpe-btn--warn" title="Exportar mesa do presidente em PDF" onclick="exportarMapa('presidente','PDF')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 7V3.5L18.5 9H13z"/></svg>PDF</button>
+              <button class="dsc-btn dsc-btn--sm gpe-btn--warn" title="Exportar mesa do presidente em PNG" onclick="exportarMapa('presidente','PNG')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2zM8.5 13.5l2.5 3 3.5-4.5 4.5 6H5l3.5-4.5z"/></svg>PNG</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══════════════ Tela 3: Mapa de Assentos — Secretaria Mesa (EVT-PAR-07 · 10 · 12) ═══════════════ -->
+        <div id="screen-mapa-secretaria" class="dsc-screen">
+          <div class="gpe-map-layout gpe-map-layout--wide-aside" style="margin-top:0">
+            <!-- Fila: quem fez check-in e ainda não foi atendido, em ordem de chegada -->
+            <aside class="gpe-panel">
+              <div class="gpe-panel-title" id="sec-disp-titulo">Pessoas Disponíveis (5)</div>
+              <input class="dsc-input" id="fila-busca" placeholder="Buscar pessoa..." aria-label="Buscar pessoa na fila" oninput="renderFila()" style="margin-bottom:18px">
+              <div id="sec-fila"></div>
+            </aside>
+
+            <div class="gpe-map-center" style="grid-template-columns:minmax(0,1fr)">
+              <div class="gpe-panel">
+                <div class="dsc-field-action">
+                  <input class="dsc-input" id="busca-mesa-sec" placeholder="Buscar pessoa na mesa..." aria-label="Buscar pessoa na mesa" oninput="buscarNaMesa('sec')">
+                  <button type="button" id="limpar-mesa-sec" style="display:none" aria-label="Limpar busca" title="Limpar busca" onclick="limparBuscaMesa('sec')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+                </div>
+                <div class="gpe-option-list" id="res-mesa-sec" style="display:none;margin-top:10px"></div>
+              </div>
+              <div class="gpe-map-wrap">
+                <div class="gpe-map" id="mapa-sec"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="gpe-panel" style="margin-top:22px">
+            <div style="font-size:18px;font-weight:600;margin-bottom:16px">Legenda das Categorias</div>
+            <div id="leg-sec"></div>
+          </div>
+        </div>
+
+        <!-- ═══════════════ Tela 4: Participantes — Secretaria Check-In (EVT-PAR-01 · 03 · 14) ═══════════════ -->
+        <div id="screen-checkin" class="dsc-screen">
+          <div class="dsc-card">
+            <form class="dsc-row" id="c-form" onsubmit="pesquisar('c'); return false;">
+              <div class="dsc-col-6 dsc-field"><label class="dsc-field-label" for="c-busca">Busca</label><input class="dsc-input" id="c-busca" type="text" placeholder="Buscar por nome, codinome, organização ou cargo" oninput="pesquisar('c')"></div>
+              <div class="dsc-col-6 dsc-field"><span class="dsc-field-label">Legendas</span><div id="c-ms-leg"></div></div>
+              <!-- Temas, Grupos de Trabalho e Cargo não são exibidos para a Secretaria Check-In (inventário 2.3, #13) -->
+              <div class="dsc-col-4 dsc-field"><span class="dsc-field-label">Convidado</span>
+                <div class="gpe-radio-group"><label><input type="radio" class="dsc-radio" name="c-conv" value="todos" checked>Todos</label><label><input type="radio" class="dsc-radio" name="c-conv" value="sim">Sim</label><label><input type="radio" class="dsc-radio" name="c-conv" value="nao">Não</label></div></div>
+              <div class="dsc-col-4 dsc-field"><span class="dsc-field-label">Confirmado</span>
+                <div class="gpe-radio-group"><label><input type="radio" class="dsc-radio" name="c-conf" value="todos" checked>Todos</label><label><input type="radio" class="dsc-radio" name="c-conf" value="sim">Sim</label><label><input type="radio" class="dsc-radio" name="c-conf" value="nao">Não</label></div></div>
+              <div class="dsc-col-4 dsc-field"><span class="dsc-field-label">Check-In</span>
+                <div class="gpe-radio-group"><label><input type="radio" class="dsc-radio" name="c-ci" value="todos" checked>Todos</label><label><input type="radio" class="dsc-radio" name="c-ci" value="sim">Sim</label><label><input type="radio" class="dsc-radio" name="c-ci" value="nao">Não</label></div></div>
+              <div class="dsc-col-12 dsc-field"><span class="dsc-field-label">Foto</span>
+                <label class="gpe-inline-check"><input type="checkbox" class="dsc-check" id="c-foto">Somente pessoas sem foto</label></div>
+              <div class="dsc-col-12 gpe-form-actions" style="margin-top:4px">
+                <button type="submit" class="dsc-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>Pesquisar</button>
+                <button type="button" class="dsc-btn" onclick="limpar('c')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>Limpar</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="dsc-card">
+            <div class="dsc-table-wrap">
+              <div class="gpe-table-caption"><span>Lista de Participantes</span><span id="c-total">Total: 12</span></div>
+              <table class="dsc-table" id="c-tabela">
+                <thead>
+                  <tr>
+                    <th style="width:8px;padding:0"></th>
+                    <th>Nome</th><th>Organização</th><th>Cargo</th><th>Legenda</th>
+                    <th>Convidado</th><th>Confirmado</th><th>Check-In</th><th>Assento</th>
+                  </tr>
+                </thead>
+                <tbody id="c-corpo"></tbody>
+              </table>
+              <div id="c-vazia" class="dsc-table-empty" style="display:none">Nenhum participante encontrado.</div>
+            </div>
+            <div class="gpe-paginator" id="c-pag"></div>
+            <div class="gpe-form-actions gpe-form-actions--end">
+              <button type="button" class="dsc-btn" onclick="exportarParticipantes()"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 7V3.5L18.5 9H13z"/></svg>Download</button>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ═══════════════ Janela "Cadastrar Pessoa" — cadastro na recepção (EVT-PAR-02) ═══════════════ -->
+  <div id="modal-cadastrar-pessoa" class="dsc-modal-mask" style="display:none" onclick="if(event.target===this)fecharCadastro()">
+    <div class="dsc-modal" role="dialog" aria-labelledby="t-cadastro">
+      <div class="dsc-modal-header">
+        <div><span id="t-cadastro">Reunião do Conselho de Política Industrial</span><small>Edifício Roberto Simonsen — Brasília - 20 de outubro de 2026 às 09:00</small></div>
+        <button class="dsc-modal-close" aria-label="Fechar" onclick="fecharCadastro()">✕</button>
+      </div>
+      <div class="dsc-modal-body" style="padding:24px 40px">
+        <div class="dsc-row" style="gap:16px">
+          <div class="dsc-col-12 dsc-field">
+            <label class="dsc-field-label" for="cp-nome">Nome Completo: <span class="dsc-req">*</span></label>
+            <input class="dsc-input" id="cp-nome" maxlength="255" data-limite="255">
+            <span class="gpe-counter" data-for="cp-nome">0/255</span>
+          </div>
+          <div class="dsc-col-12 dsc-field">
+            <label class="dsc-field-label" for="cp-inst">Instituição/Empresa <span class="dsc-req">*</span></label>
+            <input class="dsc-input" id="cp-inst" maxlength="255" data-limite="255">
+            <span class="gpe-counter" data-for="cp-inst">0/255</span>
+          </div>
+          <div class="dsc-col-12 dsc-field">
+            <label class="dsc-field-label" for="cp-cargo">Cargo <span class="dsc-req">*</span></label>
+            <input class="dsc-input" id="cp-cargo" maxlength="100" data-limite="100">
+            <span class="gpe-counter" data-for="cp-cargo">0/100</span>
+          </div>
+          <div class="dsc-col-12 dsc-field">
+            <label class="dsc-field-label" for="cp-email">E-mail <span class="dsc-req">*</span></label>
+            <input class="dsc-input" id="cp-email" maxlength="255" data-limite="255">
+            <span class="gpe-counter" data-for="cp-email">0/255</span>
+          </div>
+          <div class="dsc-col-12 dsc-field">
+            <label class="dsc-field-label" for="cp-checkin">Check-in Automático</label>
+            <span title="Ao marcar esta opção, a pessoa cadastrada terá seu check-in realizado automaticamente"><input type="checkbox" class="dsc-check" id="cp-checkin" checked style="width:22px;height:22px"></span>
+          </div>
+        </div>
+      </div>
+      <div class="dsc-modal-footer" style="border-top:0;padding:8px 40px 28px">
+        <button class="dsc-btn gpe-btn--indigo" id="cp-enviar" disabled onclick="enviarCadastro()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>Enviar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ Janela "Gerenciar Legenda da Pessoa" (EVT-PAR-04 · 05 · 06) ═══════════════ -->
+  <div id="modal-legenda" class="dsc-modal-mask" style="display:none" onclick="if(event.target===this)toggleModal('modal-legenda',false)">
+    <div class="dsc-modal" role="dialog" aria-labelledby="t-legenda">
+      <div class="dsc-modal-header"><span id="t-legenda">Gerenciar Legenda da Pessoa</span>
+        <button class="dsc-modal-close" aria-label="Fechar" onclick="toggleModal('modal-legenda',false)">✕</button></div>
+      <div class="dsc-modal-body">
+        <div class="gpe-panel-soft" style="border:1px solid var(--dsc-border-neutral-3)">
+          <div id="lg-nome" style="font-size:26px;font-weight:600">—</div>
+          <div id="lg-cargo" class="dsc-text-muted" style="margin-top:8px">—</div>
+          <div id="lg-assento" class="dsc-text-primary" style="margin-top:12px;display:flex;align-items:center;gap:6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg><span id="lg-assento-txt">Assento: A1</span></div>
+        </div>
+        <div style="font-size:20px;font-weight:600;margin:22px 0 12px">Legenda Atual:</div>
+        <div id="lg-atual"></div>
+        <div style="margin:22px 0 10px">Selecione uma Legenda:</div>
+        <div class="gpe-option-list" id="lg-opcoes"></div>
+      </div>
+      <div class="dsc-modal-footer">
+        <button class="dsc-btn dsc-btn--danger dsc-btn--chromeless" id="lg-remover" onclick="pedirRemocaoLegenda()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/></svg>Remover Legenda</button>
+        <button class="dsc-btn dsc-btn--chromeless" id="lg-cancelar" style="color:#6c757d" onclick="toggleModal('modal-legenda',false)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6 6 18"/></svg>Cancelar</button>
+        <button class="dsc-btn" id="lg-salvar" onclick="salvarLegenda()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ Janela "Selecionar Pessoa" — clique em assento do mapa (EVT-PAR-08) ═══════════════ -->
+  <div id="modal-selecionar-pessoa" class="dsc-modal-mask" style="display:none" onclick="if(event.target===this)fecharSelecao()">
+    <div class="dsc-modal gpe-modal--sm" role="dialog" aria-labelledby="t-selecionar">
+      <div class="dsc-modal-header"><span id="t-selecionar">Selecionar Pessoa</span>
+        <button class="dsc-modal-close" aria-label="Fechar" onclick="fecharSelecao()">✕</button></div>
+      <div class="dsc-modal-body">
+        <input class="dsc-input" id="sel-busca" placeholder="Digite o nome para filtrar..." aria-label="Filtrar pessoas disponíveis" oninput="filtrarDisponiveis(this.value)">
+        <div class="gpe-option-list" id="sel-opcoes" style="margin-top:12px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ Caixa de confirmação da tela (p-confirmDialog) — confirmação de presença (EVT-PAR-13) e remoção de legenda (EVT-PAR-06) ═══════════════ -->
+  <div id="modal-confirmar" class="dsc-modal-mask" style="display:none" onclick="if(event.target===this)fecharConfirmacao()">
+    <div class="dsc-modal gpe-modal--sm" role="alertdialog" aria-labelledby="cf-titulo">
+      <div class="dsc-modal-header"><span id="cf-titulo">Remover confirmação</span>
+        <button class="dsc-modal-close" aria-label="Fechar" onclick="fecharConfirmacao()">✕</button></div>
+      <div class="dsc-modal-body">
+        <div class="gpe-confirm-body"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg><p id="cf-texto" style="margin:4px 0 0"></p></div>
+      </div>
+      <div class="dsc-modal-footer">
+        <button class="dsc-btn dsc-btn--danger" onclick="confirmarAcao()">Remover</button>
+        <button class="dsc-btn dsc-btn--outline" onclick="fecharConfirmacao()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ Toasts (p-toast, canto superior direito) ═══════════════ -->
+  <div class="gpe-toast-stack" id="toasts"></div>
+
+  <div class="dsc-proto-notes">
+    <strong>📋 Notas do protótipo — Participantes (EVT-PAR)</strong>
+    <div class="gpe-proto-perfil" style="display:flex;flex-wrap:wrap">
+      <label for="perfil-simulado"><strong>Perfil simulado:</strong></label>
+      <select id="perfil-simulado" onchange="trocarPerfil(this.value)">
+        <option>Administrador</option>
+        <option>Secretaria Mesa</option>
+        <option>Secretaria Check-In</option>
+      </select>
+      <button type="button" class="dsc-btn dsc-btn--sm dsc-btn--outline" onclick="simularCheckinExterno()">Simular check-in feito na recepção por outro usuário</button>
+    </div>
+    <ul>
+      <li><strong>Visual recuperado do código-fonte</strong>: rótulos, textos de apoio, botões, colunas, dicas e mensagens vêm do inventário extraído do <code>sistema_mesa_checkin_frontend</code> (<code>arquivos/engenharia-reversa/frontend-inventory.md</code>, 2.3 e 2.4, 4.0, 4.12 a 4.16, 4.23 e 5.1 a 5.4) e das imagens de GPE005: lista de participantes (image2), planilha exportada (image3), janela Cadastrar Pessoa (image4), Gerenciar Legenda da Pessoa (image5), mapa do Administrador (image6) e mapa da Secretaria Mesa (image7). Cores e medidas foram aferidas nas capturas; o design system do kit (CAIXA) foi substituído pela camada <code>tema-gpe.css</code>.</li>
+      <li><strong>Perfis</strong>: o seletor acima troca o perfil e leva à tela de entrada dele. Administrador abre na lista e alterna com o mapa pelos botões do cabeçalho; Secretaria Mesa abre direto no mapa de consulta, com o menu só com "Evento", sem "Cadastrar Pessoa" e com o indicador de atualização automática; Secretaria Check-In abre na lista, sem os critérios Temas, Grupos de Trabalho e Cargo, com "Confirmado" só para leitura e "Assento" como texto. Endereços aceitos: <code>#lista</code>, <code>#mapa</code>, <code>#mapa-secretaria</code> e <code>#checkin</code>.</li>
+      <li><strong>Lista</strong>: filtra de verdade os 12 participantes fictícios (10 por página). "Busca" pesquisa a cada caractere, sem diferenciar acentos, e exige todas as palavras: "jose" traz João Lima pela razão social. "Empresas – presidentes" em Legendas traz também Gustavo Henrique Tavares, cuja legenda exibida é outra (⚠️ regra 6). Confirmado Sim + Check-In Não traz os confirmados que ainda não chegaram. Um texto que ninguém tem mostra "Nenhum participante encontrado." e "Total: 0". O nome abre o cadastro da pessoa em nova aba.</li>
+      <li><strong>Check-in</strong>: o ícone da coluna Check-In alterna na hora, sem confirmação, com "Check-in realizado." ou "Check-in não realizado.". ⚠️ As dicas do ícone são "Confirmado" e "Não confirmado", as mesmas da coluna Confirmado.</li>
+      <li><strong>Confirmação de presença</strong> (só Administrador): o ícone abre a caixa "Remover confirmação" ou "Confirmar participante". Retirar a de Carlos Eduardo Lins libera o assento B1 e desfaz o check-in. Confirmar Renata Oliveira Campos (com check-in e sem confirmação) desfaz o check-in dela, mas a linha continua mostrando o check-in até nova pesquisa (⚠️). ⚠️ A caixa da tela foi montada com o título "Remover Pessoa" e os botões "Remover" e "Cancelar"; o protótipo mostra o título pedido pela ação e os botões da caixa — para confirmar, aciona-se "Remover" 🔍. O texto que de fato aparece não foi conferido em execução. A mensagem "Confirmação foi realizado com sucesso" sai com o erro de concordância do sistema.</li>
+      <li><strong>Legenda</strong>: o valor da coluna Assento abre "Gerenciar Legenda da Pessoa". Maria Souza (A1) tem a legenda manual "Anfitrião" — "Remover Legenda" pede confirmação e ela volta a "Comitê estratégico", recebida por regra. ⚠️ Gustavo Henrique Tavares (A3) só tem legendas de regra e aparece como "Esta pessoa não possui legenda configurada.", embora a lista o mostre como "Comitê estratégico". Salvar com "Remover legenda" para quem não tem legenda manual dá "Atenção — Esta pessoa já não possui legenda.". "Assento livre" não é oferecida. ⚠️ A janela trata de legenda, mas o atalho fica na coluna do assento.</li>
+      <li><strong>Cadastrar Pessoa</strong>: "Enviar" só habilita com os quatro campos preenchidos e o nome com 3 caracteres ou mais; as mensagens aparecem ao sair do campo. A mensagem de sucesso fica até ser fechada. ⚠️ A lista não é recarregada: a pessoa só aparece depois de nova pesquisa. ⚠️ O check-in automático fica sem hora, e por isso a pessoa vai para o início da fila da Secretaria Mesa. Com o check-in automático, cadastrada a partir do mapa, ela aparece em Pessoas Disponíveis cerca de 1 segundo depois. ⚠️ O formato do e-mail não é conferido e o sistema não procura pessoa já cadastrada.</li>
+      <li><strong>Mapa do Administrador</strong>: arraste um cartão de Pessoas Disponíveis para um assento, arraste um ocupante de um assento para outro, ou clique num assento vazio e escolha a pessoa em "Selecionar Pessoa". Soltar sobre assento ocupado devolve o ocupante à lista, sem troca de lugares (⚠️). O "×" vermelho tira a pessoa do assento, sem confirmação. "Salvar Alocações (n)" grava o mapa inteiro na hora; sem ela, a gravação automática acontece 30 segundos depois da última alteração, com "Salvando composição automaticamente..." e a mensagem "Salvo". "Buscar pessoa na mesa..." com "mari" ou "palest" destaca o assento por 5 segundos. Os botões de zoom vão de 50% a 150%.</li>
+      <li>⚠️ <strong>Gravação do mapa</strong>: o que se grava é sempre o mapa inteiro. "Limpar Todas" esvazia a tela e mostra "Todas as alocações foram removidas da mesa.", mas nada é gravado: a gravação automática desiste quando não há ninguém sentado, e o mapa antigo volta na próxima atualização. Uma alteração ainda não gravada é descartada quando a atualização automática (a cada 3 segundos) percebe uma mudança feita em outro ponto — use o botão "Simular check-in feito na recepção por outro usuário" acima para ver. Sair do mapa cancela a gravação automática marcada. Não representados, por serem suspeitas lidas no código: a gravação apagar a data do check-in e os dados do CRM de quem está sentado e desfazer o atendimento de quem continua sentado.</li>
+      <li><strong>Mapa da Secretaria Mesa</strong>: a fila traz quem fez check-in e ainda não foi atendido, em ordem de chegada, com o assento ou "Não alocado". "ATENDIDO" registra o atendimento sem confirmação e tira a pessoa da fila. Tocar na etiqueta do assento destaca o assento no mapa; na busca da mesa, "b1" localiza o ocupante do assento B1 e já o destaca. O mapa é só de consulta. ⚠️ No computador o botão diz "ATENDIDO" e no tablet "ATENDER" (texto da imagem de GPE005). ⚠️ A dica do assento vazio continua dizendo "Clique para atribuir uma pessoa". ⚠️ Não há como desfazer um atendimento.</li>
+      <li><strong>Outros ⚠️</strong>: o botão do cabeçalho é "Cadastrar Pessoa" (na imagem da lista de GPE005, "Cadastrar Participante"); a coluna Organização mostra o nome fantasia e, na falta dele, a razão social (os dois chegam trocados do servidor); a legenda manual que não está na configuração do evento (Helena Martins Queiroz, "ICT – Reitores") pinta o assento, mas não aparece como etiqueta no cartão; a busca na mesa diferencia acentos, enquanto a de pessoas disponíveis não; o campo de busca de Pessoas Disponíveis e o da janela "Selecionar Pessoa" são o mesmo filtro; a situação de quem não fez check-in aparece como "Check in não identificado" nas dicas da mesa principal e do setor F, e "Check in não realizado" nas dos setores G, H e E; os nomes de setor das dicas ("Presidência", "Senadores", "Imprensa"…) são fixos no código. O menu "Evento" da Secretaria Check-In foi suposto igual ao da Secretaria Mesa: os rótulos do menu vêm do serviço corporativo e não há captura desse perfil.</li>
+      <li><strong>Exportações</strong>: "Download" mostra "Exportação em andamento." e, no sistema, baixa <code>Participantes.xls</code> com 14 colunas (ver image3). Os botões PDF e PNG do mapa mostram "Exportação" e a mensagem de sucesso; no sistema baixam, por exemplo, <code>Mapa_Mesa_Completo_Reunião do Conselho de Política Industrial_04102026_1405.pdf</code>. ⚠️ O arquivo "PNG" é gerado em JPEG; o Mapa Completo não traz o quadro de legendas.</li>
+      <li><strong>Não representado</strong>: a camada "Carregando dados do evento..." da abertura; falhas de servidor (mensagens nos N3); o tablet (painel de controle oculto, fila em carrossel); o formato de mesa Retangular Invertido (174 assentos, setor E à esquerda, busca por assento prometida e inexistente no mapa do Administrador); o arquivo exportado; fotos das pessoas (substituídas por iniciais; sem foto, o ícone de pessoa, como no sistema); o clique em assento ocupado da mesa principal, que abre "Selecionar Pessoa" e faz o ocupante aparecer também em Pessoas Disponíveis (suspeita de defeito).</li>
+    </ul>
+  </div>
+
+  <script>
+    /* ---------- Dados fictícios ---------- */
+    var EVENTO = { nome: 'Reunião do Conselho de Política Industrial' };
+    /* Catálogo de legendas; num = posição do bloco na configuração do evento (null = fora da configuração) */
+    var LEG = {
+      'Anfitrião':                   { cor: '#f39c33', num: 1 },
+      'Palestrantes':                { cor: '#f5c242', num: 2 },
+      'Comitê estratégico':          { cor: '#fbe38e', num: 3 },
+      'GT da MEI – coordenadores':   { cor: '#6fbf73', num: 4 },
+      'Empresas – presidentes':      { cor: '#3d8ef0', num: 5 },
+      'Empresas – vice-presidentes': { cor: '#5fa8f2', num: 6 },
+      'Empresas – diretores':        { cor: '#93c9f5', num: 7 },
+      'Assento livre':               { cor: '#ffffff', num: 8 },
+      'Diretores da CNI':            { cor: '#f3c6ea', num: null },
+      'GT da MEI – titulares':       { cor: '#a9dcaa', num: null },
+      'ICT – Reitores':              { cor: '#b5b9be', num: null }
+    };
+    var CATALOGO = Object.keys(LEG).sort(function (a, b) { return a.localeCompare(b, 'pt'); });
+    var CONFIG = Object.keys(LEG).filter(function (n) { return LEG[n].num; }).sort(function (a, b) { return LEG[a].num - LEG[b].num; });
+    /* Participantes do evento. conv/conf: true, false ou null (sem informação); ci = check-in; ciHora = ordem de chegada */
+    var P = [
+      { id: 1, nome: 'Ana Beatriz Moreira', codinome: 'ANA MOREIRA', razao: 'METALÚRGICA AURORA S.A.', fantasia: 'Aurora Metais', cargo: 'Diretor(a)', manual: null, regras: ['Empresas – diretores'], conv: true, conf: true, ci: false, ciHora: null, assento: 'C3', hist: 4, foto: true, atendido: false, temas: ['Empresa'], gts: ['GT Indústria 4.0'] },
+      { id: 2, nome: 'Ana Marinho', codinome: 'ANA MARINHO', razao: 'VIDROS ATLÂNTICO LTDA', fantasia: 'Atlântico Vidros', cargo: 'Gerente', manual: null, regras: [], conv: true, conf: false, ci: false, ciHora: null, assento: null, hist: 0, foto: false, atendido: false, temas: ['Parceiro'], gts: [] },
+      { id: 3, nome: 'Carlos Eduardo Lins', codinome: 'CARLOS LINS', razao: 'TÊXTIL NORDESTE LTDA', fantasia: 'Têxtil NE', cargo: 'Presidente(a)', manual: null, regras: ['Empresas – presidentes'], conv: true, conf: true, ci: true, ciHora: '08:47', assento: 'B1', hist: 7, foto: false, atendido: false, temas: ['Empresa'], gts: ['GT Comércio Exterior'] },
+      { id: 4, nome: 'Fernanda Rocha Prado', codinome: '', razao: 'AGROINDUSTRIAL CERRADO LTDA', fantasia: 'Agro Cerrado', cargo: 'Vice-Presidente(a)', manual: null, regras: ['Empresas – vice-presidentes'], conv: true, conf: true, ci: false, ciHora: null, assento: null, hist: 3, foto: true, atendido: false, temas: ['Empresa'], gts: [] },
+      { id: 5, nome: 'Gustavo Henrique Tavares', codinome: 'GUSTAVO TAVARES', razao: 'QUÍMICA DO VALE S.A.', fantasia: 'Química Vale', cargo: 'CEO/CFO', manual: null, regras: ['Comitê estratégico', 'Empresas – presidentes'], conv: true, conf: true, ci: true, ciHora: '08:44', assento: 'A3', hist: 12, foto: true, atendido: true, temas: ['Inovação'], gts: ['GT Indústria 4.0'] },
+      { id: 6, nome: 'Helena Martins Queiroz', codinome: 'HELENA QUEIROZ', razao: 'INSTITUTO DE TECNOLOGIA DO PLANALTO', fantasia: '', cargo: 'Reitora', manual: 'ICT – Reitores', regras: [], conv: true, conf: true, ci: true, ciHora: '08:55', assento: null, hist: 2, foto: false, atendido: false, temas: ['ICT'], gts: [] },
+      { id: 7, nome: 'João Lima', codinome: 'JOÃO LIMA', razao: 'CERÂMICA SÃO JOSÉ LTDA', fantasia: 'Cerâmica São José', cargo: 'Gerente', manual: null, regras: [], conv: true, conf: true, ci: false, ciHora: null, assento: null, hist: 1, foto: true, atendido: false, temas: [], gts: ['GT Comércio Exterior'] },
+      { id: 8, nome: 'Juliana Castro Mendes', codinome: 'JULIANA MENDES', razao: 'INOVATECH INDÚSTRIA ELETRÔNICA LTDA', fantasia: 'Inovatech', cargo: 'Diretor(a)', manual: 'Palestrantes', regras: ['Empresas – diretores'], conv: true, conf: true, ci: true, ciHora: '08:52', assento: 'A2', hist: 5, foto: true, atendido: false, temas: ['Inovação'], gts: ['GT Transformação Digital'] },
+      { id: 9, nome: 'Marcos Vinícius Andrade', codinome: '', razao: 'PAPEL E CELULOSE SUL S.A.', fantasia: 'Papel Sul', cargo: 'Presidente(a)', manual: null, regras: ['Empresas – presidentes'], conv: false, conf: true, ci: false, ciHora: null, assento: 'B3', hist: 9, foto: false, atendido: false, temas: ['Empresa'], gts: [] },
+      { id: 10, nome: 'Maria Souza', codinome: 'MARIA SOUZA', razao: 'INDÚSTRIA EXEMPLO S.A.', fantasia: 'Exemplo', cargo: 'Diretora', manual: 'Anfitrião', regras: ['Comitê estratégico'], conv: true, conf: true, ci: true, ciHora: '08:41', assento: 'A1', hist: 3, foto: true, atendido: false, temas: ['Inovação'], gts: ['GT Indústria 4.0', 'GT Comércio Exterior'] },
+      { id: 11, nome: 'Paulo Roberto Nunes', codinome: 'PAULO NUNES', razao: 'ALIMENTOS DA SERRA LTDA', fantasia: 'Serra Alimentos', cargo: 'Vice-Presidente(a)', manual: null, regras: ['GT da MEI – coordenadores'], conv: null, conf: null, ci: false, ciHora: null, assento: null, hist: 6, foto: false, atendido: false, temas: ['Parceiro'], gts: [] },
+      { id: 12, nome: 'Renata Oliveira Campos', codinome: 'RENATA CAMPOS', razao: 'MÓVEIS PLANALTO LTDA', fantasia: 'Planalto Móveis', cargo: 'Gerente', manual: null, regras: [], conv: false, conf: false, ci: true, ciHora: '09:02', assento: null, hist: 0, foto: false, atendido: false, temas: [], gts: [] }
+    ];
+    /* Opções de Temas, Grupos de Trabalho e Cargo: valores de TODAS as pessoas do sistema (⚠️ regra 11 de EVT-PAR-01) */
+    var OPC_TEMAS = ['Empresa', 'Governo', 'ICT', 'Inovação', 'Parceiro', 'Sustentabilidade'];
+    var OPC_GTS = ['GT Comércio Exterior', 'GT Descarbonização', 'GT Indústria 4.0', 'GT Transformação Digital'];
+    var OPC_CARGOS = ['CEO/CFO', 'Diretor Executivo', 'Diretor(a)', 'Diretora', 'Gerente', 'Presidente(a)', 'Reitora', 'Vice-Presidente(a)'];
+    var TOTAL_ASSENTOS = 181;
+    var PERFIL = 'Administrador', telaAtual = 'screen-lista', proximoId = 13;
+
+    var ICO = {
+      ok: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>',
+      info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>',
+      aviso: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>',
+      erro: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>',
+      xis: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M7 7l10 10M17 7 7 17"/></svg>',
+      joinha: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 21h4V9H2v12zm20-11a2 2 0 0 0-2-2h-6.3l1-4.6v-.3c0-.4-.2-.8-.4-1.1L13.2 1 6.6 7.6C6.2 8 6 8.5 6 9v10a2 2 0 0 0 2 2h9c.8 0 1.5-.5 1.8-1.2l3-7.1c.1-.2.2-.5.2-.7v-2z"/></svg>',
+      interrog: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>',
+      pessoa: '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7z"/></svg>',
+      lixeira: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/></svg>',
+      fechar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" style="width:9px;height:9px"><path d="M6 6l12 12M18 6 6 18"/></svg>'
+    };
+
+    /* ---------- Shell ---------- */
+    function showScreen(id) {
+      if (id !== 'screen-mapa') cancelarGravacao();
+      var anterior = telaAtual; telaAtual = id;
+      document.querySelectorAll('.dsc-screen').forEach(function (s) { s.classList.remove('is-active'); });
+      document.getElementById(id).classList.add('is-active');
+      fecharMenus();
+      ajustarCabecalho(id);
+      renderTela(id, anterior);
+      window.scrollTo(0, 0);
+    }
+    function toggleModal(id, show) { document.getElementById(id).style.display = show ? 'flex' : 'none'; }
+    function toggleSubmenu(btn, ev) {
+      ev.stopPropagation();
+      var item = btn.parentElement, aberto = item.classList.contains('is-open');
+      fecharMenus(); if (!aberto) item.classList.add('is-open');
+    }
+    function toggleUserMenu(ev) {
+      ev.stopPropagation();
+      var m = document.getElementById('user-menu'), aberto = m.classList.contains('is-open');
+      fecharMenus(); if (!aberto) m.classList.add('is-open');
+    }
+    function fecharMenus() { document.querySelectorAll('.is-open').forEach(function (e) { e.classList.remove('is-open'); }); }
+    document.addEventListener('click', fecharMenus);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { document.querySelectorAll('.dsc-modal-mask').forEach(function (m) { m.style.display = 'none'; }); fecharMenus(); } });
+
+    /* p-toast: resumo + detalhe; some em ~4 s, a menos que seja fixo (sticky) */
+    function toast(tipo, resumo, detalhe, fixo) {
+      var cls = { sucesso: 'dsc-toast--positive', aviso: 'dsc-toast--warning', erro: 'dsc-toast--danger', info: '' }[tipo];
+      var ico = { sucesso: ICO.ok, aviso: ICO.aviso, erro: ICO.erro, info: ICO.info }[tipo];
+      var t = document.createElement('div');
+      t.className = 'dsc-toast ' + cls; t.setAttribute('role', 'status');
+      t.innerHTML = ico + '<div style="flex:1"><strong>' + resumo + '</strong>' + (detalhe ? '<span>' + detalhe + '</span>' : '') + '</div>' +
+        '<button class="dsc-icon-action" aria-label="Fechar mensagem" title="Fechar" style="width:24px;height:24px">✕</button>';
+      t.querySelector('button').onclick = function () { t.remove(); };
+      document.getElementById('toasts').appendChild(t);
+      if (!fixo) setTimeout(function () { t.remove(); }, 4000);
+    }
+
+    /* ---------- Perfil simulado e cabeçalho ---------- */
+    var TELA_INICIAL = { 'Administrador': 'screen-lista', 'Secretaria Mesa': 'screen-mapa-secretaria', 'Secretaria Check-In': 'screen-checkin' };
+    function aplicarPerfil(perfil, tela) {
+      PERFIL = perfil;
+      document.getElementById('hi-perfil').textContent = perfil;
+      document.getElementById('ud-perfil').textContent = perfil;
+      document.getElementById('perfil-simulado').value = perfil;
+      var admin = perfil === 'Administrador';
+      document.getElementById('menu-admin').style.display = admin ? '' : 'none';
+      document.getElementById('menu-secretaria').style.display = admin ? 'none' : '';
+      iniciarAtualizacao(perfil !== 'Secretaria Check-In'); // a Secretaria Check-In não tem atualização automática
+      showScreen(tela || TELA_INICIAL[perfil]);
+    }
+    function trocarPerfil(perfil) { aplicarPerfil(perfil); history.replaceState(null, '', HASH_DA_TELA[TELA_INICIAL[perfil]]); }
+    function irTelaInicial() { showScreen(TELA_INICIAL[PERFIL]); }
+    function irPara(tela) { showScreen(tela); history.replaceState(null, '', HASH_DA_TELA[tela]); }
+    function ajustarCabecalho(id) {
+      var adm = id === 'screen-lista' || id === 'screen-mapa', sec = id === 'screen-mapa-secretaria';
+      document.getElementById('ev-alternar').style.display = adm ? '' : 'none';
+      document.getElementById('ev-cadastrar').style.display = sec ? 'none' : '';
+      document.getElementById('ev-autorefresh').style.display = sec ? '' : 'none';
+      document.getElementById('ev-atualizar').style.display = sec ? '' : 'none';
+      document.getElementById('btn-ver-lista').className = 'dsc-btn' + (id === 'screen-lista' ? '' : ' dsc-btn--outline');
+      document.getElementById('btn-ver-mapa').className = 'dsc-btn' + (id === 'screen-mapa' ? '' : ' dsc-btn--outline');
+      var bc = { 'screen-lista': ['Eventos', 'Participantes'], 'screen-mapa': ['Eventos', 'Mapa de Assentos'], 'screen-mapa-secretaria': ['Evento', 'Mapa de Assentos'], 'screen-checkin': ['Evento', 'Participantes'] }[id];
+      document.getElementById('breadcrumb').innerHTML = '<span>Início</span><span class="dsc-sep">›</span>' +
+        (bc[0] === 'Eventos' ? '<span>Eventos</span><span class="dsc-sep">›</span><a href="../../eventos/cadastro-eventos/flow.html">Cadastro</a>' : '<span>Evento</span>') +
+        '<span class="dsc-sep">›</span><span>' + EVENTO.nome + '</span><span class="dsc-sep">›</span><span class="is-current">' + bc[1] + '</span>';
+    }
+    function renderTela(id, anterior) {
+      if (id === 'screen-lista') {
+        // ⚠️ voltando do mapa, os critérios reaparecem em branco, mas a lista mantém a última pesquisa
+        if (anterior === 'screen-mapa') limparCampos('a');
+        renderLista('a');
+      }
+      if (id === 'screen-checkin') renderLista('c');
+      if (id === 'screen-mapa') { if (assinatura() !== ultimaAssinatura) reconstruirMesa(); renderAdm(); }
+      if (id === 'screen-mapa-secretaria') renderSec();
+    }
+
+    /* ---------- Utilitários ---------- */
+    function porId(id) { for (var i = 0; i < P.length; i++) if (P[i].id === id) return P[i]; return null; }
+    function norm(s) { return String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase(); }
+    function org(p) { return p.fantasia || p.razao; } // ⚠️ a tela mostra o nome fantasia e, na falta, a razão social
+    function rotulo(p) { return p.codinome || p.nome; }
+    function noMapa(p) { return p.conf === true || p.ci; }
+    function legendaExibida(p) {
+      if (p.manual) return p.manual;
+      var melhor = null;
+      p.regras.forEach(function (n) { if (LEG[n] && LEG[n].num && (!melhor || LEG[n].num < LEG[melhor].num)) melhor = n; });
+      return melhor;
+    }
+    function todasLegendas(p) { return (p.manual ? [p.manual] : []).concat(p.regras); }
+    function numeroLegenda(p) { var l = legendaExibida(p); return l && LEG[l].num ? LEG[l].num : null; }
+    function corDe(p) { var l = legendaExibida(p); return l ? LEG[l].cor : '#f8f9fa'; }
+    function textoSobre(cor) {
+      var r = parseInt(cor.substr(1, 2), 16), g = parseInt(cor.substr(3, 2), 16), b = parseInt(cor.substr(5, 2), 16);
+      return (0.299 * r + 0.587 * g + 0.114 * b) / 255 > 0.72 ? '#2f3640' : '#fff';
+    }
+    function attr(s) { return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/\n/g, '&#10;'); }
+    function val(id) { return document.getElementById(id).value.trim(); }
+    function iniciais(nome) { return nome.trim().split(/\s+/).slice(0, 2).map(function (w) { return w.charAt(0).toUpperCase(); }).join(''); }
+    function agora() { var d = new Date(); return ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2) + ':' + ('0' + d.getSeconds()).slice(-2); }
+
+    /* ---------- Seleção múltipla (p-multiSelect) ---------- */
+    function montarMS(id, opcoes, vazio, plural) {
+      var c = document.getElementById(id);
+      c.innerHTML = '<div class="gpe-ms" data-vazio="' + vazio + '" data-plural="' + plural + '">' +
+        '<button type="button" class="dsc-select gpe-ms-trigger" onclick="abrirMS(this, event)">' + vazio + '</button>' +
+        '<div class="gpe-ms-panel" onclick="event.stopPropagation()"><div class="gpe-listbox" style="border:0">' +
+        opcoes.map(function (o) { return '<label><input type="checkbox" class="dsc-check" value="' + attr(o) + '" onchange="rotuloMS(\'' + id + '\')">' + o + '</label>'; }).join('') +
+        '</div></div></div>';
+    }
+    function abrirMS(btn, ev) { ev.stopPropagation(); var ms = btn.parentElement, aberto = ms.classList.contains('is-open'); fecharMenus(); if (!aberto) ms.classList.add('is-open'); }
+    function valoresMS(id) { var c = document.getElementById(id); if (!c) return []; return Array.prototype.map.call(c.querySelectorAll('input:checked'), function (i) { return i.value; }); }
+    function rotuloMS(id) {
+      var c = document.getElementById(id), ms = c.querySelector('.gpe-ms'), v = valoresMS(id);
+      c.querySelectorAll('label').forEach(function (l) { l.classList.toggle('is-selected', l.querySelector('input').checked); });
+      ms.querySelector('.gpe-ms-trigger').textContent = !v.length ? ms.dataset.vazio : (v.length > 2 ? ms.dataset.plural.replace('{0}', v.length) : v.join(', '));
+    }
+
+    /* ---------- Pesquisar Participantes (EVT-PAR-01) ---------- */
+    var LST = { a: { res: [], pag: 0, filtro: null }, c: { res: [], pag: 0, filtro: null } };
+    function radio(nome) { return document.querySelector('input[name="' + nome + '"]:checked').value; }
+    function lerFiltro(pre) {
+      return {
+        termo: norm(val(pre + '-busca')).replace(/\s+/g, ' ').trim(),
+        legendas: valoresMS(pre + '-ms-leg'), temas: valoresMS(pre + '-ms-tema'), gts: valoresMS(pre + '-ms-gt'), cargos: valoresMS(pre + '-ms-cargo'),
+        conv: radio(pre + '-conv'), conf: radio(pre + '-conf'), ci: radio(pre + '-ci'), semFoto: document.getElementById(pre + '-foto').checked
+      };
+    }
+    function contemAlgum(valores, escolhidos) { return escolhidos.some(function (e) { return valores.some(function (v) { return norm(v).indexOf(norm(e)) >= 0; }); }); }
+    function filtrar(f) {
+      return P.filter(function (p) {
+        if (f.termo) {
+          var alvo = norm([p.nome, p.codinome, p.razao, p.fantasia, p.cargo].join(' | '));
+          if (!f.termo.split(' ').every(function (w) { return alvo.indexOf(w) >= 0; })) return false;
+        }
+        if (f.legendas.length && !f.legendas.some(function (l) { return todasLegendas(p).indexOf(l) >= 0; })) return false; // ⚠️ considera também as legendas não exibidas
+        if (f.temas.length && !contemAlgum(p.temas, f.temas)) return false;
+        if (f.gts.length && !contemAlgum(p.gts, f.gts)) return false;
+        if (f.cargos.length && !contemAlgum([p.cargo], f.cargos)) return false;
+        if (f.conv === 'sim' && p.conv !== true) return false;
+        if (f.conv === 'nao' && p.conv !== false) return false;
+        if (f.conf === 'sim' && p.conf !== true) return false;
+        if (f.conf === 'nao' && p.conf !== false) return false;
+        if (f.ci === 'sim' && !p.ci) return false;
+        if (f.ci === 'nao' && p.ci) return false;
+        if (f.semFoto && p.foto) return false;
+        return true;
+      }).sort(function (a, b) { return a.nome.localeCompare(b.nome, 'pt'); });
+    }
+    function comCarregamento(pre, fn) {
+      var t = document.getElementById(pre + '-tabela'); t.style.opacity = '0.35';
+      setTimeout(function () { t.style.opacity = ''; fn(); }, 250);
+    }
+    function pesquisar(pre) {
+      var f = lerFiltro(pre);
+      comCarregamento(pre, function () {
+        P.forEach(function (p) { delete p._ciTela; });
+        LST[pre].filtro = f; LST[pre].res = filtrar(f); LST[pre].pag = 0; renderLista(pre);
+      });
+    }
+    function limparCampos(pre) {
+      document.getElementById(pre + '-form').reset();
+      document.querySelectorAll('#' + pre + '-form .gpe-ms').forEach(function (ms) { rotuloMS(ms.parentElement.id); });
+    }
+    function limpar(pre) { limparCampos(pre); pesquisar(pre); }
+    function recarregarPagina(pre) { // recarrega a página atual com a última pesquisa
+      P.forEach(function (p) { delete p._ciTela; });
+      var st = LST[pre]; st.res = filtrar(st.filtro); st.pag = Math.min(st.pag, Math.max(0, Math.ceil(st.res.length / 10) - 1)); renderLista(pre);
+    }
+    function irPagina(pre, n) { comCarregamento(pre, function () { P.forEach(function (p) { delete p._ciTela; }); LST[pre].res = filtrar(LST[pre].filtro); LST[pre].pag = n; renderLista(pre); }); }
+    function ciTela(p) { return p._ciTela !== undefined ? p._ciTela : p.ci; }
+    function iconeLeitura(v) {
+      if (v === true) return '<span class="gpe-status gpe-status--sim" title="Sim" aria-label="Sim">' + ICO.ok + '</span>';
+      if (v === false) return '<span class="gpe-status gpe-status--nao" title="Não" aria-label="Não">' + ICO.xis + '</span>';
+      return '<span class="gpe-status gpe-status--pendente" title="Pendente" aria-label="Pendente">' + ICO.interrog + '</span>';
+    }
+    function botaoStatus(sim, dica, acao, rotuloAcessivel) {
+      return '<button type="button" class="gpe-status is-clickable ' + (sim ? 'gpe-status--sim' : 'gpe-status--nao') + '" title="' + dica + '" aria-label="' + attr(rotuloAcessivel) + '" onclick="' + acao + '">' + (sim ? ICO.joinha : ICO.xis) + '</button>';
+    }
+    function linha(pre, p) {
+      var adm = pre === 'a', ci = ciTela(p);
+      var dicaConf = (p.conf === null || p.conf === undefined) ? 'Status desconhecido' : (p.conf ? 'Confirmado' : 'Não confirmado');
+      var conf = adm ? botaoStatus(p.conf === true, dicaConf, 'pedirConfirmacao(' + p.id + ',\'' + pre + '\')', 'Alterar a confirmação de ' + p.nome) : iconeLeitura(p.conf);
+      var check = botaoStatus(ci, ci ? 'Confirmado' : 'Não confirmado', 'alternarCheckin(' + p.id + ',\'' + pre + '\')', 'Alterar o check-in de ' + p.nome);
+      var ass = p.assento || 'Sem assento';
+      var assCel = adm ? '<button type="button" class="gpe-link" title="Clique para gerenciar legenda da pessoa" onclick="abrirLegenda(' + p.id + ',\'' + pre + '\')">' + ass + '</button>' : ass;
+      return '<tr><td style="width:8px;padding:0;background:' + corDe(p) + '"></td>' +
+        '<td class="gpe-left"><a class="gpe-link" href="../../pessoas/cadastro-pessoas/flow.html#pessoa" target="_blank" title="Abrir o perfil da pessoa em nova aba">' + p.nome + '</a></td>' +
+        '<td>' + org(p) + '</td><td>' + p.cargo + '</td><td>' + (legendaExibida(p) || '') + '</td>' +
+        '<td>' + iconeLeitura(p.conv) + '</td><td>' + conf + '</td><td>' + check + '</td><td>' + assCel + '</td></tr>';
+    }
+    function renderLista(pre) {
+      var st = LST[pre], ini = st.pag * 10, pagina = st.res.slice(ini, ini + 10), vazia = st.res.length === 0;
+      document.getElementById(pre + '-corpo').innerHTML = pagina.map(function (p) { return linha(pre, p); }).join('');
+      document.getElementById(pre + '-tabela').style.display = vazia ? 'none' : '';
+      document.getElementById(pre + '-vazia').style.display = vazia ? 'block' : 'none';
+      document.getElementById(pre + '-total').textContent = 'Total: ' + st.res.length;
+      var paginas = Math.max(1, Math.ceil(st.res.length / 10)), h = '';
+      h += '<span class="gpe-page-report">' + (vazia ? '[0 a 0 de 0]' : '[' + (ini + 1) + ' a ' + (ini + pagina.length) + ' de ' + st.res.length + ']') + '</span>';
+      h += '<button type="button" aria-label="Primeira página" ' + (st.pag === 0 ? 'disabled' : 'onclick="irPagina(\'' + pre + '\',0)"') + '>«</button>';
+      h += '<button type="button" aria-label="Página anterior" ' + (st.pag === 0 ? 'disabled' : 'onclick="irPagina(\'' + pre + '\',' + (st.pag - 1) + ')"') + '>‹</button>';
+      for (var i = 0; i < paginas; i++) h += '<button type="button" class="' + (i === st.pag ? 'is-active' : '') + '" onclick="irPagina(\'' + pre + '\',' + i + ')">' + (i + 1) + '</button>';
+      h += '<button type="button" aria-label="Próxima página" ' + (st.pag >= paginas - 1 ? 'disabled' : 'onclick="irPagina(\'' + pre + '\',' + (st.pag + 1) + ')"') + '>›</button>';
+      h += '<button type="button" aria-label="Última página" ' + (st.pag >= paginas - 1 ? 'disabled' : 'onclick="irPagina(\'' + pre + '\',' + (paginas - 1) + ')"') + '>»</button>';
+      document.getElementById(pre + '-pag').innerHTML = h;
+    }
+
+    /* ---------- Registrar Check-in (EVT-PAR-03) ---------- */
+    function alternarCheckin(id, pre) {
+      var p = porId(id), novo = !ciTela(p); // envia o contrário do que a linha mostra
+      delete p._ciTela; p.ci = novo; p.ciHora = agora().slice(0, 5); // ⚠️ ao desmarcar, a hora é regravada
+      renderLista(pre); // a lista não é recarregada: só o ícone muda
+      if (novo) toast('sucesso', 'Check-in realizado.', 'Check-in foi realizado com sucesso');
+      else toast('sucesso', 'Check-in não realizado.', 'Check-in foi atualizado para não realizado');
+    }
+
+    /* ---------- Caixa de confirmação (p-confirmDialog) ---------- */
+    var acaoConfirmada = null;
+    function abrirConfirmacao(titulo, texto, acao) {
+      document.getElementById('cf-titulo').textContent = titulo;
+      document.getElementById('cf-texto').textContent = texto;
+      acaoConfirmada = acao; toggleModal('modal-confirmar', true);
+    }
+    function fecharConfirmacao() { acaoConfirmada = null; toggleModal('modal-confirmar', false); }
+    function confirmarAcao() { var a = acaoConfirmada; fecharConfirmacao(); if (a) a(); }
+
+    /* ---------- Alterar Confirmação de Presença (EVT-PAR-13) ---------- */
+    function pedirConfirmacao(id, pre) {
+      var p = porId(id), retirar = p.conf === true;
+      abrirConfirmacao(retirar ? 'Remover confirmação' : 'Confirmar participante',
+        retirar ? 'Deseja remover a confirmação do participante ' + p.nome + '?' : 'Deseja confirmar o participante ' + p.nome + '?',
+        function () {
+          if (retirar) {
+            p.conf = false; p.assento = null; delete p._ciTela;
+            if (p.ci) { p.ci = false; p.ciHora = null; }
+            toast('sucesso', 'Não confirmação realizada.', 'A confirmação foi atualizada para não realizada');
+          } else {
+            p.conf = true;
+            if (p.ci) { p.ci = false; p.ciHora = null; p._ciTela = true; } // ⚠️ desfaz o check-in, mas a linha continua mostrando-o
+            toast('sucesso', 'Confirmação realizada.', 'Confirmação foi realizado com sucesso');
+          }
+          renderLista(pre);
+        });
+    }
+
+    /* ---------- Exportar Participantes (EVT-PAR-14) ---------- */
+    function exportarParticipantes() { toast('aviso', 'Exportação em andamento.', 'A exportação dos participantes está em andamento, por favor aguarde.'); }
+
+    /* ---------- Gerenciar Legenda da Pessoa (EVT-PAR-04 · 05 · 06) ---------- */
+    var legPessoa = null, legPre = 'a', legSel = null;
+    var OPC_LEGENDA = CATALOGO.filter(function (n) { return norm(n) !== 'assento livre'; }); // "Assento livre" não é oferecida
+    function abrirLegenda(id, pre) {
+      legPessoa = porId(id); legPre = pre; legSel = legPessoa.manual ? OPC_LEGENDA.indexOf(legPessoa.manual) : -1;
+      var p = legPessoa;
+      document.getElementById('lg-nome').textContent = p.nome;
+      document.getElementById('lg-cargo').textContent = p.cargo + ' - ' + org(p);
+      document.getElementById('lg-assento').style.display = p.assento ? 'flex' : 'none';
+      document.getElementById('lg-assento-txt').textContent = 'Assento: ' + p.assento;
+      // ⚠️ só a legenda MANUAL é tratada como atual; a recebida por regra não aparece
+      document.getElementById('lg-atual').innerHTML = p.manual
+        ? '<div class="gpe-panel-soft" style="background:#eef6ff;border:1px solid #bcd8f7;display:flex;align-items:center;gap:12px"><span class="gpe-swatch gpe-swatch--lg" style="background:' + LEG[p.manual].cor + '"></span><span style="font-size:17px">' + p.manual + '</span><span class="dsc-tag dsc-tag--highlight dsc-tag--sm">Legenda manual</span></div>'
+        : '<p class="dsc-text-muted" style="margin:0">Esta pessoa não possui legenda configurada.</p>';
+      document.getElementById('lg-remover').style.display = p.manual ? '' : 'none';
+      ocupadoLegenda(false); renderOpcoesLegenda();
+      toggleModal('modal-legenda', true);
+      document.getElementById('lg-opcoes').scrollTop = 0;
+    }
+    function renderOpcoesLegenda() {
+      document.getElementById('lg-opcoes').innerHTML = OPC_LEGENDA.map(function (n, i) {
+        return '<button type="button" class="gpe-option' + (legSel === i ? ' is-selected' : '') + '" onclick="legSel=' + i + ';renderOpcoesLegenda()">' +
+          '<span class="gpe-swatch gpe-swatch--lg" style="background:' + LEG[n].cor + '"></span><span>' + n + (LEG[n].num ? '<small>Configurada neste evento</small>' : '') + '</span></button>';
+      }).join('') +
+        '<button type="button" class="gpe-option' + (legSel === -1 ? ' is-selected' : '') + '" onclick="legSel=-1;renderOpcoesLegenda()" style="color:var(--dsc-danger-90)">' +
+        '<span class="gpe-swatch gpe-swatch--lg" style="background:#fff;display:grid;place-items:center">' + ICO.lixeira.replace('<svg ', '<svg width="16" height="16" ') + '</span><span>Remover legenda</span></button>';
+    }
+    function ocupadoLegenda(sim) {
+      ['lg-remover', 'lg-cancelar', 'lg-salvar'].forEach(function (b) { document.getElementById(b).disabled = sim; });
+      document.getElementById('lg-salvar').classList.toggle('is-loading', sim);
+    }
+    function salvarLegenda() {
+      var p = legPessoa;
+      if (legSel === -1) {
+        if (p.manual) pedirRemocaoLegenda();
+        else toast('aviso', 'Atenção', 'Esta pessoa já não possui legenda.');
+        return;
+      }
+      var escolhida = OPC_LEGENDA[legSel];
+      ocupadoLegenda(true);
+      setTimeout(function () {
+        ocupadoLegenda(false);
+        p.regras = p.regras.filter(function (r) { return r !== escolhida; }); // a atribuição de regra passa a ser manual, sem duplicar
+        p.manual = escolhida;
+        toggleModal('modal-legenda', false);
+        toast('sucesso', 'Sucesso', 'Legenda atualizada com sucesso!');
+        recarregarPagina(legPre);
+      }, 600);
+    }
+    function pedirRemocaoLegenda() {
+      // 🔍 título pedido pela ação; os botões são os da caixa de confirmação da tela
+      abrirConfirmacao('Confirmar Remoção', 'Tem certeza que deseja remover a legenda desta pessoa?', function () {
+        ocupadoLegenda(true);
+        setTimeout(function () {
+          ocupadoLegenda(false);
+          legPessoa.manual = null;
+          toggleModal('modal-legenda', false);
+          toast('sucesso', 'Sucesso', 'Legenda removida com sucesso!');
+          recarregarPagina(legPre);
+        }, 500);
+      });
+    }
+
+    /* ---------- Cadastrar Participante (EVT-PAR-02) ---------- */
+    var CAMPOS_CP = ['cp-nome', 'cp-inst', 'cp-cargo', 'cp-email'];
+    function abrirCadastro() { resetCadastro(); toggleModal('modal-cadastrar-pessoa', true); document.getElementById('cp-nome').focus(); }
+    function fecharCadastro() { toggleModal('modal-cadastrar-pessoa', false); resetCadastro(); } // fechar descarta o que foi digitado
+    function resetCadastro() {
+      CAMPOS_CP.forEach(function (id) { var el = document.getElementById(id); el.value = ''; el.classList.remove('was-touched'); erroCampo(id, ''); });
+      document.getElementById('cp-checkin').checked = true;
+      document.getElementById('cp-enviar').classList.remove('is-loading');
+      atualizarContadores(); validarCadastro(false);
+    }
+    function atualizarContadores() {
+      document.querySelectorAll('#modal-cadastrar-pessoa .gpe-counter').forEach(function (c) {
+        var inp = document.getElementById(c.dataset.for), lim = parseInt(inp.dataset.limite, 10), n = inp.value.length;
+        c.textContent = n + '/' + lim;
+        c.classList.toggle('is-warn', n > lim * 0.8 && n <= lim * 0.95);
+        c.classList.toggle('is-limit', n > lim * 0.95);
+      });
+    }
+    function erroCampo(inputId, msg) {
+      var fld = document.getElementById(inputId).closest('.dsc-field');
+      var e = fld.querySelector('.dsc-field-error'); if (e) e.remove();
+      fld.classList.toggle('is-invalid', !!msg);
+      if (msg) { e = document.createElement('span'); e.className = 'dsc-field-error'; e.textContent = msg; fld.insertBefore(e, fld.querySelector('.gpe-counter')); }
+    }
+    function validarCadastro(mostrar, apenas) {
+      var regras = {
+        'cp-nome': function (v) { return !v ? 'Este campo é obrigatório' : (v.length < 3 ? 'Mínimo de 3 caracteres' : ''); },
+        'cp-inst': function (v) { return v ? '' : 'Este campo é obrigatório'; },
+        'cp-cargo': function (v) { return v ? '' : 'Este campo é obrigatório'; },
+        'cp-email': function (v) { return v ? '' : 'Este campo é obrigatório'; } // ⚠️ o formato do e-mail não é conferido
+      };
+      var ok = true;
+      Object.keys(regras).forEach(function (id) {
+        var msg = regras[id](val(id)); if (msg) ok = false;
+        if (mostrar && (!apenas || apenas === id) && document.getElementById(id).classList.contains('was-touched')) erroCampo(id, msg);
+      });
+      document.getElementById('cp-enviar').disabled = !ok;
+      return ok;
+    }
+    CAMPOS_CP.forEach(function (id) {
+      var el = document.getElementById(id);
+      el.addEventListener('input', function () { atualizarContadores(); validarCadastro(true, id); });
+      el.addEventListener('blur', function () { el.classList.add('was-touched'); validarCadastro(true, id); });
+    });
+    function enviarCadastro() {
+      if (!validarCadastro(false)) return;
+      var b = document.getElementById('cp-enviar'); b.classList.add('is-loading');
+      setTimeout(function () {
+        var auto = document.getElementById('cp-checkin').checked;
+        // pessoa nova (sem procurar duplicidade), sem Cód. Contato; entra não convidada, não confirmada, sem legenda e sem assento
+        P.push({ id: proximoId++, nome: val('cp-nome'), codinome: '', razao: val('cp-inst'), fantasia: '', cargo: val('cp-cargo'), manual: null, regras: [],
+          conv: false, conf: false, ci: auto, ciHora: null /* ⚠️ check-in automático sem hora */, assento: null, hist: 0, foto: false, atendido: false, temas: [], gts: [] });
+        fecharCadastro();
+        toast('sucesso', 'Sucesso', 'Cadastro de pessoa na recepção realizado com sucesso', true); // fica até ser fechada
+        if (PERFIL !== 'Secretaria Check-In') setTimeout(verificarAtualizacao, 1000); // a lista NÃO é recarregada (⚠️)
+      }, 700);
+    }
+
+    /* ---------- Mapa de assentos: estrutura do formato Retangular (181 assentos) ---------- */
+    function faixa(l, n) { var a = []; for (var i = 1; i <= n; i++) a.push(l + i); return a; }
+    var LAYOUT = { F: faixa('F', 32), G: faixa('G', 10), H: faixa('H', 36), A: ['A4', 'A2', 'A1', 'A3', 'A5'], B: faixa('B', 35), C: faixa('C', 35), D: ['D4', 'D2', 'D1', 'D3', 'D5'], E: faixa('E', 23) };
+    var AREAS = { A: 'Mesa Principal - Cabeçalho', B: 'Mesa Principal - Lateral Esquerda', C: 'Mesa Principal - Lateral Direita', D: 'Mesa Principal - Rodapé', G: 'Seção G', E: 'Seção E', F: 'Assentos Laterais F', H: 'Seção H' };
+    function setorNome(id) { // ⚠️ nomes fixos no código, usados só na dica do assento
+      var l = id.charAt(0), n = parseInt(id.slice(1), 10);
+      if (l === 'A') return n === 1 ? 'Anfitrião' : 'Palestrantes';
+      if (l === 'B' || l === 'C') return n <= 5 ? 'Presidência' : n <= 15 ? 'Deputados Federais' : n <= 25 ? 'Senadores' : 'Convidados Especiais';
+      return { D: 'Governadores', E: 'Imprensa', F: 'Assessoria', G: 'Segurança', H: 'Técnicos' }[l] || 'Outros';
+    }
+
+    /* Estado: o que está gravado fica em P[].assento; o mapa aberto do Administrador trabalha numa cópia (MESA) */
+    var MESA = {}, ultimaAssinatura = '', bloqueado = false, zoomAdm = 80, temporizador = null, arrasto = null, buscaDisp = '', alvoSelecao = null, destaqueTimer = null;
+    function assinatura() { // o que a atualização automática compara (não inclui legenda nem atendimento)
+      return JSON.stringify(P.filter(noMapa).map(function (p) { return [p.id, p.ci, p.conf, p.hist, p.assento]; }));
+    }
+    function reconstruirMesa() {
+      MESA = {};
+      P.forEach(function (p) { if (noMapa(p) && p.assento) MESA[p.assento] = p.id; });
+      ultimaAssinatura = assinatura();
+    }
+    function ocupacao(modo) {
+      var o = {};
+      if (modo === 'adm') Object.keys(MESA).forEach(function (s) { o[s] = porId(MESA[s]); });
+      else P.forEach(function (p) { if (noMapa(p) && p.assento) o[p.assento] = p; });
+      return o;
+    }
+    function assentoNaMesa(pid) { for (var s in MESA) if (MESA[s] === pid) return s; return null; }
+    function sentados() { return Object.keys(MESA).length; }
+
+    function seatHtml(id, modo, occ) {
+      var p = occ[id], adm = modo === 'adm', letra = id.charAt(0), cls = 'gpe-seat', st = '', inner, dica, extra = '';
+      if (p) {
+        var cor = corDe(p);
+        cls += ' is-occupied' + (p.ci ? ' is-checked' : '');
+        st = p.ci ? 'background:' + cor + ';border-color:' + cor + ';color:' + textoSobre(cor) : 'border:2px solid ' + (cor === '#f8f9fa' ? '#c9ced4' : cor);
+        var status = p.ci ? 'Check in realizado' : ('GHE'.indexOf(letra) >= 0 ? 'Check in não realizado' : 'Check in não identificado');
+        dica = id + ' - ' + setorNome(id) + '\nPessoa: ' + p.nome + '\nCargo: ' + p.cargo + '\nInstituição: ' + p.razao + '\nParticipações anteriores: ' + p.hist + '\nStatus: ' + status;
+        inner = '<span><b>' + rotulo(p) + (letra === 'E' ? ' (' + p.hist + ')' : '') + '</b>' + org(p) + '</span>';
+        if (adm) {
+          inner += '<button type="button" class="gpe-seat-remove" aria-label="Remover ' + attr(p.nome) + ' do assento ' + id + '" title="Remover pessoa" onclick="removerAssento(event,\'' + id + '\')">' + ICO.fechar + '</button>';
+          extra = ' draggable="true" ondragstart="arrastarDoAssento(event,\'' + id + '\')" ondragend="arrasto=null"';
+        }
+      } else {
+        dica = 'Cadeira ' + id + '\nSetor: ' + setorNome(id) + '\nClique para atribuir uma pessoa'; // ⚠️ também no mapa só de consulta
+        inner = id;
+      }
+      if (adm) extra += ' ondragover="sobreAssento(event,this)" ondragleave="this.classList.remove(\'is-drop\')" ondrop="soltarNoAssento(event,\'' + id + '\')" onclick="clicarAssento(\'' + id + '\')"';
+      return '<div class="' + cls + '" data-seat="' + id + '" title="' + attr(dica) + '" style="' + st + '"' + extra + '>' + inner + '</div>';
+    }
+    function renderMapa(modo) {
+      var occ = ocupacao(modo);
+      function s(ids) { return ids.map(function (id) { return seatHtml(id, modo, occ); }).join(''); }
+      document.getElementById('mapa-' + modo).innerHTML =
+        '<div class="gpe-map-grid" id="grade-' + modo + '" style="grid-template-columns:auto auto auto">' +
+          '<div class="gpe-map-stack">' +
+            '<div class="gpe-sector gpe-sector--f" aria-label="Setor F">' + s(LAYOUT.F) + '</div>' +
+            '<div class="gpe-sector gpe-sector--col" aria-label="Setor G">' + s(LAYOUT.G) + '</div>' +
+            '<div class="gpe-sector gpe-sector--f" aria-label="Setor H">' + s(LAYOUT.H) + '</div>' +
+          '</div>' +
+          '<div class="gpe-main-table" aria-label="Mesa principal">' + s(LAYOUT.A) +
+            '<div class="gpe-sector gpe-sector--col" aria-label="Setor B">' + s(LAYOUT.B) + '</div>' +
+            '<div class="gpe-main-table-center">Mesa Principal</div>' +
+            '<div class="gpe-sector gpe-sector--col" aria-label="Setor C">' + s(LAYOUT.C) + '</div>' + s(LAYOUT.D) +
+          '</div>' +
+          '<div class="gpe-sector gpe-sector--col" aria-label="Setor E">' + s(LAYOUT.E) + '</div>' +
+        '</div>';
+      if (modo === 'adm') aplicarZoom();
+    }
+    function renderLegendaCategorias(modo) {
+      var occ = ocupacao(modo), pessoas = Object.keys(occ).map(function (k) { return occ[k]; });
+      var itens = CONFIG.filter(function (n) { return norm(n) !== 'assento livre'; });
+      P.filter(noMapa).forEach(function (p) { var l = legendaExibida(p); if (l && itens.indexOf(l) < 0 && norm(l) !== 'assento livre') itens.push(l); }); // legendas manuais fora da configuração
+      var h = '<div class="gpe-map-legend">' + itens.map(function (n) {
+        var q = pessoas.filter(function (p) { return legendaExibida(p) === n; }).length;
+        return '<span><i class="gpe-swatch" style="background:' + LEG[n].cor + '"></i>' + n + ' (' + q + ')</span>';
+      }).join('') + '<span><i class="gpe-swatch" style="background:#fff"></i>Assento livre (' + Math.max(0, TOTAL_ASSENTOS - pessoas.length) + ')</span></div>';
+      h += '<div class="gpe-map-legend" style="border-top:1px solid var(--dsc-border-neutral-3);margin-top:16px;padding-top:16px">' +
+        '<span><i class="gpe-swatch" style="background:#1677e8;border-color:#1677e8"></i>Check in realizado</span>' +
+        '<span><i class="gpe-swatch" style="background:#fff;border:2px solid #1677e8"></i>Check in não identificado</span>' +
+        '<span><i class="gpe-swatch" style="background:#fff"></i>Vazio</span></div>';
+      document.getElementById('leg-' + modo).innerHTML = h;
+    }
+
+    /* ---------- Mapa do Administrador (EVT-PAR-07 · 08 · 09 · 11) ---------- */
+    function disponiveisAdm() {
+      return P.filter(function (p) { return noMapa(p) && !assentoNaMesa(p.id); }).sort(function (a, b) {
+        var na = numeroLegenda(a) || 999, nb = numeroLegenda(b) || 999;
+        return na - nb || b.hist - a.hist || a.nome.localeCompare(b.nome, 'pt');
+      });
+    }
+    function casaBusca(p, termo) {
+      var t = norm(termo).trim(); if (!t) return true;
+      return [p.nome, p.codinome, p.cargo, p.razao, p.fantasia, legendaExibida(p)].some(function (v) { return norm(v).indexOf(t) >= 0; });
+    }
+    function renderDisponiveis() {
+      var lista = disponiveisAdm();
+      document.getElementById('adm-disp-titulo').textContent = 'Pessoas Disponíveis (' + lista.length + ')'; // conta todas, mesmo com filtro
+      document.getElementById('adm-disponiveis').innerHTML = lista.filter(function (p) { return casaBusca(p, buscaDisp); }).map(function (p) {
+        var l = legendaExibida(p), tagLeg = (l && LEG[l].num) ? '<span class="dsc-tag dsc-tag--sm" style="background:' + LEG[l].cor + ';color:' + textoSobre(LEG[l].cor) + '">' + l + '</span> ' : ''; // ⚠️ só legenda da configuração
+        return '<div class="gpe-person-card" draggable="true" title="' + attr(p.cargo + ' - ' + p.razao) + '" ondragstart="arrastarCartao(event,' + p.id + ',this)" ondragend="this.classList.remove(\'is-dragging\');arrasto=null">' +
+          '<strong>' + rotulo(p) + '</strong><small>(' + p.hist + ')</small><br>' + p.cargo + '<br><em>' + org(p) + '</em>' +
+          '<div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap">' + tagLeg +
+          (p.ci ? '<span class="dsc-tag gpe-tag-check">Check in realizado</span>' : '<span class="dsc-tag gpe-tag-check gpe-tag-check--pendente">Check in não identificado</span>') + '</div></div>';
+      }).join('');
+    }
+    function renderAdm() {
+      renderMapa('adm'); renderDisponiveis(); renderLegendaCategorias('adm');
+      var n = sentados();
+      document.getElementById('rot-salvar-alocacoes').textContent = 'Salvar Alocações (' + n + ')';
+      document.getElementById('btn-salvar-alocacoes').disabled = n === 0 || bloqueado;
+      document.getElementById('btn-limpar-todas').disabled = n === 0 || bloqueado;
+      if (document.getElementById('busca-mesa-adm').value) buscarNaMesa('adm', true);
+    }
+    function filtrarDisponiveis(v) { // ⚠️ o campo da lista lateral e o da janela "Selecionar Pessoa" são o mesmo filtro
+      buscaDisp = v;
+      document.getElementById('disp-busca').value = v; document.getElementById('sel-busca').value = v;
+      renderDisponiveis(); renderOpcoesSelecao();
+    }
+
+    /* Arrastar e soltar (HTML5) */
+    function arrastarCartao(ev, pid, el) {
+      if (bloqueado) { ev.preventDefault(); return; }
+      arrasto = { de: 'lista', pid: pid }; el.classList.add('is-dragging');
+      ev.dataTransfer.setData('text/plain', String(pid)); ev.dataTransfer.effectAllowed = 'move';
+    }
+    function arrastarDoAssento(ev, seat) {
+      if (bloqueado) { ev.preventDefault(); return; }
+      arrasto = { de: 'assento', seat: seat, pid: MESA[seat] };
+      ev.dataTransfer.setData('text/plain', seat); ev.dataTransfer.effectAllowed = 'move';
+    }
+    function sobreAssento(ev, el) { if (bloqueado || !arrasto) return; ev.preventDefault(); el.classList.add('is-drop'); }
+    function soltarNoAssento(ev, seat) {
+      ev.preventDefault();
+      var el = ev.currentTarget; if (el) el.classList.remove('is-drop');
+      if (!arrasto || bloqueado) return;
+      var a = arrasto; arrasto = null;
+      if (a.de === 'lista' && assentoNaMesa(a.pid)) return; // pessoa da lista que já consta como sentada: ignorada
+      if (a.de === 'assento' && a.seat === seat) return;
+      colocar(a.pid, seat);
+    }
+    function colocar(pid, seat) {
+      var antigo = assentoNaMesa(pid); if (antigo) delete MESA[antigo];
+      MESA[seat] = pid; // ⚠️ o ocupante anterior perde o assento e volta às pessoas disponíveis (não há troca)
+      aposAlterarMesa();
+    }
+    function removerAssento(ev, seat) {
+      ev.stopPropagation();
+      if (bloqueado) return;
+      delete MESA[seat]; // sem confirmação
+      aposAlterarMesa();
+    }
+    function aposAlterarMesa() { renderAdm(); agendarGravacao(); }
+
+    /* Janela "Selecionar Pessoa" */
+    function clicarAssento(seat) {
+      if (bloqueado) return;
+      if (MESA[seat] && 'EFGH'.indexOf(seat.charAt(0)) >= 0) return; // nos setores E, F, G e H o clique em assento ocupado não faz nada
+      alvoSelecao = seat; renderOpcoesSelecao(); toggleModal('modal-selecionar-pessoa', true);
+    }
+    function renderOpcoesSelecao() {
+      document.getElementById('sel-opcoes').innerHTML = disponiveisAdm().filter(function (p) { return casaBusca(p, buscaDisp); }).map(function (p) {
+        return '<button type="button" class="gpe-option" onclick="escolherPessoa(' + p.id + ')"><span><strong>' + rotulo(p) + '</strong> (' + p.hist + ')' +
+          '<small>' + org(p) + '</small><small>' + p.razao + '</small>' +
+          (p.ci ? '<span class="dsc-tag gpe-tag-check">Check in realizado</span>' : '<span class="dsc-tag gpe-tag-check gpe-tag-check--pendente">Check in não identificado</span>') + '</span></button>';
+      }).join('');
+    }
+    function escolherPessoa(pid) { var s = alvoSelecao; fecharSelecao(); colocar(pid, s); }
+    function fecharSelecao() { toggleModal('modal-selecionar-pessoa', false); alvoSelecao = null; filtrarDisponiveis(''); } // fechar apaga o filtro dos dois campos
+
+    /* Gravação do mapa inteiro: botão ou automática, 30 s depois da última alteração */
+    function agendarGravacao() { cancelarGravacao(); temporizador = setTimeout(gravarAutomaticamente, 30000); }
+    function cancelarGravacao() { if (temporizador) { clearTimeout(temporizador); temporizador = null; } }
+    function bloquear(sim) {
+      bloqueado = sim;
+      document.getElementById('overlay-adm').style.display = sim ? 'flex' : 'none';
+      document.getElementById('btn-salvar-alocacoes').disabled = sim || sentados() === 0;
+      document.getElementById('btn-limpar-todas').disabled = sim || sentados() === 0;
+    }
+    function gravarMapa() { // o mapa inteiro substitui todas as atribuições do evento
+      P.forEach(function (p) {
+        if (!noMapa(p)) return;
+        var novo = assentoNaMesa(p.id);
+        if (p.assento && !novo) p.atendido = false; // quem perdeu o assento volta a não atendido
+        p.assento = novo;
+      });
+      ultimaAssinatura = assinatura();
+    }
+    function gravarAutomaticamente() {
+      temporizador = null;
+      if (sentados() === 0) return; // ⚠️ o mapa sem ninguém sentado nunca é enviado
+      document.getElementById('adm-autosave').style.display = '';
+      bloquear(true);
+      setTimeout(function () {
+        gravarMapa(); bloquear(false);
+        document.getElementById('adm-autosave').style.display = 'none';
+        renderAdm();
+        toast('sucesso', 'Salvo', 'Composição salva automaticamente');
+      }, 1200);
+    }
+    function salvarAlocacoes() {
+      var n = sentados();
+      if (n === 0) { toast('aviso', 'Aviso', 'Não há pessoas alocadas na mesa para salvar.'); return; }
+      cancelarGravacao(); bloquear(true);
+      setTimeout(function () {
+        gravarMapa(); bloquear(false); renderAdm();
+        toast('sucesso', 'Sucesso', 'Composições da mesa salvas com sucesso! ' + n + ' pessoas foram alocadas.');
+      }, 800);
+    }
+    function limparTodas() { // EVT-PAR-11 — sem confirmação; ⚠️ não chega ao servidor
+      if (bloqueado || sentados() === 0) return;
+      MESA = {};
+      renderAdm();
+      toast('sucesso', 'Sucesso', 'Todas as alocações foram removidas da mesa.');
+      agendarGravacao();
+    }
+    function mudarZoom(passo) { zoomAdm = passo === 0 ? 100 : Math.max(50, Math.min(150, zoomAdm + passo)); aplicarZoom(); }
+    function aplicarZoom() {
+      var g = document.getElementById('grade-adm'); if (g) g.style.zoom = zoomAdm / 100;
+      document.getElementById('zoom-rotulo').textContent = zoomAdm + '%';
+    }
+
+    /* ---------- Buscar Pessoa na Mesa (EVT-PAR-12) ---------- */
+    function buscarNaMesa(modo, silencioso) {
+      var inp = document.getElementById('busca-mesa-' + modo), termo = inp.value.trim(), box = document.getElementById('res-mesa-' + modo);
+      document.getElementById('limpar-mesa-' + modo).style.display = inp.value ? '' : 'none';
+      if (!termo) { box.style.display = 'none'; box.innerHTML = ''; return; }
+      var occ = ocupacao(modo), t = termo.toLowerCase(), achados = [];
+      var porCadeira = modo === 'sec' && /^[a-h]\d+$/i.test(termo); // só no mapa da Secretaria Mesa
+      Object.keys(occ).forEach(function (s) {
+        var p = occ[s], ok;
+        if (porCadeira) ok = s === termo.toUpperCase();
+        else {
+          ok = p.nome.toLowerCase().indexOf(t) >= 0 || (p.codinome && p.codinome.toLowerCase().indexOf(t) >= 0); // ⚠️ diferencia acentos
+          var l = legendaExibida(p);
+          if (!ok && modo === 'adm' && 'FH'.indexOf(s.charAt(0)) < 0 && l) ok = l.toLowerCase().indexOf(t) >= 0;
+        }
+        if (ok) achados.push(s);
+      });
+      achados.sort(function (a, b) { return 'ABCDGEFH'.indexOf(a.charAt(0)) - 'ABCDGEFH'.indexOf(b.charAt(0)) || parseInt(a.slice(1), 10) - parseInt(b.slice(1), 10); });
+      box.style.display = 'block';
+      if (!achados.length) { box.innerHTML = '<div class="gpe-option-list-head">Nenhuma pessoa encontrada nos assentos</div>'; return; }
+      box.innerHTML = '<div class="gpe-option-list-head">' + achados.length + ' pessoa(s) encontrada(s)</div>' + achados.map(function (s) {
+        var p = occ[s], l = legendaExibida(p), loc = AREAS[s.charAt(0)] + ' - ' + s + (modo === 'adm' && l ? ' - ' + l : '');
+        return '<button type="button" class="gpe-option" title="' + attr('Localizado em: ' + loc) + '" onclick="destacar(\'' + modo + '\',\'' + s + '\')"><span><strong>' + rotulo(p) + '</strong><small>' + loc + '</small></span></button>';
+      }).join('');
+      if (porCadeira && !silencioso) destacar(modo, achados[0]);
+    }
+    function limparBuscaMesa(modo) {
+      document.getElementById('busca-mesa-' + modo).value = ''; buscarNaMesa(modo);
+      document.querySelectorAll('.gpe-seat.is-found').forEach(function (e) { e.classList.remove('is-found'); });
+    }
+    function destacar(modo, seat) {
+      document.querySelectorAll('.gpe-seat.is-found').forEach(function (e) { e.classList.remove('is-found'); });
+      var el = document.querySelector('#mapa-' + modo + ' [data-seat="' + seat + '"]'); if (!el) return;
+      el.classList.add('is-found');
+      el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+      clearTimeout(destaqueTimer);
+      destaqueTimer = setTimeout(function () { el.classList.remove('is-found'); }, 5000);
+    }
+
+    /* ---------- Mapa da Secretaria Mesa (EVT-PAR-07 · 10 · 12) ---------- */
+    function fila() { // check-in feito e ainda não atendido, com ou sem assento, em ordem de chegada
+      return P.filter(function (p) { return noMapa(p) && p.ci && !p.atendido; })
+        .sort(function (a, b) { return (a.ciHora || '') < (b.ciHora || '') ? -1 : (a.ciHora || '') > (b.ciHora || '') ? 1 : 0; });
+    }
+    var CORES_FOTO = ['#5b7fa6', '#7a6aa8', '#4f8f7d', '#a0705a', '#6a8caf', '#8e6b8f'];
+    function renderFila() {
+      var lista = fila(), termo = document.getElementById('fila-busca').value;
+      document.getElementById('sec-disp-titulo').textContent = 'Pessoas Disponíveis (' + lista.length + ')';
+      document.getElementById('sec-fila').innerHTML = lista.filter(function (p) { return casaBusca(p, termo); }).map(function (p) {
+        var foto = p.foto ? '<div class="gpe-queue-photo" style="background:' + CORES_FOTO[p.id % CORES_FOTO.length] + ';color:#fff;font-size:42px;font-weight:700" title="Foto da pessoa (substituída por iniciais no protótipo)">' + iniciais(p.nome) + '</div>'
+          : '<div class="gpe-queue-photo">' + ICO.pessoa + '</div>';
+        var assento = p.assento
+          ? '<div class="gpe-queue-seat gpe-queue-seat--ok" role="button" tabindex="0" style="cursor:pointer" title="Localizar no mapa" onclick="destacar(\'sec\',\'' + p.assento + '\')">' + p.assento + '</div>'
+          : '<div class="gpe-queue-seat gpe-queue-seat--none">Não alocado</div>';
+        return '<div class="gpe-queue-card">' + foto + '<div class="gpe-queue-name">' + rotulo(p) + '</div><div class="gpe-queue-org">' + org(p) + '</div>' + assento +
+          '<button type="button" class="dsc-btn gpe-btn--block gpe-btn--upper" title="Atender Pessoa" onclick="atender(' + p.id + ')">ATENDIDO</button></div>';
+      }).join('');
+    }
+    function renderSec() { renderFila(); renderMapa('sec'); renderLegendaCategorias('sec'); if (document.getElementById('busca-mesa-sec').value) buscarNaMesa('sec', true); }
+    function atender(id) { // EVT-PAR-10 — sem confirmação; não há como desfazer
+      var p = porId(id); p.atendido = true;
+      toast('sucesso', 'Sucesso', 'Pessoa atendida com sucesso');
+      renderFila();
+    }
+
+    /* ---------- Atualização automática (a cada 3 s; não para a Secretaria Check-In) ---------- */
+    var intervalo = null;
+    function iniciarAtualizacao(ligar) { clearInterval(intervalo); intervalo = ligar ? setInterval(verificarAtualizacao, 3000) : null; }
+    function verificarAtualizacao() {
+      var d = new Date(), dt = ('0' + d.getDate()).slice(-2) + '/' + ('0' + (d.getMonth() + 1)).slice(-2) + '/' + d.getFullYear() + ' ' + agora();
+      document.getElementById('ev-verificacao').title = 'Última verificação em: ' + dt;
+      if (bloqueado || assinatura() === ultimaAssinatura) return; // só refaz o mapa quando algo mudou
+      reconstruirMesa(); // ⚠️ descarta o que o Administrador ainda não gravou
+      if (telaAtual === 'screen-mapa') renderAdm();
+      if (telaAtual === 'screen-mapa-secretaria') renderSec();
+    }
+    function atualizarAgora() { verificarAtualizacao(); if (telaAtual === 'screen-mapa-secretaria') renderSec(); }
+    function simularCheckinExterno() { // mudança feita em outro ponto do sistema
+      var p = P.filter(function (x) { return !x.ci && x.conf === true; })[0];
+      if (!p) { toast('info', 'Simulação', 'Todos os confirmados já têm check-in.'); return; }
+      p.ci = true; p.ciHora = agora().slice(0, 5);
+      toast('info', 'Simulação', 'Check-in de ' + p.nome + ' registrado em outro ponto; o mapa percebe a mudança em até 3 segundos.');
+    }
+
+    /* ---------- Exportar Mapa de Assentos (EVT-PAR-15) ---------- */
+    function exportarMapa(saida, formato) {
+      var completo = saida === 'completo';
+      toast('info', 'Exportação', completo ? 'Preparando exportação do mapa completo...' : 'Preparando exportação para o presidente...');
+      setTimeout(function () {
+        toast('sucesso', 'Sucesso', completo ? 'Mapa completo exportado em ' + formato + ' com sucesso!' : 'Mesa do presidente exportada em ' + formato + ' com sucesso!');
+      }, 1200);
+    }
+
+    /* ---------- Inicialização ---------- */
+    montarMS('a-ms-leg', CATALOGO, 'Selecione legendas', '{0} legendas selecionadas');
+    montarMS('a-ms-tema', OPC_TEMAS, 'Selecione temas', '{0} temas selecionados');
+    montarMS('a-ms-gt', OPC_GTS, 'Selecione', '{0} grupos de trabalho selecionados');
+    montarMS('a-ms-cargo', OPC_CARGOS, 'Selecione', '{0} cargo selecionados'); // ⚠️ texto literal do sistema
+    montarMS('c-ms-leg', CATALOGO, 'Selecione legendas', '{0} legendas selecionadas');
+    ['a', 'c'].forEach(function (pre) { LST[pre].filtro = lerFiltro(pre); LST[pre].res = filtrar(LST[pre].filtro); });
+    reconstruirMesa();
+    if (window.innerWidth > 1440) zoomAdm = 100; // em telas de até 1.440 pontos o desenho já abre reduzido
+    var HASH_DA_TELA = { 'screen-lista': '#lista', 'screen-mapa': '#mapa', 'screen-mapa-secretaria': '#mapa-secretaria', 'screen-checkin': '#checkin' };
+    var ROTAS = { '#lista': ['Administrador', 'screen-lista'], '#mapa': ['Administrador', 'screen-mapa'], '#mapa-secretaria': ['Secretaria Mesa', 'screen-mapa-secretaria'], '#checkin': ['Secretaria Check-In', 'screen-checkin'] };
+    function abrirPorEndereco() { var r = ROTAS[location.hash] || ROTAS['#lista']; aplicarPerfil(r[0], r[1]); }
+    window.addEventListener('hashchange', abrirPorEndereco);
+    abrirPorEndereco();
+  </script>
+</body>
+</html>
