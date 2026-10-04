@@ -1,0 +1,537 @@
+<!-- docqui: 4.1.0 | prompt: PROMPT_PROTOTYPE_FLOW_FULL | atualizado: 2026-10-04 -->
+<!DOCTYPE html>
+<!--
+  ⚠️ PROTÓTIPO NAVEGÁVEL — treino, não jogo.
+  Fonte de verdade de LAYOUT, COMPORTAMENTO e ESTADOS — NUNCA de implementação.
+  Não copie este HTML/CSS/JS para o código de produção: aqui tudo é autocontido
+  e procedural DE PROPÓSITO (simulação). A implementação real segue outra
+  estratégia: componentes do design system do projeto (mapa de equivalência no
+  README do tema), catálogo global/PATTERNS.md e convenções do global/MASTER.md.
+  Classes .dsc-* são EXCLUSIVAS de protótipo — proibidas em código de produção.
+-->
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Protótipo: Autenticação — Acesso e Usuários</title>
+  <!-- Biblioteca de componentes + camada de tema do GPE (visual recuperado do código-fonte) -->
+  <link rel="stylesheet" href="../../_biblioteca-ds/ds.css">
+  <link rel="stylesheet" href="../../_biblioteca-ds/tema-gpe.css">
+  <style>
+    /* candidato a tema-gpe.css */
+    /* Rótulos sem estilo das telas Recuperar senha e Alterar senha: a aplicação não aplica
+       a fonte nem a cor do tema a eles, e o navegador os mostra com a fonte serifada padrão
+       (imagens "Esqueci Minha Senha" e "Alterar senha do primeiro acesso" de GPE001). */
+    .gpe-label-plain { display: block; font-family: "Times New Roman", Times, serif; font-weight: 400; font-size: 17px; color: #212529; }
+  </style>
+</head>
+<body>
+
+  <div class="dsc-proto-badge">🎨 PROTÓTIPO — não é o sistema real</div>
+
+  <!-- ═══════════════ Tela 1: Acesso (ACE-AUT-01) — moldura de autenticação, sem o shell interno ═══════════════ -->
+  <div id="screen-login" class="dsc-screen is-active">
+    <div class="gpe-login">
+      <div class="gpe-login-form">
+        <div style="width:100%;max-width:580px;margin:0 auto">
+          <h1>Seja bem-vindo(a) ao Portal de Gestão de Participantes em Eventos!</h1>
+          <p style="margin:0 0 34px;font-size:15px">Faça o login para acessar.</p>
+
+          <form id="form-login" onsubmit="entrar(); return false;" novalidate>
+            <div class="dsc-field" style="margin-bottom:22px">
+              <label class="dsc-field-label" for="l-usuario">Usuário <span class="dsc-req">*</span></label>
+              <input class="dsc-input" id="l-usuario" type="text" autocomplete="username">
+            </div>
+            <div class="dsc-field" style="margin-bottom:22px">
+              <label class="dsc-field-label" for="l-senha">Senha <span class="dsc-req">*</span></label>
+              <div class="dsc-field-action">
+                <input class="dsc-input" id="l-senha" type="password" autocomplete="current-password">
+                <button type="button" id="l-olho" aria-label="Mostrar senha" title="Mostrar senha" onclick="alternarSenha()"></button>
+              </div>
+            </div>
+            <p style="margin:0 0 22px"><a href="#" class="gpe-label-strong" onclick="abrirRecuperacao(); return false;">Esqueceu a senha?</a></p>
+            <button type="submit" class="dsc-btn gpe-btn--block">Entrar</button>
+          </form>
+
+          <div style="display:flex;align-items:center;gap:16px;margin-top:70px">
+            <div class="gpe-brand-cni" style="margin-top:0"><span style="font-size:18px">Sistema</span><br>INDÚSTRIA<small>CNI | SESI | SENAI | IEL</small></div>
+            <div style="border-left:1px solid #1b3f94;padding-left:16px;font-weight:700;color:#1b3f94;font-size:20px;line-height:1.15">A INDÚSTRIA CRIA.<br>A INDÚSTRIA É MAIS.</div>
+          </div>
+        </div>
+      </div>
+      <div class="gpe-login-art" aria-hidden="true">Ilustração da tela de acesso — não reproduzida no protótipo</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ Tela 2: Recuperar senha (ACE-AUT-03) — mesma moldura ═══════════════ -->
+  <div id="screen-recuperar-senha" class="dsc-screen">
+    <div class="gpe-login">
+      <div class="gpe-login-form">
+        <div style="width:100%;max-width:580px;margin:0 auto">
+          <h1>Seja bem-vindo(a) ao Portal de Gestão de Participantes em Eventos!</h1>
+          <p style="margin:0 0 34px;font-size:15px">Faça o login para acessar.</p>
+
+          <div class="dsc-alert" role="note">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg>
+            <span>Digite seu login e uma senha temporária será enviada para redefinir a sua senha</span>
+          </div>
+
+          <div class="dsc-field" style="max-width:460px;margin:24px auto 0;text-align:center">
+            <label class="gpe-label-plain" for="r-usuario">Usuário <span class="dsc-req">*</span></label>
+            <input class="dsc-input" id="r-usuario" type="text" size="30" style="text-align:left">
+          </div>
+          <div style="display:flex;justify-content:center;gap:12px;margin-top:16px;flex-wrap:wrap">
+            <button type="button" class="dsc-btn dsc-btn--sm" style="width:200px;justify-content:center" onclick="recuperarSenha()">Recuperar senha</button>
+            <button type="button" class="dsc-btn dsc-btn--sm dsc-btn--danger" style="width:200px;justify-content:center" onclick="voltarAoAcesso()">Voltar</button>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:16px;margin-top:70px">
+            <div class="gpe-brand-cni" style="margin-top:0"><span style="font-size:18px">Sistema</span><br>INDÚSTRIA<small>CNI | SESI | SENAI | IEL</small></div>
+            <div style="border-left:1px solid #1b3f94;padding-left:16px;font-weight:700;color:#1b3f94;font-size:20px;line-height:1.15">A INDÚSTRIA CRIA.<br>A INDÚSTRIA É MAIS.</div>
+          </div>
+        </div>
+      </div>
+      <div class="gpe-login-art" aria-hidden="true">Ilustração da tela de acesso — não reproduzida no protótipo</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ Tela 3: Alterar senha (ACE-AUT-04) — troca obrigatória e voluntária, mesma moldura ═══════════════ -->
+  <div id="screen-alterar-senha" class="dsc-screen">
+    <div class="gpe-login">
+      <div class="gpe-login-form">
+        <div style="width:100%;max-width:580px;margin:0 auto">
+          <h1>Seja bem-vindo(a) ao Portal de Gestão de Participantes em Eventos!</h1>
+          <p style="margin:0 0 34px;font-size:15px">Faça o login para acessar.</p>
+
+          <!-- p-message da troca obrigatória (só quando a senha em uso é provisória) -->
+          <div class="dsc-alert dsc-alert--warning" id="as-aviso" role="alert" style="display:none;margin-bottom:20px">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+            <span><strong>Alteração de senha obrigatória!</strong> Para continuar altere a sua senha.</span>
+          </div>
+
+          <form id="form-senha" onsubmit="alterarSenha(); return false;" novalidate>
+            <div class="dsc-field" id="fld-as-atual" style="margin-bottom:14px">
+              <label class="gpe-label-plain" for="as-atual">Senha Atual <span class="dsc-req">*</span></label>
+              <input class="dsc-input" id="as-atual" type="password" autocomplete="current-password">
+            </div>
+            <div class="dsc-field" style="margin-bottom:14px">
+              <label class="gpe-label-plain" for="as-nova">Nova Senha <span class="dsc-req">*</span></label>
+              <input class="dsc-input" id="as-nova" type="password" autocomplete="new-password">
+            </div>
+            <div class="dsc-field" style="margin-bottom:14px">
+              <label class="gpe-label-plain" for="as-confirma">Confirme a Nova Senha <span class="dsc-req">*</span></label>
+              <input class="dsc-input" id="as-confirma" type="password" autocomplete="new-password">
+              <span class="dsc-field-error" id="as-nao-conferem" style="display:none">As senhas não conferem.</span>
+            </div>
+            <div style="display:flex;justify-content:space-around;gap:12px;margin-top:6px;flex-wrap:wrap">
+              <button type="submit" class="dsc-btn dsc-btn--sm" style="width:200px;justify-content:center">Alterar Senha</button>
+              <button type="button" class="dsc-btn dsc-btn--sm dsc-btn--danger" style="width:200px;justify-content:center" onclick="voltarAoAcesso()">Voltar</button>
+            </div>
+          </form>
+
+          <div style="display:flex;align-items:center;gap:16px;margin-top:70px">
+            <div class="gpe-brand-cni" style="margin-top:0"><span style="font-size:18px">Sistema</span><br>INDÚSTRIA<small>CNI | SESI | SENAI | IEL</small></div>
+            <div style="border-left:1px solid #1b3f94;padding-left:16px;font-weight:700;color:#1b3f94;font-size:20px;line-height:1.15">A INDÚSTRIA CRIA.<br>A INDÚSTRIA É MAIS.</div>
+          </div>
+        </div>
+      </div>
+      <div class="gpe-login-art" aria-hidden="true">Ilustração da tela de acesso — não reproduzida no protótipo</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ Área logada: shell (topbar + menu horizontal) ═══════════════ -->
+  <div class="dsc-app" id="app" style="display:none">
+    <div class="dsc-shell-main">
+
+      <!-- Topbar: título do sistema à esquerda, usuário à direita (topbar.component) -->
+      <header class="dsc-header">
+        <div class="dsc-header-start">
+          <span class="dsc-header-logo">Gestão de Participantes em Eventos</span>
+        </div>
+        <div class="dsc-header-actions">
+          <!-- Menu do usuário: Consultar Dados do Usuário (ACE-AUT-06) + atalhos de ACE-AUT-05, ACE-AUT-04 e ACE-AUT-02 -->
+          <div class="gpe-user-menu" id="user-menu">
+            <button class="dsc-header-item" onclick="toggleUserMenu(event)" aria-haspopup="true">
+              <span class="dsc-hi-body"><span class="dsc-hi-title" id="hd-nome">Ana Costa</span><span class="dsc-hi-sub dsc-text-primary" id="hd-perfil">Administrador</span></span>
+              <span class="dsc-avatar" id="hd-avatar">AC</span>
+            </button>
+            <ul class="gpe-user-dropdown">
+              <li class="gpe-ud-info"><strong>Nome:</strong> <span id="ud-nome">Ana Costa</span></li>
+              <li class="gpe-ud-info"><strong>Login:</strong> <span id="ud-login">ana.costa</span></li>
+              <li class="gpe-ud-info"><strong>Perfil:</strong> <span id="ud-perfil">Administrador</span></li>
+              <li class="gpe-ud-info"><strong>Email:</strong> <span id="ud-email">ana.costa@cni.com.br</span></li>
+              <li class="gpe-ud-sep"></li>
+              <li><a href="#" onclick="abrirFoto(); return false;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="12" cy="12" r="3"/></svg>Alterar Foto do Perfil</a></li>
+              <li><a href="#" onclick="abrirAlterarSenhaPeloMenu(); return false;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Alterar Senha</a></li>
+              <li><a href="#" onclick="encerrarSessao(); return false;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>Logout</a></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+
+      <!-- Menu horizontal (p-menubar montado com o menu que o login devolve) -->
+      <nav class="gpe-menubar" aria-label="Menu principal">
+        <div class="gpe-menu-item"><a class="gpe-menu-link is-active" href="#" onclick="showScreen('screen-inicio'); return false;"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" opacity=".35"/><path d="M12 12l5-5" stroke="#fff" stroke-width="2"/></svg>Dashboard</a></div>
+        <div class="gpe-menu-item" id="menu-administracao">
+          <button class="gpe-menu-link" onclick="toggleSubmenu(this, event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Administração<svg class="gpe-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+          <ul class="gpe-submenu">
+            <li><a href="../../acesso-usuarios/usuarios/flow.html">Usuários</a></li>
+            <li><a href="../../pessoas/cadastro-pessoas/flow.html">Pessoas</a></li>
+            <li><a href="../../eventos/legendas/flow.html#catalogo">Catálogo de legendas</a></li>
+          </ul>
+        </div>
+        <div class="gpe-menu-item" id="menu-eventos">
+          <button class="gpe-menu-link" onclick="toggleSubmenu(this, event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Eventos<svg class="gpe-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+          <ul class="gpe-submenu">
+            <li><a href="../../eventos/cadastro-eventos/flow.html">Cadastro</a></li>
+          </ul>
+        </div>
+      </nav>
+
+      <main class="dsc-main">
+
+        <!-- ═══════════════ Tela 4: Tela inicial /dashboard-simples (não atende feature; destino do login e da troca de senha) ═══════════════ -->
+        <div id="screen-inicio" class="dsc-screen">
+          <nav class="dsc-breadcrumb"><span>Início</span><span class="dsc-sep">›</span><span class="is-current">Dashboard</span></nav>
+          <div class="dsc-card" style="min-height:62vh">
+            <h2 class="dsc-page-title" style="font-size:32px;font-weight:500;margin-bottom:12px">Gestão de Participantes em Eventos</h2>
+            <p style="margin:0">Seja bem-vindo ao Gestão de Participantes em Eventos</p>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ═══════════════ Janela "Alterar Imagem do Perfil" (ACE-AUT-05) — descrita só no GPE001 ═══════════════ -->
+  <div id="modal-foto" class="dsc-modal-mask" style="display:none" onclick="if(event.target===this)toggleModal('modal-foto',false)">
+    <div class="dsc-modal gpe-modal--sm" role="dialog" aria-labelledby="t-foto">
+      <div class="dsc-modal-header"><span id="t-foto" style="font-size:18px;font-weight:500">Alterar Imagem do Perfil</span>
+        <button class="dsc-modal-close" aria-label="Fechar" title="Fechar" onclick="toggleModal('modal-foto',false)">✕</button></div>
+      <div class="dsc-modal-body" style="text-align:center">
+        <div class="dsc-alert dsc-alert--warning" role="note" style="text-align:left;margin-bottom:18px;font-size:13px">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+          <span>Janela descrita no GPE001; não existe na tela implementada — hoje o item "Alterar Foto do Perfil" não abre nada.</span>
+        </div>
+        <div class="gpe-queue-photo" id="foto-previa" style="width:180px;height:180px;font-size:52px;font-weight:700;background:#e9eef5;color:#1873d3">AC</div>
+        <p style="text-align:left;margin:0 0 14px">Para trocar a foto do seu perfil click no botão Selecionar Imagem.</p>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+          <button type="button" class="dsc-btn dsc-btn--sm" onclick="selecionarImagem()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>Selecionar Imagem</button>
+          <span class="dsc-text-muted" id="foto-arquivo" style="font-size:13px;display:none"></span>
+          <button type="button" class="dsc-btn dsc-btn--sm" onclick="salvarImagem()">Salvar Imagem</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ Toasts (p-toast, canto superior direito) ═══════════════ -->
+  <div class="gpe-toast-stack" id="toasts"></div>
+
+  <div class="dsc-proto-notes">
+    <strong>📋 Notas do protótipo — Autenticação (ACE-AUT)</strong>
+    <ul>
+      <li><strong>Visual recuperado do código-fonte</strong>: telas, rótulos e mensagens vêm do inventário extraído do <code>sistema_mesa_checkin_frontend</code> (<code>arquivos/engenharia-reversa/frontend-inventory.md</code>, seções 2.1 a 2.4, 3.1 a 3.8, 4.0 e 4.1) e das imagens de GPE001: Efetuar Login, tela inicial com o menu do usuário, Esqueci Minha Senha, Alterar senha do primeiro acesso, Alterar imagem de perfil e Consultar dados do Usuário. As ilustrações da tela de acesso e da tela inicial não foram reproduzidas. O asterisco de obrigatório é convenção do protótipo: a tela real não o mostra.</li>
+      <li><strong>Como simular o acesso</strong> (qualquer senha com 8 caracteres ou mais):
+        <code>ana.costa</code> — Administrador, chega à tela inicial;
+        <code>secretaria.mesa</code> — Secretaria Mesa, segue para os participantes do evento principal no mapa (<code>participantes/flow.html#mapa-secretaria</code>);
+        <code>secretaria.checkin</code> — Secretaria Check-In, segue para a lista do evento principal (<code>participantes/flow.html#checkin</code>);
+        <code>novo.usuario</code> — Secretaria Check-In com senha provisória, cai na troca obrigatória;
+        <code>secretaria.semprincipal</code> — Secretaria Mesa sem evento principal marcado;
+        <code>servico.fora</code> — o cadastro corporativo não responde (“Erro” / “Serviço indisponível.”);
+        qualquer outro login — o cadastro corporativo recusa (“Erro” com o detalhe que ele envia).
+        <div class="gpe-proto-perfil" style="display:flex"><label for="proto-login">Preencher o acesso com</label>
+          <select id="proto-login" onchange="preencherAcesso(this.value); this.value='';">
+            <option value="">—</option>
+            <option value="ana.costa">ana.costa (Administrador)</option>
+            <option value="secretaria.mesa">secretaria.mesa (Secretaria Mesa)</option>
+            <option value="secretaria.checkin">secretaria.checkin (Secretaria Check-In)</option>
+            <option value="novo.usuario">novo.usuario (senha provisória)</option>
+            <option value="secretaria.semprincipal">secretaria.semprincipal (sem evento principal)</option>
+            <option value="servico.fora">servico.fora (serviço indisponível)</option>
+            <option value="joana.silva">joana.silva (recusado)</option>
+          </select></div>
+      </li>
+      <li>Validação do acesso: “Entrar” vazio mostra “Campo obrigatório.” em Usuário e “Senha obrigatória” em Senha; uma senha de 7 caracteres mostra “A sua senha deve ter mais de 8 caracteres.”. ⚠️ O texto diz “mais de 8”, mas a senha de exatamente 8 caracteres é aceita. A tecla Enter equivale a “Entrar”. Não há indicador de carregamento, como no sistema.</li>
+      <li>❓ O detalhe da recusa (“Usuário ou senha inválidos.”) e o da recuperação recusada (“Usuário não encontrado.”) são ilustrativos: o texto é do cadastro corporativo e não está no código do GPE.</li>
+      <li>⚠️ Destino por perfil: Secretaria Mesa e Secretaria Check-In vão para os participantes do evento principal; os demais perfis, para a tela inicial. GPE001 fala de um destino único. Com <code>secretaria.semprincipal</code>, a autenticação é concluída mas a tela de acesso fica parada, sem mensagem (suspeita de defeito; a tela “não há evento principal” existe e nunca é aberta).</li>
+      <li>⚠️ A sessão é sempre lembrada (não há a opção de lembrar ou não). Na entrada com senha provisória, o sistema emite a mensagem de erro comum antes de mudar de tela; como a tela muda em seguida, provavelmente não é vista — o protótipo não a mostra.</li>
+      <li>Recuperar senha: o campo só acusa “Campo obrigatório.” depois de tocado; ⚠️ “Recuperar senha” não confere o campo e envia o pedido mesmo vazio. Com um login conhecido, a tela volta ao acesso com “Senha temporária enviada.” — ⚠️ 🔍 provavelmente essa confirmação não aparece no sistema real, e GPE001 fala de um link, não de senha temporária. ⚠️ Quem conhece o login de outro usuário pode pedir a recuperação da senha dele.</li>
+      <li>Alterar senha: a troca obrigatória (aberta por <code>novo.usuario</code> ou por <code>#alterar-senha-obrigatoria</code>) mostra o aviso e esconde “Senha Atual”; a voluntária (menu do usuário ou <code>#alterar-senha</code>) pede também a senha atual. “As senhas não conferem.” aparece assim que os valores diferem, inclusive com a confirmação vazia. Depois da troca, o sistema entra com a senha nova e abre a tela inicial, sem mensagem.</li>
+      <li>⚠️ O aviso “Alteração de senha obrigatória!” está no código, mas montado de forma que provavelmente não aparece como previsto (não aparece na imagem de GPE001); o protótipo mostra o texto previsto. ⚠️ Na voluntária, o usuário logado sai do shell e vê a moldura de acesso com “Faça o login para acessar.”; “Voltar” leva à tela de acesso, não à tela de onde veio. ⚠️ Depois da troca, o destino é a tela inicial para qualquer perfil — com <code>novo.usuario</code>, uma Secretaria Check-In chega à tela inicial só com o item Dashboard, sem caminho de menu até os participantes.</li>
+      <li>⚠️ Recusas do cadastro corporativo na troca não aparecem: a tela não tem onde mostrar a mensagem. Simule com a Senha Atual <code>errada123</code> ou a Nova Senha <code>12345678</code> — a tela fica como está, sem aviso. ⚠️ 🔍 A troca obrigatória não é esquecida depois de concluída: na mesma sessão, “Alterar Senha” pelo menu volta no modo obrigatório e a nova troca é recusada sem mensagem (reproduzido depois de entrar com <code>novo.usuario</code>).</li>
+      <li>Menu do usuário (ACE-AUT-06): Nome, Login, Perfil e Email são os dados recebidos na autenticação, com o rótulo em negrito; o menu fecha com novo clique ou clique fora. O cabeçalho real mostra o nome e a foto; aqui a foto é substituída pelas iniciais e o perfil aparece sob o nome, como nos demais protótipos. Usuário sem foto fica com o espaço vazio 🔍.</li>
+      <li>Logout (ACE-AUT-02): encerra na hora, sem confirmação, e volta à tela de acesso. ⚠️ O encerramento só limpa o navegador: o cadastro corporativo não é avisado e, até a página ser recarregada, o botão de voltar do navegador reabre a tela anterior (🔍) — não representado.</li>
+      <li>⚠️ Alterar Foto do Perfil (ACE-AUT-05): a janela só existe no GPE001; no sistema atual o item não abre nada. O protótipo abre a janela do documento (“Selecionar Imagem” simula a escolha de um arquivo; “Salvar Imagem” mostra “Foto Alterada” e troca a foto do cabeçalho). Formato e tamanho da imagem não são conferidos ❓. A grafia “click” é a do documento.
+        <div class="gpe-proto-perfil" style="display:flex"><label for="proto-foto">“Alterar Foto do Perfil” abre</label>
+          <select id="proto-foto">
+            <option value="gpe001">a janela do GPE001</option>
+            <option value="atual">nada (sistema atual)</option>
+          </select></div>
+      </li>
+      <li>Não representado: serviços corporativos fora do ar ao abrir o sistema (a tela de acesso não abre, sem aviso); credencial recusada durante o uso (a sessão cai e volta ao acesso, sem explicação); reabrir o navegador com a sessão guardada (vai à tela inicial, para qualquer perfil); falha ao buscar a foto (“Serviço indisponível”); falha ao entrar depois de trocar a senha; erro ao gravar a foto.</li>
+      <li>Perfis: todos os perfis do N2 usam todas as features deste Feature Set. ⚠️ Painel e Participante também entram e chegam à tela inicial só com o item Dashboard, como mostra <code>novo.usuario</code> depois da troca.</li>
+    </ul>
+  </div>
+
+  <script>
+    /* ---------- Usuários fictícios do cadastro corporativo ---------- */
+    var USUARIOS = {
+      'ana.costa': { nome: 'Ana Costa', login: 'ana.costa', perfil: 'Administrador', email: 'ana.costa@cni.com.br' },
+      'secretaria.mesa': { nome: 'Roberto Almeida', login: 'secretaria.mesa', perfil: 'Secretaria Mesa', email: 'roberto.almeida@cni.com.br', destino: '../../eventos/participantes/flow.html#mapa-secretaria' },
+      'secretaria.checkin': { nome: 'Luciana Ferreira', login: 'secretaria.checkin', perfil: 'Secretaria Check-In', email: 'luciana.ferreira@cni.com.br', destino: '../../eventos/participantes/flow.html#checkin' },
+      'novo.usuario': { nome: 'Patrícia Gomes', login: 'novo.usuario', perfil: 'Secretaria Check-In', email: 'patricia.gomes@cni.com.br', provisoria: true },
+      'secretaria.semprincipal': { nome: 'Marcelo Antunes', login: 'secretaria.semprincipal', perfil: 'Secretaria Mesa', email: 'marcelo.antunes@cni.com.br', semPrincipal: true }
+    };
+    var sessao = USUARIOS['ana.costa'];   // quem chega por #inicio, #foto ou #alterar-senha já está logado como Ana Costa
+    var trocaPendente = null;             // { usuario, senhaAtual, concluida } — ⚠️ nunca é limpo depois da troca
+    var modoObrigatorio = false;
+    var fotoEscolhida = null;
+
+    var ICO = {
+      ok: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>',
+      info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>',
+      aviso: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>',
+      erro: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>',
+      olho: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>',
+      olhoFechado: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/><path d="M1 1l22 22"/></svg>',
+      pessoa: '<svg viewBox="0 0 24 24" fill="currentColor" style="width:62%;height:62%"><circle cx="12" cy="8" r="4.2"/><path d="M3.5 22c0-4.7 3.8-8.5 8.5-8.5s8.5 3.8 8.5 8.5z"/></svg>'
+    };
+
+    /* ---------- Shell ---------- */
+    function showScreen(id) {
+      document.querySelectorAll('.dsc-screen').forEach(function (s) { s.classList.remove('is-active'); });
+      var tela = document.getElementById(id);
+      tela.classList.add('is-active');
+      // as telas de autenticação ocupam a página inteira, sem topbar nem menu
+      document.getElementById('app').style.display = tela.closest('.dsc-app') ? '' : 'none';
+      fecharMenus();
+      window.scrollTo(0, 0);
+    }
+    function toggleModal(id, show) { document.getElementById(id).style.display = show ? 'flex' : 'none'; }
+    function toggleSubmenu(btn, ev) {
+      ev.stopPropagation();
+      var item = btn.parentElement, aberto = item.classList.contains('is-open');
+      fecharMenus(); if (!aberto) item.classList.add('is-open');
+    }
+    function toggleUserMenu(ev) {
+      ev.stopPropagation();
+      var m = document.getElementById('user-menu'), aberto = m.classList.contains('is-open');
+      fecharMenus(); if (!aberto) m.classList.add('is-open');
+    }
+    function fecharMenus() { document.querySelectorAll('.is-open').forEach(function (e) { e.classList.remove('is-open'); }); }
+    document.addEventListener('click', fecharMenus);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { document.querySelectorAll('.dsc-modal-mask').forEach(function (m) { m.style.display = 'none'; }); fecharMenus(); } });
+
+    /* p-toast: resumo + detalhe; some em ~4 s, a menos que seja fixo (sticky) */
+    function toast(tipo, resumo, detalhe, fixo) {
+      var cls = { sucesso: 'dsc-toast--positive', aviso: 'dsc-toast--warning', erro: 'dsc-toast--danger', info: '' }[tipo];
+      var ico = { sucesso: ICO.ok, aviso: ICO.aviso, erro: ICO.erro, info: ICO.info }[tipo];
+      var t = document.createElement('div');
+      t.className = 'dsc-toast ' + cls; t.setAttribute('role', 'status');
+      t.innerHTML = ico + '<div style="flex:1"><strong>' + resumo + '</strong>' + (detalhe ? '<span>' + detalhe + '</span>' : '') + '</div>' +
+        '<button class="dsc-icon-action" aria-label="Fechar mensagem" title="Fechar" style="width:24px;height:24px">✕</button>';
+      t.querySelector('button').onclick = function () { t.remove(); };
+      document.getElementById('toasts').appendChild(t);
+      if (!fixo) setTimeout(function () { t.remove(); }, 4000);
+    }
+
+    /* ---------- Utilitários de formulário ---------- */
+    function val(id) { return document.getElementById(id).value; }
+    function erroCampo(inputId, msg) {
+      var fld = document.getElementById(inputId).closest('.dsc-field');
+      var e = fld.querySelector('.dsc-field-error.js-erro'); if (e) e.remove();
+      fld.classList.toggle('is-invalid', !!msg);
+      if (msg) {
+        e = document.createElement('span'); e.className = 'dsc-field-error js-erro'; e.textContent = msg;
+        var depois = fld.querySelector('#as-nao-conferem');
+        if (depois) fld.insertBefore(e, depois); else fld.appendChild(e);
+      }
+    }
+    function limparErros(formId) {
+      var f = document.getElementById(formId);
+      f.querySelectorAll('.js-erro').forEach(function (e) { e.remove(); });
+      f.querySelectorAll('.is-invalid').forEach(function (e) { e.classList.remove('is-invalid'); });
+      f.querySelectorAll('.was-touched').forEach(function (e) { e.classList.remove('was-touched'); });
+    }
+    // BasicValidators.required → "Campo obrigatório."
+    function regraObrigatorio(v) { return v ? '' : 'Campo obrigatório.'; }
+    // BasicValidators.password → vazio: "Senha obrigatória"; menos de 8: "A sua senha deve ter mais de 8 caracteres." (⚠️ 8 caracteres passam)
+    function regraSenha(v) { return !v ? 'Senha obrigatória' : (v.length < 8 ? 'A sua senha deve ter mais de 8 caracteres.' : ''); }
+    function ligarValidacao(id, regra) {
+      var el = document.getElementById(id);
+      el.addEventListener('blur', function () { el.classList.add('was-touched'); erroCampo(id, regra(el.value)); });
+      el.addEventListener('input', function () { if (el.classList.contains('was-touched')) erroCampo(id, regra(el.value)); });
+    }
+
+    /* ---------- Sessão ---------- */
+    function iniciais(nome) { return nome.trim().split(/\s+/).filter(function (w) { return w.length > 2 || /^[A-ZÀ-Ú]/.test(w); }).slice(0, 2).map(function (w) { return w.charAt(0).toUpperCase(); }).join(''); }
+    function aplicarSessao(u) {
+      sessao = u;
+      document.getElementById('hd-nome').textContent = u.nome;
+      document.getElementById('hd-perfil').textContent = u.perfil;
+      document.getElementById('ud-nome').textContent = u.nome;
+      document.getElementById('ud-login').textContent = u.login;
+      document.getElementById('ud-perfil').textContent = u.perfil;
+      document.getElementById('ud-email').textContent = u.email;
+      mostrarFotoCabecalho(u.foto);
+      // o menu vem do cadastro corporativo: Administrador vê Administração e Eventos; os perfis de secretaria, só Dashboard
+      var admin = u.perfil === 'Administrador';
+      document.getElementById('menu-administracao').style.display = admin ? '' : 'none';
+      document.getElementById('menu-eventos').style.display = admin ? '' : 'none';
+    }
+    function mostrarFotoCabecalho(temFoto) {
+      var a = document.getElementById('hd-avatar');
+      if (temFoto) { a.innerHTML = ICO.pessoa; a.style.background = '#4a90e2'; a.style.color = '#fff'; }
+      else { a.textContent = iniciais(sessao.nome); a.style.background = ''; a.style.color = ''; }
+    }
+
+    /* ---------- Autenticar Usuário (ACE-AUT-01) ---------- */
+    function entrar() {
+      var usuario = val('l-usuario').trim(), senha = val('l-senha');
+      document.querySelectorAll('#form-login .dsc-input').forEach(function (i) { i.classList.add('was-touched'); });
+      var e1 = regraObrigatorio(usuario), e2 = regraSenha(senha);
+      erroCampo('l-usuario', e1); erroCampo('l-senha', e2);
+      if (e1 || e2) return;                       // nada é enviado ao cadastro corporativo
+      // sem indicador de carregamento: a tela fica como está enquanto o cadastro corporativo confere
+      setTimeout(function () {
+        if (usuario === 'servico.fora') { toast('erro', 'Erro', 'Serviço indisponível.'); return; }
+        var u = USUARIOS[usuario];
+        if (!u) { toast('erro', 'Erro', 'Usuário ou senha inválidos.'); return; }   // ❓ detalhe enviado pelo cadastro corporativo
+        if (u.provisoria) {                          // senha provisória: troca obrigatória antes de entrar
+          trocaPendente = { usuario: u, senhaAtual: senha, concluida: false };
+          abrirAlterarSenha(true);
+          return;
+        }
+        if (u.semPrincipal) return;                  // ⚠️ autenticado, mas fica parado na tela de acesso, sem mensagem
+        if (u.destino) { location.href = u.destino; return; }   // secretarias: participantes do evento principal
+        aplicarSessao(u);
+        showScreen('screen-inicio');
+      }, 350);
+    }
+    function alternarSenha() {
+      var inp = document.getElementById('l-senha'), btn = document.getElementById('l-olho');
+      var mostrar = inp.type === 'password';
+      inp.type = mostrar ? 'text' : 'password';
+      btn.innerHTML = mostrar ? ICO.olhoFechado : ICO.olho;
+      btn.setAttribute('aria-label', mostrar ? 'Ocultar senha' : 'Mostrar senha');
+      btn.title = mostrar ? 'Ocultar senha' : 'Mostrar senha';
+    }
+    function abrirAcesso() {
+      document.getElementById('form-login').reset(); limparErros('form-login');
+      var inp = document.getElementById('l-senha'); if (inp.type !== 'password') alternarSenha();
+      showScreen('screen-login');
+    }
+    function preencherAcesso(login) {
+      if (!login) return;
+      abrirAcesso();
+      document.getElementById('l-usuario').value = login;
+      document.getElementById('l-senha').value = 'senha2026';
+    }
+
+    /* ---------- Recuperar Senha (ACE-AUT-03) ---------- */
+    function abrirRecuperacao() {
+      document.getElementById('r-usuario').value = '';
+      var fld = document.getElementById('r-usuario').closest('.dsc-field');
+      fld.classList.remove('is-invalid'); var e = fld.querySelector('.js-erro'); if (e) e.remove();
+      document.getElementById('r-usuario').classList.remove('was-touched');
+      showScreen('screen-recuperar-senha');
+    }
+    function recuperarSenha() {
+      var login = val('r-usuario').trim();             // ⚠️ o botão não confere o preenchimento
+      setTimeout(function () {
+        if (login === 'servico.fora') { toast('erro', 'Erro', 'Serviço indisponível.'); return; }
+        if (!USUARIOS[login]) { toast('erro', 'Erro', 'Usuário não encontrado.'); return; }   // ❓ detalhe enviado pelo cadastro corporativo
+        abrirAcesso();
+        toast('sucesso', 'Senha temporária enviada.', '');   // ⚠️ 🔍 provavelmente não aparece no sistema real
+      }, 350);
+    }
+    function voltarAoAcesso() { abrirAcesso(); }
+
+    /* ---------- Alterar Senha (ACE-AUT-04) ---------- */
+    function abrirAlterarSenha(obrigatoria) {
+      modoObrigatorio = obrigatoria;
+      document.getElementById('form-senha').reset(); limparErros('form-senha');
+      document.getElementById('as-nao-conferem').style.display = 'none';
+      document.getElementById('as-aviso').style.display = obrigatoria ? 'flex' : 'none';
+      document.getElementById('fld-as-atual').style.display = obrigatoria ? 'none' : '';
+      showScreen('screen-alterar-senha');
+    }
+    function abrirAlterarSenhaPeloMenu() {
+      // ⚠️ 🔍 a troca obrigatória não é esquecida: na mesma sessão a tela volta no modo obrigatório
+      abrirAlterarSenha(!!trocaPendente);
+    }
+    function conferirIguais() {
+      var difere = val('as-nova') !== val('as-confirma');
+      document.getElementById('as-nao-conferem').style.display = difere ? 'flex' : 'none';
+      return !difere;
+    }
+    function alterarSenha() {
+      var campos = modoObrigatorio ? ['as-nova', 'as-confirma'] : ['as-atual', 'as-nova', 'as-confirma'];
+      var ok = true;
+      campos.forEach(function (id) { document.getElementById(id).classList.add('was-touched'); var m = regraSenha(val(id)); erroCampo(id, m); if (m) ok = false; });
+      if (!conferirIguais()) ok = false;
+      if (!ok) return;
+      setTimeout(function () {
+        var recusada = (!modoObrigatorio && val('as-atual') === 'errada123') ||   // senha atual incorreta
+                       val('as-nova') === '12345678' ||                           // nova senha recusada pelo cadastro corporativo
+                       (modoObrigatorio && trocaPendente && trocaPendente.concluida); // a provisória já foi substituída
+        if (recusada) return;                        // ⚠️ a tela não tem onde mostrar o erro: nada acontece
+        var u = modoObrigatorio && trocaPendente ? trocaPendente.usuario : sessao;
+        if (trocaPendente) trocaPendente.concluida = true;   // ⚠️ mas não é limpo
+        aplicarSessao(u);
+        showScreen('screen-inicio');                 // tela inicial para qualquer perfil, sem mensagem
+      }, 350);
+    }
+
+    /* ---------- Encerrar Sessão (ACE-AUT-02) ---------- */
+    function encerrarSessao() { abrirAcesso(); }    // sem confirmação e sem chamar o servidor
+
+    /* ---------- Alterar Foto de Perfil (ACE-AUT-05) ---------- */
+    function abrirFoto() {
+      fecharMenus();
+      if (document.getElementById('proto-foto').value === 'atual') return;   // sistema atual: o item não abre nada
+      fotoEscolhida = null;
+      var p = document.getElementById('foto-previa');
+      if (sessao.foto) { p.innerHTML = ICO.pessoa; p.style.background = '#4a90e2'; p.style.color = '#fff'; }
+      else { p.textContent = iniciais(sessao.nome); p.style.background = '#e9eef5'; p.style.color = '#1873d3'; }
+      document.getElementById('foto-arquivo').style.display = 'none';
+      toggleModal('modal-foto', true);
+    }
+    function selecionarImagem() {
+      // simula a escolha de um arquivo no computador; nenhuma regra de formato ou tamanho é aplicada ❓
+      fotoEscolhida = sessao.login + '-perfil.jpg';
+      var p = document.getElementById('foto-previa');
+      p.innerHTML = ICO.pessoa; p.style.background = '#4a90e2'; p.style.color = '#fff';
+      var a = document.getElementById('foto-arquivo'); a.textContent = fotoEscolhida; a.style.display = '';
+    }
+    function salvarImagem() {
+      toggleModal('modal-foto', false);
+      if (fotoEscolhida) { sessao.foto = fotoEscolhida; mostrarFotoCabecalho(true); }
+      toast('sucesso', 'Foto Alterada', '');
+    }
+
+    /* ---------- Validação ao tocar os campos ---------- */
+    ligarValidacao('l-usuario', regraObrigatorio);
+    ligarValidacao('l-senha', regraSenha);
+    ligarValidacao('r-usuario', regraObrigatorio);   // só ao sair do campo; o botão não valida
+    ['as-atual', 'as-nova', 'as-confirma'].forEach(function (id) { ligarValidacao(id, regraSenha); });
+    ['as-nova', 'as-confirma'].forEach(function (id) { document.getElementById(id).addEventListener('input', conferirIguais); });
+    document.getElementById('l-olho').innerHTML = ICO.olho;
+
+    /* ---------- Entrada por endereço ----------
+       #login (padrão) · #recuperar-senha · #alterar-senha (voluntária, pelo menu do usuário dos outros fluxos)
+       #alterar-senha-obrigatoria · #inicio (Dashboard dos outros fluxos) · #foto (tela inicial com a janela aberta) */
+    function abrirPorHash() {
+      var h = location.hash.replace('#', '');
+      if (h === 'recuperar-senha') abrirRecuperacao();
+      else if (h === 'alterar-senha') { aplicarSessao(sessao); abrirAlterarSenha(false); }
+      else if (h === 'alterar-senha-obrigatoria') { trocaPendente = { usuario: USUARIOS['novo.usuario'], senhaAtual: 'provisoria1', concluida: false }; abrirAlterarSenha(true); }
+      else if (h === 'inicio') { aplicarSessao(sessao); showScreen('screen-inicio'); }
+      else if (h === 'foto') { aplicarSessao(sessao); showScreen('screen-inicio'); abrirFoto(); }
+      else abrirAcesso();
+    }
+    window.addEventListener('hashchange', abrirPorHash);
+    abrirPorHash();
+  </script>
+</body>
+</html>

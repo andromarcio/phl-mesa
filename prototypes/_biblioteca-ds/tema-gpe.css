@@ -447,6 +447,11 @@ body { background: var(--gpe-app-bg); }
   .gpe-cond-row { grid-template-columns: 1fr; }
 }
 @media (max-width: 768px) {
+  .dsc-header { height: 64px; padding: 0 12px; }
+  .dsc-header-start { min-width: 0; }
+  .dsc-header-logo { font-size: 17px; white-space: normal; line-height: 1.2; }
+  .dsc-header .dsc-hi-body { display: none; }
+  .dsc-header .dsc-avatar { width: 40px; height: 40px; font-size: 14px; }
   .dsc-row { grid-template-columns: 1fr; }
   .dsc-row > [class*="dsc-col-"] { grid-column: auto; }
   .gpe-menubar { overflow-x: auto; }
