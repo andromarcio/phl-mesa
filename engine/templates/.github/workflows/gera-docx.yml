@@ -1,0 +1,72 @@
+name: Gera documentos (.docx)
+
+# Regenera as Especificações Funcionais (.docx) e a página "Central de Documentos"
+# (documentos/index.html) **sob demanda** — pelo botão "Run workflow" na aba Actions.
+# Reusa as figuras em cache (documentos/_diagramas/ e documentos/_prototipos/), então
+# NÃO precisa de navegador no runner (GERA_DOCX_NO_BROWSER=1).
+#
+# SOB DEMANDA, DE PROPÓSITO (decisão de 2026-09-09): o .docx é entrega, não artefato de
+# build. Regerar a cada push enchia o histórico de commits do bot por mudança de texto
+# que ninguém ia entregar naquele dia, e dava a impressão de documento sempre em dia —
+# quando a esteira não refaz figura nenhuma e a tela podia estar dias atrás do protótipo.
+# Quem vai entregar, gera: local (com navegador, para as figuras saírem atuais) ou por
+# este workflow (só o texto).
+#
+# Diagrama novo (feature set sem PNG em cache): gere localmente com um Chromium
+#   (python3 scripts/gera-docx.py <pasta-do-N2>) e commite o PNG de _diagramas/;
+#   aqui, sem cache, a jornada cai para uma lista textual dos passos.
+#
+# FIGURA VELHA: esta esteira não refaz figura — nem a jornada, nem a tela do protótipo.
+#   O gerador confere as impressões digitais (_fontes.json), lista o que saiu de uma
+#   versão anterior da fonte e escreve no resumo do job. Para reprovar em vez de só
+#   avisar, defina GERA_DOCX_FIGURAS_ESTRITO: '1' abaixo. Quem corrige a fonte refaz
+#   local, com Chromium, e commita documentos/:
+#     python3 scripts/gera-docx.py --refaz-figuras-velhas
+#   A conferência sozinha (`--confere-figuras`) não gera nada, não abre navegador e não
+#   escreve um byte — se um dia se quiser um aviso a cada push sem gerar .docx, é ela.
+#
+# Loop-safe: o bot commita apenas documentos/**, o push usa o GITHUB_TOKEN (que não
+# dispara workflows) e a mensagem leva [skip ci]. Sem gatilho de push, o laço nem se
+# põe — as três proteções ficam porque o custo é zero e o gatilho pode voltar.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gera-docx-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  gerar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Gerar .docx + página Docs (reusa o cache de diagramas)
+        env:
+          GERA_DOCX_NO_BROWSER: '1'
+          # A sigla sai do `**Sigla**` do global/MASTER.md — fonte única.
+        run: python3 scripts/gera-docx.py --all
+
+      - name: Commitar se houver mudança
+        run: |
+          git config user.name  "docs-bot"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add documentos/
+          if git diff --cached --quiet; then
+            echo "documentos/ já estão em dia — nada a commitar."
+            exit 0
+          fi
+          git commit -m "chore(docs): regenera .docx e página Docs [skip ci]"
+          for i in 1 2 3; do
+            git pull --rebase --autostash origin "${GITHUB_REF_NAME}" \
+              && git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0
+            echo "push falhou (tentativa $i) — refazendo rebase"; sleep 3
+          done
+          echo "::error::não consegui empurrar os documentos regenerados"; exit 1

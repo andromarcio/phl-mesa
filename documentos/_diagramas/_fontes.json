@@ -1,0 +1,32 @@
+{
+ "ACE-AUT": {
+  "origem": "modules/acesso-usuarios/autenticacao/README.md",
+  "sha": "d71cc89f327f95893665e34c0bb3974ddebf52bad8e43a1fdfadb515c5ca2854",
+  "tipo": "mermaid"
+ },
+ "ACE-USU": {
+  "origem": "modules/acesso-usuarios/usuarios/README.md",
+  "sha": "53816207c125ffaf9d89ae85cb91fbbf1da24ceacfee15be1778476bc9ff462f",
+  "tipo": "mermaid"
+ },
+ "EVT-CAD": {
+  "origem": "modules/eventos/cadastro-eventos/README.md",
+  "sha": "2f99e668d4a1f3950eaa6cbafd5b95073fa0c1693b9bf7a7bd460b19f51318e7",
+  "tipo": "mermaid"
+ },
+ "EVT-LEG": {
+  "origem": "modules/eventos/legendas/README.md",
+  "sha": "94dc06b70e241f4af2bb9436763bfecf8c3d154166f216b567ef26fd80a3d2f5",
+  "tipo": "mermaid"
+ },
+ "EVT-PAR": {
+  "origem": "modules/eventos/participantes/README.md",
+  "sha": "7cc360998d69e1364cd471d779023139c266e1aeb28ffda7cf323c39e0cc24c2",
+  "tipo": "mermaid"
+ },
+ "PES-CAD": {
+  "origem": "modules/pessoas/cadastro-pessoas/README.md",
+  "sha": "c2a61c9d9332004214ef931bbfbccd598319e4f72036ea2279b83824a1545066",
+  "tipo": "mermaid"
+ }
+}

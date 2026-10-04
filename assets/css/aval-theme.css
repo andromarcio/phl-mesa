@@ -1,0 +1,155 @@
+/* ============================================================
+   AVAL — tema do visualizador de documentação (GitHub Pages)
+   Ponte de tokens para assets/css/app.css com os valores da
+   identidade AVAL v1.3 (fonte: prototypes/_biblioteca-ds/tokens.css
+   e global/DESIGN-SYSTEM.md).
+
+   Marca: o azul constrói, o verde aprova.
+   - Azul Aval  #005CA9 → estrutura, links, ação
+   - Marinho    #0A2440 → texto forte, superfícies do modo escuro
+   - Aviso é DOURADO, nunca laranja (azul + laranja é o conjunto
+     da CAIXA — regra de ouro AVAL).
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root {
+  /* ---- Marca / escala azul ---- */
+  --dsc-color-primary-90: #005ca9;   /* Azul Aval */
+  --dsc-color-primary-70: #0078e0;
+  --dsc-color-primary-50: #33a0ff;   /* primário no escuro */
+  --dsc-color-primary-30: #8fcbff;
+  --dsc-color-bg-highlight-1: #e5f2fc;        /* Névoa azul — destaque */
+  --dsc-color-content-highlight-1: #00437a;   /* azul profundo — texto de destaque */
+  --dsc-color-negative-90: #c0392b;
+
+  /* "Secundária" do visualizador (ícones de pasta): neutros AVAL —
+     Grafite sobre Névoa. Estrutura é azul/neutra; laranja não existe aqui. */
+  --dsc-color-secondary-90: #526981;
+  --dsc-color-secondary-10: #e3eef8;
+  --dsc-color-bg-neutral-3: #edf3f9;
+
+  /* ---- Superfícies e texto (claro) ---- */
+  --surface-ground: #f6fafd;   /* Papel Frio */
+  --surface-card:   #ffffff;
+  --surface-border: #d6e3f0;
+  --surface-hover:  #edf3f9;
+  --text-color:     #0a2440;   /* Marinho */
+  --text-secondary: #2b3a4a;
+  --text-muted:     #526981;   /* Grafite */
+  --primary-color:  var(--dsc-color-primary-90);
+
+  /* ---- Tipografia (Archivo · IBM Plex Sans · IBM Plex Mono) ---- */
+  --dsc-font-family-1: 'IBM Plex Sans', 'Segoe UI', system-ui, sans-serif;
+  --dsc-font-title:    'Archivo', 'Segoe UI', system-ui, sans-serif;
+  --dsc-font-mono:     'IBM Plex Mono', ui-monospace, 'SFMono-Regular', monospace;
+
+  /* ---- Forma (AVAL: controles 6px; pílula só em chips) ---- */
+  --dsc-border-radius-small: 4px;
+  --dsc-border-radius-medium: 6px;
+  --dsc-border-radius-pill: 999px;
+
+  /* ---- Espaçamento ---- */
+  --dsc-spacing-quark: 4px;
+  --dsc-spacing-nano: 8px;
+  --dsc-spacing-micro: 12px;
+  --dsc-spacing-tiny: 16px;
+  --dsc-spacing-smaller: 24px;
+
+  /* ---- Efeitos ---- */
+  --transition-duration: .15s;
+  --focus-ring: 0 0 0 3px color-mix(in srgb, var(--primary-color), transparent 78%);
+  --shadow-1: 0 1px 3px rgba(10, 36, 64, .06);
+  --dsc-elevation-2: 0 12px 28px rgba(10, 36, 64, .12);
+}
+
+/* ---- Modo escuro — superfícies em Marinho (fonte única do dark) ---- */
+.app-dark {
+  --surface-ground: #0a1a2e;
+  --surface-card:   #0f2036;
+  --surface-border: #1f3a5a;
+  --surface-hover:  #162941;
+  --text-color:     rgba(255, 255, 255, .92);
+  --text-secondary: rgba(255, 255, 255, .78);
+  --text-muted:     #8aa0b8;
+  --primary-color:  var(--dsc-color-primary-50);
+
+  --dsc-color-bg-highlight-1: rgba(51, 160, 255, .14);
+  --dsc-color-content-highlight-1: #8fcbff;
+  --dsc-color-negative-90: #f28b82;
+  --dsc-color-bg-neutral-3: #162941;
+  --dsc-color-secondary-90: #8aa0b8;
+  --dsc-color-secondary-10: rgba(138, 160, 184, .15);
+
+  --shadow-1: 0 1px 3px rgba(0, 0, 0, .4);
+  --dsc-elevation-2: 0 12px 28px rgba(0, 0, 0, .5);
+}
+
+/* ---- Base ---- */
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--dsc-font-family-1);
+  background: var(--surface-ground);
+  color: var(--text-color);
+  -webkit-font-smoothing: antialiased;
+}
+button { font: inherit; color: inherit; }
+
+/* ---- Marca no header: vetor próprio (nunca digitar "AVAL");
+        versão branca no modo escuro ---- */
+.dsc-sidebar-brand img.logo-light,
+.dsc-sidebar-brand img.logo-dark { height: 26px; width: auto; }
+.dsc-sidebar-brand img.logo-dark { display: none; }
+.app-dark .dsc-sidebar-brand img.logo-light { display: none; }
+.app-dark .dsc-sidebar-brand img.logo-dark { display: block; }
+
+#brandName {
+  font-family: var(--dsc-font-title);
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--text-muted);
+  margin-left: 4px;
+  padding-left: 12px;
+  border-left: 1px solid var(--surface-border);
+  white-space: nowrap;
+}
+
+/* ---- Títulos em Archivo (identidade: Archivo para títulos) ---- */
+.dsc-markdown-body h1,
+.dsc-markdown-body h2,
+.dsc-markdown-body h3,
+.dsc-markdown-body h4,
+.dsc-title-sm { font-family: var(--dsc-font-title); }
+
+/* ---- Utilitários usados pelo visualizador ---- */
+.dsc-title-sm { font-size: 1.25rem; line-height: 1.75rem; font-weight: 600; margin: 0 0 4px; }
+.dsc-body-sm { font-size: .875rem; line-height: 1.25rem; margin: 0; }
+.dsc-caption { font-size: .75rem; line-height: 1rem; }
+.dsc-text-muted { color: var(--text-muted); }
+.dsc-text-negative { color: var(--dsc-color-negative-90); }
+
+/* ---- Loader ---- */
+.dsc-loader {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 12px; padding: 48px 16px; color: var(--text-muted);
+}
+.dsc-spinner {
+  width: 28px; height: 28px;
+  border: 3px solid var(--surface-border);
+  border-top-color: var(--primary-color);
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+}
+
+/* ---- Caminho do protótipo (IDs/valores em IBM Plex Mono) ---- */
+.dsc-badge-path {
+  font-family: var(--dsc-font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+  background: var(--surface-hover);
+  border: 1px solid var(--surface-border);
+  border-radius: 4px;
+  padding: 3px 8px;
+  word-break: break-all;
+}

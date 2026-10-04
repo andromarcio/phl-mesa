@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 388 200" role="img" aria-label="Aval">
+  <g fill="none" stroke-width="20" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="#FFFFFF" d="M24 160 L59 70 L94 160"/>
+    <path stroke="#FFFFFF" d="M39 131 L79 131"/>
+    <path stroke="#25C08A" d="M108 110 L140 157 L190 40"/>
+    <path stroke="#FFFFFF" d="M176 160 L211 70 L246 160"/>
+    <path stroke="#FFFFFF" d="M191 131 L231 131"/>
+    <path stroke="#FFFFFF" d="M280 70 L280 160 L328 160"/>
+  </g>
+  <circle cx="362" cy="149" r="11" fill="#25C08A"/>
+</svg>

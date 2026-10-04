@@ -1,0 +1,531 @@
+<title>Aval — Identidade Visual</title>
+<style>
+  :root{
+    --bg:#F6FAFD; --panel:#FFFFFF; --panel-2:#EEF4FA;
+    --ink:#0F2438; --muted:#526981; --line:#D9E4EF;
+    --brand:#005CA9; --brand-text:#005CA9; --navy:#0A2440;
+    --approve:#0E9F6E; --approve-text:#0B7A55; --approve-tint:#E2F5EC;
+    --blue-tint:#E3EEF8; --danger:#B4552D;
+    --dotc:#0E9F6E; --mark:#005CA9;
+    --mono:ui-monospace,"SF Mono","Cascadia Code",Menlo,Consolas,monospace;
+    --sans:system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0A1622; --panel:#0F2233; --panel-2:#132A3F;
+      --ink:#E9F1F9; --muted:#9DB2C7; --line:#223A52;
+      --brand-text:#5CA4E0; --navy:#0A2440;
+      --approve:#2FB984; --approve-text:#3DC490; --approve-tint:#123328;
+      --blue-tint:#12293E; --danger:#D98B66;
+      --dotc:#25C08A; --mark:#FFFFFF;
+    }
+  }
+  :root[data-theme="light"]{
+    --bg:#F6FAFD; --panel:#FFFFFF; --panel-2:#EEF4FA;
+    --ink:#0F2438; --muted:#526981; --line:#D9E4EF;
+    --brand-text:#005CA9; --approve:#0E9F6E; --approve-text:#0B7A55; --approve-tint:#E2F5EC;
+    --blue-tint:#E3EEF8; --danger:#B4552D; --dotc:#0E9F6E; --mark:#005CA9;
+  }
+  :root[data-theme="dark"]{
+    --bg:#0A1622; --panel:#0F2233; --panel-2:#132A3F;
+    --ink:#E9F1F9; --muted:#9DB2C7; --line:#223A52;
+    --brand-text:#5CA4E0; --approve:#2FB984; --approve-text:#3DC490; --approve-tint:#123328;
+    --blue-tint:#12293E; --danger:#D98B66; --dotc:#25C08A; --mark:#FFFFFF;
+  }
+
+  body{background:var(--bg); color:var(--ink); font-family:var(--sans);
+    font-size:15.5px; line-height:1.65; margin:0;}
+  .wrap{max-width:1060px; margin:0 auto; padding:56px 28px 80px;}
+
+  .eyebrow{display:flex; align-items:center; gap:8px;
+    font-size:11px; font-weight:700; letter-spacing:.15em; text-transform:uppercase;
+    color:var(--brand-text); margin:0 0 14px;}
+  .eyebrow::before{content:""; width:7px; height:7px; border-radius:50%; background:var(--approve); flex:none;}
+  h1{font-size:15px; font-weight:600; color:var(--muted); margin:0 0 40px; letter-spacing:.02em;}
+  h1 strong{color:var(--ink); font-weight:700;}
+  h2{font-size:25px; line-height:1.25; font-weight:750; letter-spacing:-.015em;
+    margin:0 0 10px; text-wrap:balance;}
+  .lede{color:var(--muted); max-width:62ch; margin:0 0 30px;}
+  section{margin:0 0 72px;}
+  .hex{font-family:var(--mono); font-size:12.5px;}
+
+  /* ---------- hero ---------- */
+  .hero{padding:34px 0 10px;}
+  .hero .markbox{color:var(--mark); max-width:560px; margin:8px 0 26px;}
+  .hero svg{display:block; width:100%; height:auto;}
+  .tagline{font-size:clamp(20px,3.2vw,27px); font-weight:750; letter-spacing:-.015em;
+    line-height:1.3; margin:0 0 6px; text-wrap:balance;}
+  .tagline .ok{color:var(--approve-text);}
+  .hero .sub{color:var(--muted); margin:0 0 34px;}
+  .beats{display:flex; flex-wrap:wrap; gap:0 34px; border-top:1px solid var(--line); padding-top:18px;}
+  .beat{display:flex; align-items:baseline; gap:9px; padding:4px 0;}
+  .beat b{font-size:19px; font-weight:800; color:var(--brand-text);}
+  .beat span{font-size:11px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--muted);}
+
+  @media (prefers-reduced-motion: no-preference){
+    .hero path{stroke-dasharray:340; stroke-dashoffset:340; animation:draw 1s cubic-bezier(.6,0,.3,1) forwards;}
+    .hero path:nth-of-type(2){animation-delay:.12s}
+    .hero path:nth-of-type(3){animation-delay:.28s}
+    .hero path:nth-of-type(4){animation-delay:.46s}
+    .hero path:nth-of-type(5){animation-delay:.58s}
+    .hero path:nth-of-type(6){animation-delay:.72s}
+    .hero circle{transform-origin:362px 149px; transform:scale(0); animation:pop .34s .95s cubic-bezier(.2,1.4,.4,1) forwards;}
+    @keyframes draw{to{stroke-dashoffset:0}}
+    @keyframes pop{to{transform:scale(1)}}
+  }
+
+  /* ---------- panels & grids ---------- */
+  .grid{display:grid; gap:14px;}
+  .cols-2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr));}
+  .cols-3{grid-template-columns:repeat(auto-fit,minmax(230px,1fr));}
+  .panel{background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:22px;}
+  .panel h3{font-size:15px; font-weight:700; margin:0 0 6px;}
+  .panel p{font-size:13.5px; color:var(--muted); margin:0;}
+
+  .chip-logo{border-radius:10px; padding:34px 30px; display:flex; align-items:center; justify-content:center;}
+  .chip-logo svg{width:min(300px,80%); height:auto;}
+  .on-light{background:#FFFFFF; border:1px solid var(--line);}
+  .on-navy{background:#0A2440;}
+  .caption{font-size:12px; color:var(--muted); margin-top:8px;}
+
+  /* anatomy */
+  .anatomy{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:14px;}
+  .anatomy .demo{display:flex; align-items:center; gap:18px;}
+  .anatomy svg{flex:none;}
+
+  /* shape system */
+  .shapes{display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px;}
+  .shape{background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:18px; text-align:left;}
+  .shape .glyph{height:44px; display:flex; align-items:center; margin-bottom:10px;}
+  .shape b{display:block; font-size:13px;}
+  .shape span{font-size:12px; color:var(--muted);}
+
+  /* colors */
+  .swatches{display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:14px;}
+  .swatch{border:1px solid var(--line); border-radius:10px; overflow:hidden; background:var(--panel);}
+  .swatch .field{height:86px;}
+  .swatch .meta{padding:12px 14px;}
+  .swatch b{display:block; font-size:13.5px;}
+  .swatch .use{font-size:12px; color:var(--muted); display:block; margin-top:2px;}
+
+  /* type */
+  .type-sample{font-size:26px; font-weight:750; letter-spacing:-.01em; margin:2px 0 8px;}
+  .type-sample.mono{font-family:var(--mono); font-size:16px; font-weight:500; letter-spacing:0;}
+
+  /* applications */
+  .icons-row{display:flex; align-items:flex-end; gap:26px; flex-wrap:wrap;}
+  .icons-row figure{margin:0; text-align:center;}
+  .icons-row figcaption{font-size:11.5px; color:var(--muted); margin-top:8px; font-family:var(--mono);}
+  .btn{display:inline-flex; align-items:center; gap:8px; border-radius:8px; padding:11px 20px;
+    font-size:14.5px; font-weight:650; border:1.5px solid transparent; cursor:default;}
+  .btn.primary{background:#005CA9; color:#fff;}
+  .btn.ghost{border-color:var(--brand-text); color:var(--brand-text); background:transparent;}
+  .states{display:flex; gap:10px; flex-wrap:wrap; margin-top:18px;}
+  .state{display:inline-flex; align-items:center; gap:7px; font-size:12.5px; font-weight:650;
+    border-radius:999px; padding:5px 13px;}
+  .state.run{background:var(--blue-tint); color:var(--brand-text);}
+  .state.wait{background:var(--panel-2); color:var(--muted); border:1px dashed var(--line);}
+  .state.ok{background:var(--approve-tint); color:var(--approve-text);}
+  .sig{display:flex; align-items:center; gap:16px; margin-top:6px;}
+  .sig .domain{font-family:var(--mono); font-size:13px; color:var(--muted); letter-spacing:.04em;}
+
+  /* rules */
+  .rule{border-radius:10px; padding:16px 18px; background:var(--panel); border:1px solid var(--line); font-size:13.5px;}
+  .rule b{display:flex; gap:8px; align-items:center; margin-bottom:4px; font-size:13px;}
+  .rule.do b{color:var(--approve-text);}
+  .rule.dont b{color:var(--danger);}
+  .rule p{margin:0; color:var(--muted); font-size:13px;}
+
+  .note{border-left:3px solid var(--brand); background:var(--panel); border-radius:0 10px 10px 0;
+    padding:18px 22px; font-size:13.5px; color:var(--muted);}
+  .note b{color:var(--ink);}
+  .note + .note{margin-top:12px;}
+
+  footer{border-top:1px solid var(--line); padding-top:22px; font-size:12.5px; color:var(--muted);}
+  footer .hex{color:var(--brand-text);}
+  a{color:var(--brand-text);}
+  :focus-visible{outline:2px solid var(--brand-text); outline-offset:2px; border-radius:4px;}
+</style>
+
+<div class="wrap">
+
+  <h1><strong>Aval</strong> · Identidade visual v1 · esteira de agentes com aprovação humana</h1>
+
+  <!-- ================= HERO ================= -->
+  <section class="hero">
+    <div class="markbox">
+      <svg viewBox="0 0 388 200" role="img" aria-label="Logotipo Aval">
+        <g fill="none" stroke-width="20" stroke-linecap="round" stroke-linejoin="round">
+          <path stroke="currentColor" d="M24 160 L59 70 L94 160"/>
+          <path stroke="currentColor" d="M39 131 L79 131"/>
+          <path style="stroke:var(--dotc)" d="M108 110 L140 157 L190 40"/>
+          <path stroke="currentColor" d="M176 160 L211 70 L246 160"/>
+          <path stroke="currentColor" d="M191 131 L231 131"/>
+          <path stroke="currentColor" d="M280 70 L280 160 L328 160"/>
+        </g>
+        <circle cx="362" cy="149" r="11" style="fill:var(--dotc)"/>
+      </svg>
+    </div>
+    <p class="tagline">Os agentes constroem. <span class="ok">Você dá o aval.</span></p>
+    <p class="sub">Marca para uma plataforma onde agentes de IA percorrem a engenharia de software
+      e nada avança sem aprovação humana.</p>
+    <div class="beats">
+      <div class="beat"><b>A</b><span>Agentes</span></div>
+      <div class="beat"><b>V</b><span>Validação</span></div>
+      <div class="beat"><b>A</b><span>Aprovação</span></div>
+      <div class="beat"><b>L</b><span>Lançamento</span></div>
+    </div>
+  </section>
+
+  <!-- ================= EVOLUÇÃO ================= -->
+  <section>
+    <p class="eyebrow">Evolução · como chegamos à final</p>
+    <h2>Três decisões, um logotipo</h2>
+    <p class="lede">O visto ganhou a cor da aprovação; em vez de esticá-lo, as demais letras foram
+      <b>reduzidas</b> — e o traço recalibrado de 26 para 20, mantendo a relação traço/altura
+      original e as contraformas do A abertas. Os respiros foram <b>apertados e igualados</b>:
+      13 unidades no ponto de maior aproximação de cada par, metade do espaço anterior.</p>
+    <div class="grid cols-3">
+      <div>
+        <div class="chip-logo on-light">
+          <svg viewBox="0 0 508 200" aria-label="Versão 1, ponto de partida">
+            <g fill="none" stroke="#005CA9" stroke-width="26" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M24 160 L68 40 L112 160"/><path d="M42 121 L94 121"/>
+              <path d="M148 110 L180 157 L230 40"/>
+              <path d="M256 160 L300 40 L344 160"/><path d="M274 121 L326 121"/>
+              <path d="M370 40 L370 160 L434 160"/>
+            </g>
+            <circle cx="470" cy="146" r="14" fill="#0E9F6E"/>
+          </svg>
+        </div>
+        <p class="caption">v1 · ponto de partida — palavra íntegra, visto discreto</p>
+      </div>
+      <div>
+        <div class="chip-logo on-light">
+          <svg viewBox="0 0 508 200" aria-label="Versão 1.1, visto verde esticado">
+            <g fill="none" stroke="#005CA9" stroke-width="26" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M24 160 L68 40 L112 160"/><path d="M42 121 L94 121"/>
+              <path d="M256 160 L300 40 L344 160"/><path d="M274 121 L326 121"/>
+              <path d="M370 40 L370 160 L434 160"/>
+            </g>
+            <path d="M148 110 L180 157 L238 22" fill="none" stroke="#0E9F6E" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="470" cy="146" r="14" fill="#0E9F6E"/>
+          </svg>
+        </div>
+        <p class="caption">v1.1 · visto verde com braço esticado — o gesto certo, a proporção
+          forçada</p>
+      </div>
+      <div>
+        <div class="chip-logo on-light">
+          <svg viewBox="0 0 388 200" aria-label="Versão 1.3, final">
+            <g fill="none" stroke-width="20" stroke-linecap="round" stroke-linejoin="round">
+              <path stroke="#005CA9" d="M24 160 L59 70 L94 160"/>
+              <path stroke="#005CA9" d="M39 131 L79 131"/>
+              <path stroke="#0E9F6E" d="M108 110 L140 157 L190 40"/>
+              <path stroke="#005CA9" d="M176 160 L211 70 L246 160"/>
+              <path stroke="#005CA9" d="M191 131 L231 131"/>
+              <path stroke="#005CA9" d="M280 70 L280 160 L328 160"/>
+            </g>
+            <circle cx="362" cy="149" r="11" fill="#0E9F6E"/>
+          </svg>
+        </div>
+        <p class="caption"><b>v1.3 · final</b> — traço recalibrado (contraformas abertas),
+          letras compactas com respiros de 13 unidades, visto em proporção natural</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CONCEITO ================= -->
+  <section>
+    <p class="eyebrow">Conceito</p>
+    <h2>O visto mora dentro do nome</h2>
+    <p class="lede">O logotipo é desenhado do zero — quatro letras de traço reto, sem tipografia de
+      prateleira. Dois gestos carregam todo o significado:</p>
+
+    <div class="anatomy">
+      <div class="panel demo">
+        <svg width="62" height="90" viewBox="0 0 102 150" aria-hidden="true">
+          <path d="M10 90 L42 137 L92 20" fill="none" stroke="var(--approve)" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div>
+          <h3>O V é um visto</h3>
+          <p>A letra central vira o gesto de aprovar: braço curto de entrada, braço longo
+            subindo — em verde e mais alto que as demais letras, que foram reduzidas para
+            deixá-lo em proporção natural. Aval escrito com o próprio ato de avalizar.</p>
+        </div>
+      </div>
+      <div class="panel demo">
+        <svg width="56" height="72" viewBox="0 0 60 130" aria-hidden="true">
+          <circle cx="30" cy="65" r="17" style="fill:var(--dotc)"/>
+        </svg>
+        <div>
+          <h3>O ponto final é o gate</h3>
+          <p>A esteira só termina quando alguém aprova. O ponto verde fecha o logotipo como o
+            humano fecha cada etapa — com o visto, forma o par verde da aprovação:
+            <b>o azul constrói, o verde aprova</b>.</p>
+        </div>
+      </div>
+    </div>
+
+    <p class="lede" style="margin:26px 0 14px">O mesmo vocabulário vira o sistema de formas dos
+      estados do produto:</p>
+    <div class="shapes">
+      <div class="shape">
+        <div class="glyph"><svg width="30" height="30" viewBox="0 0 30 30"><circle cx="15" cy="15" r="10" fill="none" stroke="var(--brand-text)" stroke-width="4"/></svg></div>
+        <b>Agentes executando</b><span>círculo vazado — trabalho em curso</span>
+      </div>
+      <div class="shape">
+        <div class="glyph"><svg width="30" height="30" viewBox="0 0 30 30"><circle cx="15" cy="15" r="12" fill="var(--brand-text)"/></svg></div>
+        <b>Validação técnica</b><span>círculo cheio — verificado pela esteira</span>
+      </div>
+      <div class="shape">
+        <div class="glyph"><svg width="26" height="36" viewBox="0 0 34 46"><path d="M4 26 L14 41 L30 4" fill="none" stroke="var(--approve)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <b>Aprovação humana</b><span>o visto verde — o gate</span>
+      </div>
+      <div class="shape">
+        <div class="glyph"><svg width="30" height="30" viewBox="0 0 30 30"><rect x="4" y="4" width="22" height="22" rx="5" fill="var(--navy)" stroke="var(--line)" stroke-width="1"/></svg></div>
+        <b>Lançamento</b><span>quadrado estável — entregue em produção</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= VERSÕES ================= -->
+  <section>
+    <p class="eyebrow">Versões</p>
+    <h2>Uma marca, três aplicações fixas</h2>
+    <p class="lede">Fundo claro recebe a versão azul; fundo escuro recebe a branca. O visto e o
+      ponto são verdes nas duas. A monocromática existe para carimbo, gravação e o depósito no
+      INPI.</p>
+    <div class="grid cols-2">
+      <div>
+        <div class="chip-logo on-light">
+          <svg viewBox="0 0 388 200" aria-label="Aval em fundo claro">
+            <g fill="none" stroke-width="20" stroke-linecap="round" stroke-linejoin="round">
+              <path stroke="#005CA9" d="M24 160 L59 70 L94 160"/>
+              <path stroke="#005CA9" d="M39 131 L79 131"/>
+              <path stroke="#0E9F6E" d="M108 110 L140 157 L190 40"/>
+              <path stroke="#005CA9" d="M176 160 L211 70 L246 160"/>
+              <path stroke="#005CA9" d="M191 131 L231 131"/>
+              <path stroke="#005CA9" d="M280 70 L280 160 L328 160"/>
+            </g>
+            <circle cx="362" cy="149" r="11" fill="#0E9F6E"/>
+          </svg>
+        </div>
+        <p class="caption">Principal · Azul Aval sobre claro · <span class="hex">aval-logo.svg</span></p>
+      </div>
+      <div>
+        <div class="chip-logo on-navy">
+          <svg viewBox="0 0 388 200" aria-label="Aval em fundo escuro">
+            <g fill="none" stroke-width="20" stroke-linecap="round" stroke-linejoin="round">
+              <path stroke="#FFFFFF" d="M24 160 L59 70 L94 160"/>
+              <path stroke="#FFFFFF" d="M39 131 L79 131"/>
+              <path stroke="#25C08A" d="M108 110 L140 157 L190 40"/>
+              <path stroke="#FFFFFF" d="M176 160 L211 70 L246 160"/>
+              <path stroke="#FFFFFF" d="M191 131 L231 131"/>
+              <path stroke="#FFFFFF" d="M280 70 L280 160 L328 160"/>
+            </g>
+            <circle cx="362" cy="149" r="11" fill="#25C08A"/>
+          </svg>
+        </div>
+        <p class="caption">Inversa · branca sobre Marinho · <span class="hex">aval-logo-branca.svg</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CORES ================= -->
+  <section>
+    <p class="eyebrow">Cores</p>
+    <h2>Azul de banco, verde de aprovação</h2>
+    <p class="lede">A primária <span class="hex">#005CA9</span> fala a língua visual do setor
+      financeiro. O que torna a paleta <em>da Aval</em> é o par: um marinho profundo para texto e
+      fundos escuros, e um único verde reservado ao ato de aprovar.</p>
+    <div class="swatches">
+      <div class="swatch"><div class="field" style="background:#005CA9"></div>
+        <div class="meta"><b>Azul Aval</b><span class="hex">#005CA9</span>
+        <span class="use">Primária: logo, ações, links</span></div></div>
+      <div class="swatch"><div class="field" style="background:#0A2440"></div>
+        <div class="meta"><b>Marinho</b><span class="hex">#0A2440</span>
+        <span class="use">Texto forte, fundos escuros</span></div></div>
+      <div class="swatch"><div class="field" style="background:#0E9F6E"></div>
+        <div class="meta"><b>Verde Visto</b><span class="hex">#0E9F6E</span>
+        <span class="use">Só aprovação: o visto, o ponto, checks, estado ok</span></div></div>
+      <div class="swatch"><div class="field" style="background:#E3EEF8"></div>
+        <div class="meta"><b>Névoa</b><span class="hex">#E3EEF8</span>
+        <span class="use">Tints, chips, fundos de apoio</span></div></div>
+      <div class="swatch"><div class="field" style="background:#F6FAFD; border-bottom:1px solid var(--line)"></div>
+        <div class="meta"><b>Papel Frio</b><span class="hex">#F6FAFD</span>
+        <span class="use">Fundo claro padrão</span></div></div>
+      <div class="swatch"><div class="field" style="background:#526981"></div>
+        <div class="meta"><b>Grafite Azulado</b><span class="hex">#526981</span>
+        <span class="use">Texto secundário, legendas</span></div></div>
+    </div>
+  </section>
+
+  <!-- ================= TIPOGRAFIA ================= -->
+  <section>
+    <p class="eyebrow">Tipografia</p>
+    <h2>Vozes de engenharia</h2>
+    <p class="lede">O logotipo é desenho, não fonte — nenhuma tipografia o reproduz. Para o resto
+      da marca, três vozes gratuitas (Google Fonts), escolhidas pelo repertório: uma grotesca firme
+      para títulos e uma família com herança de engenharia para interface e logs.</p>
+    <div class="grid cols-3">
+      <div class="panel">
+        <p class="type-sample" style="letter-spacing:-.02em">Archivo</p>
+        <h3>Títulos e rótulos</h3>
+        <p>Grotesca sólida, ótima em pesos altos e caixa alta com tracking — a voz dos gates e
+          seções.</p>
+      </div>
+      <div class="panel">
+        <p class="type-sample" style="font-weight:500">IBM Plex Sans</p>
+        <h3>Texto e interface</h3>
+        <p>Desenhada para produto técnico, português completo, excelente em telas densas de
+          esteira.</p>
+      </div>
+      <div class="panel">
+        <p class="type-sample mono">IBM Plex Mono</p>
+        <h3>Logs, código e dados</h3>
+        <p>A vida do produto é log de agente, diff e ID de processo — a mono é voz de marca, não
+          detalhe.</p>
+      </div>
+    </div>
+    <p class="caption">Amostras acima renderizadas na fonte do seu sistema — baixe as famílias
+      oficiais antes de aplicar.</p>
+  </section>
+
+  <!-- ================= APLICAÇÕES ================= -->
+  <section>
+    <p class="eyebrow">Aplicações</p>
+    <h2>Do ícone ao gate de aprovação</h2>
+    <div class="grid cols-2">
+      <div class="panel">
+        <h3 style="margin-bottom:14px">Ícone do app · <span class="hex">aval-simbolo.svg</span></h3>
+        <div class="icons-row">
+          <figure>
+            <svg width="96" height="96" viewBox="0 0 512 512" aria-label="Ícone Aval 96 px">
+              <defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#0A6BBE"/><stop offset="1" stop-color="#004D8F"/></linearGradient></defs>
+              <rect width="512" height="512" rx="118" fill="url(#g1)"/>
+              <path d="M158 284 L234 396 L354 116" fill="none" stroke="#FFF" stroke-width="48" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="350" cy="368" r="26" fill="#25C08A"/>
+            </svg><figcaption>96</figcaption>
+          </figure>
+          <figure>
+            <svg width="48" height="48" viewBox="0 0 512 512" aria-hidden="true">
+              <rect width="512" height="512" rx="118" fill="#005CA9"/>
+              <path d="M158 284 L234 396 L354 116" fill="none" stroke="#FFF" stroke-width="48" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="350" cy="368" r="26" fill="#25C08A"/>
+            </svg><figcaption>48</figcaption>
+          </figure>
+          <figure>
+            <svg width="24" height="24" viewBox="0 0 512 512" aria-hidden="true">
+              <rect width="512" height="512" rx="118" fill="#005CA9"/>
+              <path d="M158 284 L234 396 L354 116" fill="none" stroke="#FFF" stroke-width="62" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg><figcaption>24 · sem ponto</figcaption>
+          </figure>
+        </div>
+        <p style="margin-top:14px">O símbolo usa <b>exatamente a geometria do V do logotipo</b>
+          (braços em proporção 2,2:1). Abaixo de 32&nbsp;px o ponto sai e o traço engrossa —
+          favicon continua legível.</p>
+        <div class="icons-row" style="margin-top:16px">
+          <figure>
+            <div style="background:#FFFFFF;border:1px solid var(--line);border-radius:12px;padding:8px">
+              <svg width="64" height="64" viewBox="0 0 512 512" aria-label="Símbolo sem fundo, V azul">
+                <path d="M158 284 L234 396 L354 116" fill="none" stroke="#005CA9" stroke-width="48" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="350" cy="368" r="26" fill="#0E9F6E"/>
+              </svg>
+            </div>
+            <figcaption>sem fundo · V azul</figcaption>
+          </figure>
+          <figure>
+            <div style="background:#FFFFFF;border:1px solid var(--line);border-radius:12px;padding:8px">
+              <svg width="64" height="64" viewBox="0 0 512 512" aria-label="Símbolo sem fundo, V verde">
+                <path d="M158 284 L234 396 L354 116" fill="none" stroke="#0E9F6E" stroke-width="48" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="350" cy="368" r="26" fill="#0E9F6E"/>
+              </svg>
+            </div>
+            <figcaption>sem fundo · V verde</figcaption>
+          </figure>
+        </div>
+      </div>
+      <div class="panel">
+        <h3 style="margin-bottom:14px">O gate, em interface</h3>
+        <div style="display:flex; gap:10px; flex-wrap:wrap">
+          <span class="btn primary">Aprovar e avançar
+            <svg width="12" height="16" viewBox="0 0 34 46" aria-hidden="true"><path d="M4 26 L14 41 L30 4" fill="none" stroke="#25C08A" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <span class="btn ghost">Solicitar ajustes</span>
+        </div>
+        <div class="states">
+          <span class="state run">● Agentes executando</span>
+          <span class="state wait">· Aguardando seu aval</span>
+          <span class="state ok">✓ Aprovado</span>
+        </div>
+        <div class="sig">
+          <svg width="104" viewBox="0 0 388 200" aria-hidden="true">
+            <g fill="none" stroke-width="20" stroke-linecap="round" stroke-linejoin="round">
+              <path stroke="var(--mark)" d="M24 160 L59 70 L94 160"/>
+              <path stroke="var(--mark)" d="M39 131 L79 131"/>
+              <path style="stroke:var(--dotc)" d="M108 110 L140 157 L190 40"/>
+              <path stroke="var(--mark)" d="M176 160 L211 70 L246 160"/>
+              <path stroke="var(--mark)" d="M191 131 L231 131"/>
+              <path stroke="var(--mark)" d="M280 70 L280 160 L328 160"/>
+            </g>
+            <circle cx="362" cy="149" r="11" style="fill:var(--dotc)"/>
+          </svg>
+          <span class="domain">aval.app</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= REGRAS ================= -->
+  <section>
+    <p class="eyebrow">Uso</p>
+    <h2>Três sins, três nãos</h2>
+    <div class="grid cols-3">
+      <div class="rule do"><b>✓ Use os arquivos oficiais</b>
+        <p>O logotipo é desenho vetorial próprio. Nunca o recomponha digitando "AVAL" em uma
+          fonte.</p></div>
+      <div class="rule do"><b>✓ Respeite o par de fundos</b>
+        <p>Claro recebe azul, escuro recebe branca — e o visto e o ponto são sempre verdes,
+          nas duas.</p></div>
+      <div class="rule do"><b>✓ Dê respiro de 2 pontos</b>
+        <p>Área de proteção mínima ao redor da marca: duas vezes o diâmetro do ponto verde.</p></div>
+      <div class="rule dont"><b>✕ Nada de laranja com o azul</b>
+        <p>Azul <span class="hex">#005CA9</span> + laranja é o uniforme da CAIXA. O par da Aval é
+          azul + verde + marinho.</p></div>
+      <div class="rule dont"><b>✕ Sem listras nem monograma "A"</b>
+        <p>Distância deliberada do conjunto visual da marca AVAL já registrada na classe 42
+          (Aval Engenharia) — isso protege você.</p></div>
+      <div class="rule dont"><b>✕ O verde é só do aval</b>
+        <p>Visto e ponto são sempre verdes — e nada mais na marca usa o verde. Sem recolorir,
+          sem gradiente.</p></div>
+    </div>
+  </section>
+
+  <!-- ================= NOTAS ================= -->
+  <section>
+    <p class="eyebrow">Notas estratégicas</p>
+    <div class="note">
+      <b>Sobre a primária ser o azul da CAIXA.</b> <span class="hex">#005CA9</span> é o token
+      primário do CAIXA Design System. Mantida por decisão sua — fala a língua do comprador — mas a
+      identidade se afasta pelo conjunto: formas próprias (visto + ponto), verde exclusivo e a
+      proibição do laranja. Se um dia quiser distância total, o desvio barato é escurecer para
+      <span class="hex">#00549B</span> sem retrabalho de marca.
+    </div>
+    <div class="note">
+      <b>Sobre o INPI.</b> Este conjunto (logotipo + ponto verde) é o recomendado para o depósito
+      da <b>marca mista</b> nas classes 09 e 42 — quanto mais distinto do logo listrado da Aval
+      Engenharia, mais forte a tese de convivência.
+    </div>
+  </section>
+
+  <footer>
+    Arquivos da marca: <span class="hex">aval-logo.svg</span> ·
+    <span class="hex">aval-logo-branca.svg</span> · <span class="hex">aval-logo-mono.svg</span> ·
+    <span class="hex">aval-simbolo.svg</span> · <span class="hex">aval-simbolo-azul.svg</span> ·
+    <span class="hex">aval-simbolo-verde.svg</span> &nbsp;—&nbsp; Identidade v1.3 · julho 2026 ·
+    <em>Os agentes constroem. Você dá o aval.</em>
+  </footer>
+
+</div>

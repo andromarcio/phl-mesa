@@ -1,0 +1,1574 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIM PDTIC25148-34</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root {
+/* Identidade AVAL */
+      --brand-blue: #005CA9;
+      --brand-blue-dark: #0A2440;
+      --brand-blue-light: #E5F2FC;
+      --brand-blue-hover: #004B8A;
+      --brand-accent: #0078E0;
+      
+      /* Aviso é Dourado no AVAL (regra: nunca laranja) */
+      --brand-gold: #B45309;
+      --brand-gold-light: #FFFBEB;
+      --brand-gold-border: #FDE68A;
+      
+      /* Superfícies & Bordas */
+      --bg-app: #F6FAFD;
+      --bg-sidebar: #FFFFFF;
+      --bg-card: #FFFFFF;
+      --bg-hover: #EDF3F9;
+      --bg-active: #E3EEF8;
+      --border-color: #D6E3F0;
+      --border-subtle: #E8F0F8;
+      
+      /* Compatibilidade mapa.css */
+      --primary-color: #005CA9;
+      --surface-ground: #F6FAFD;
+      --surface-card: #FFFFFF;
+      --surface-border: #D6E3F0;
+      --surface-hover: #EDF3F9;
+      --text-color: #0A2440;
+      --shadow-1: 0 1px 3px rgba(10, 36, 64, 0.06);
+      --focus-ring: 0 0 0 3px rgba(0, 92, 169, 0.18);
+      --dsc-font-family-1: 'IBM Plex Sans', 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+      --dsc-font-title: 'Archivo', 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+      --dsc-font-mono: 'IBM Plex Mono', ui-monospace, "SFMono-Regular", "Courier New", monospace;
+      --dsc-border-radius-pill: 999px;
+      --dsc-border-radius-medium: 6px;
+      --transition-duration: 0.15s;
+      
+      /* Tipografia & Cores */
+      --text-main: #0A2440;
+      --text-secondary: #2B3A4A;
+      --text-muted: #526981;
+      --text-blue: #005CA9;
+      
+      /* Status & Badges */
+      --badge-success-bg: #ECFDF5;
+      --badge-success-text: #047857;
+      --badge-success-border: #A7F3D0;
+      
+      --badge-warning-bg: #FFFBEB;
+      --badge-warning-text: #B45309;
+      --badge-warning-border: #FDE68A;
+      
+      --badge-info-bg: #EFF6FF;
+      --badge-info-text: #1D4ED8;
+      --badge-info-border: #BFDBFE;
+      
+      --badge-purple-bg: #F5F3FF;
+      --badge-purple-text: #6D28D9;
+      --badge-purple-border: #DDD6FE;
+
+      /* Sombras & Raios */
+      --shadow-sm: 0 1px 2px 0 rgba(10, 36, 64, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(10, 36, 64, 0.08), 0 2px 4px -2px rgba(10, 36, 64, 0.05);
+      --radius-sm: 4px;
+      --radius-md: 6px;
+      --radius-lg: 10px;
+      --radius-full: 999px;
+
+      /* Dimensões */
+      --header-height: 60px;
+      --sidebar-width: 320px;
+}
+:root {
+  --_bg: var(--bg-app, #F6FAFD);
+  --_card: var(--bg-card, #FFFFFF);
+  --_borda: var(--border-color, #D6E3F0);
+  --_borda-sutil: var(--border-subtle, #E8F0F8);
+  --_hover: var(--bg-hover, #EDF3F9);
+  --_texto: var(--text-main, var(--text-color, #0A2440));
+  --_texto2: var(--text-secondary, #526981);
+  --_marca: var(--brand-blue, var(--primary-color, #005CA9));
+  --_marca-clara: var(--brand-blue-light, #E5F2FC);
+  --_titulo: var(--dsc-font-title, 'Archivo', 'Segoe UI', system-ui, sans-serif);
+  --_corpo: var(--dsc-font-family-1, 'IBM Plex Sans', 'Segoe UI', system-ui, sans-serif);
+  --_mono: 'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace;
+}
+* { box-sizing: border-box; }
+body { margin:0; background: var(--_bg); color: var(--_texto); font-family: var(--_corpo); font-size:14px; line-height:1.6; -webkit-font-smoothing:antialiased; }
+.wrap { width: 100%; margin: 0; padding: 32px 40px 80px; }
+/* O conteúdo destes documentos é majoritariamente tabela larga — a tela inteira é
+   trabalho útil, não desperdício. A prosa corrida fica com medida de leitura própria
+   para não virar linha de 200 caracteres em monitor grande. */
+@media (max-width: 720px) { .wrap { padding: 24px 16px 60px; } }
+.doc-head { margin-bottom: 26px; }
+.eyebrow { font-size:11px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color: var(--_marca); margin-bottom:10px; }
+h1 { font-family: var(--_titulo); font-size: clamp(24px,3.4vw,32px); font-weight:700; line-height:1.2; margin:0 0 14px; color: var(--_texto); text-wrap: balance; }
+.doc-section { background: var(--_card); border:1px solid var(--_borda); border-radius:10px; padding: 0; margin-bottom:20px; box-shadow: 0 1px 3px rgba(10,36,64,.06); }
+.section-header { display:flex; align-items:center; justify-content:space-between; gap:12px; padding: 20px 28px; cursor:pointer; list-style:none; }
+.section-header::-webkit-details-marker { display:none; }
+.section-title { font-family: var(--_titulo); font-size:18px; font-weight:700; color: var(--_texto); display:flex; align-items:center; gap:10px; }
+.section-title svg { color: var(--_marca); flex:none; }
+.chevron { color: var(--_texto2); transition: transform .18s; flex:none; }
+details[open] > .section-header .chevron { transform: rotate(180deg); }
+.section-body { padding: 18px 28px 24px; border-top:1px solid var(--_borda-sutil); }
+.markdown-body > :first-child { margin-top:0; }
+.markdown-body > :last-child { margin-bottom:0; }
+.markdown-body h3 { font-family: var(--_titulo); font-size:15.5px; font-weight:700; margin:26px 0 10px; color: var(--_texto); }
+.markdown-body h4 { font-size:14px; font-weight:700; margin:20px 0 8px; }
+.markdown-body p { margin: 0 0 12px; }
+.markdown-body ul, .markdown-body ol { margin:0 0 12px; padding-left:22px; }
+.markdown-body li { margin-bottom:6px; }
+.markdown-body code { font-family: var(--_mono); font-size:.86em; background: var(--_hover); border:1px solid var(--_borda-sutil); border-radius:4px; padding:1px 5px; overflow-wrap:anywhere; }
+/* caminho de arquivo e chave longa não têm espaço para quebrar: sem isto, um code
+   comprido empurra o corpo inteiro e a página ganha rolagem horizontal no celular */
+.markdown-body { overflow-wrap: break-word; }
+.custom-table .col-id  { white-space: nowrap; width: 1%; }
+.custom-table .col-num { white-space: nowrap; min-width: 5.5rem; }
+.custom-table .col-prosa { min-width: 38rem; }
+.custom-table .col-nome  { min-width: 15rem; max-width: 22rem; }
+.ficha { margin: 2px 0 22px; font-size: 13px; color: var(--_texto2); }
+.ficha blockquote { margin:0; border:0; padding:0; }
+.ficha p { margin: 0; line-height: 1.9; }
+.markdown-body pre { background: var(--_hover); border:1px solid var(--_borda); border-radius:8px; padding:14px 16px; overflow-x:auto; }
+.markdown-body pre code { background:none; border:0; padding:0; }
+.markdown-body blockquote { margin:0 0 14px; padding:12px 18px; border-left:3px solid var(--_marca); background: var(--_bg); border-radius:0 6px 6px 0; color: var(--_texto2); }
+.markdown-body blockquote > :first-child { margin-top:0; } .markdown-body blockquote > :last-child { margin-bottom:0; }
+.markdown-body a { color: var(--_marca); }
+.item-titulo { display:flex; align-items:center; flex-wrap:wrap; gap:10px; margin:30px 0 12px; font-family: var(--_titulo); font-size:17px; font-weight:700; color: var(--_texto); }
+.item-nome { flex:0 1 auto; min-width:0; }
+.chave { font-family: var(--_mono); font-size:12px; font-weight:600; letter-spacing:.01em; color: var(--_texto2); background: var(--_hover); border:1px solid var(--_borda); border-radius:999px; padding:4px 12px; white-space:nowrap; }
+.badge { font-size:11px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; border-radius:999px; padding:3px 11px; white-space:nowrap; }
+.badge--alterada { background:#DBEAFE; color:#1D4ED8; }
+.badge--nova     { background:#EDE9FE; color:#6D28D9; }
+.badge--mista    { background:#FEF3C7; color:#B45309; }
+.kpi-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap:14px; margin:16px 0 20px; }
+.stat { background: var(--_card); border:1px solid var(--_borda); border-left:4px solid var(--acento, var(--_marca)); border-radius:8px; padding:16px 20px; box-shadow:0 1px 3px rgba(10,36,64,.06); }
+.stat-n { font-family: var(--_titulo); font-size:30px; font-weight:700; line-height:1.05; color: var(--_texto); font-variant-numeric: tabular-nums; }
+.stat-k { margin-top:8px; font-size:13px; color: var(--_texto2); line-height:1.45; }
+.stat-k span { display:block; margin-top:3px; color: var(--_texto2); opacity:.85; }
+.table-container { width:100%; overflow-x:auto; margin: 12px 0; border:1px solid var(--_borda); border-radius:8px; }
+.custom-table { width:100%; border-collapse:collapse; text-align:left; font-size:13px; }
+.custom-table th { background: var(--_hover); color: var(--_texto); font-weight:600; font-family: var(--_titulo); padding:12px 16px; border-bottom:1px solid var(--_borda); white-space:nowrap; }
+.custom-table td { padding:12px 16px; border-bottom:1px solid var(--_borda-sutil); color: var(--_texto); vertical-align:top; line-height:1.5; }
+// A primeira coluna costuma ser um ID curto, que não deve partir. Mas quando ela é
+// um NOME ou a própria narrativa, o nowrap faz o texto transbordar por cima da
+// coluna vizinha — 665px de conteúdo numa célula de 304px. Essas ficam de fora.
+.custom-table th:first-child, .custom-table td:first-child:not(.col-nome):not(.col-prosa) { white-space:nowrap; }
+.custom-table tbody tr:last-child td { border-bottom:none; }
+.custom-table tbody tr:hover { background: var(--_hover); }
+.changelog-table td { font-size:12.5px; }
+.changelog-table th:first-child, .changelog-table td:first-child { width:120px; min-width:110px; }
+.req-tag { font-weight:600; color:#E11D48; font-size:11px; background:#FFE4E6; padding:2px 6px; border-radius:4px; display:inline-block; }
+.opt-tag { font-weight:500; color: var(--_texto2); font-size:11px; background: var(--_hover); padding:2px 6px; border-radius:4px; display:inline-block; }
+.rodape { margin-top:34px; padding-top:18px; border-top:1px solid var(--_borda); font-size:12.5px; color: var(--_texto2); }
+@media print { .doc-section { break-inside: avoid; border:1px solid #ccc; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="doc-head">
+    <div class="eyebrow">Análise de impacto</div>
+    <h1>AIM PDTIC25148-34</h1>
+  </header>
+  <div class="ficha markdown-body"><p><strong>Ticket</strong>: Jira <code>PDTIC25148-34</code> — Configuração de Legendas por Evento<br><strong>Link</strong>: <a href="https://sistemaindustria.atlassian.net/browse/PDTIC25148-34">https://sistemaindustria.atlassian.net/browse/PDTIC25148-34</a><br><strong>Sprint</strong>: SP005<br><strong>Estado</strong>: Em análise  </p>
+</div>
+
+  <details class="doc-section" id="detalhe-do-item" open>
+    <summary class="section-header">
+      <span class="section-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="3" y1="9" x2="21" y2="9"></line>
+          <line x1="9" y1="21" x2="9" y2="9"></line>
+        </svg>
+        Detalhe do item
+      </span>
+      <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </summary>
+    <div class="section-body markdown-body">
+<blockquote>
+<p>Transcrição da descrição do ticket <code>PDTIC25148-34</code> no Jira, a partir da exportação de 2026-10-04 guardada em <code>arquivos/</code>.</p>
+</blockquote>
+<h3>História do Usuário</h3>
+<p><strong>Eu como</strong> usuário responsável pela configuração do evento</p>
+<p><strong>Quero</strong> configurar e aplicar as legendas das pessoas por meio de blocos e regras reutilizáveis</p>
+<p><strong>Para</strong> definir a identificação dos participantes de cada evento de forma flexível, permitindo reaproveitar configurações entre eventos.</p>
+<h3>Descrição</h3>
+<p>A funcionalidade <strong>Configuração de Legendas</strong>, disponível na rota <code>/regras-legenda/:eventoId</code>, deverá ser reformulada para permitir que as legendas sejam configuradas especificamente para cada evento.</p>
+<p>Atualmente, a funcionalidade utiliza blocos de legenda pré-definidos e a numeração está relacionada à classificação automática. Com a alteração, os blocos poderão ser criados ou reutilizados entre eventos, enquanto sua ordem e suas regras serão definidas no contexto de cada evento.</p>
+<p>A legenda atribuída a uma pessoa também deverá passar a ser vinculada ao evento, seguindo a associação <strong>Evento – Pessoa – Legenda</strong>.</p>
+<p>A tela deverá permitir:</p>
+<ul>
+<li>visualizar os blocos configurados para o evento;</li>
+<li>adicionar um bloco existente do Catálogo;</li>
+<li>criar um novo bloco;</li>
+<li>remover blocos do evento;</li>
+<li>alterar a ordem dos blocos;</li>
+<li>configurar as condições de aplicação;</li>
+<li>salvar a configuração como preset;</li>
+<li>carregar configurações de outros eventos ou presets existentes;</li>
+<li>simular a aplicação das regras;</li>
+<li>executar a geração das legendas.</li>
+</ul>
+<p>Todo bloco adicionado à configuração do evento deverá estar em vigor. Não haverá conceito de bloco ativo ou inativo. Caso um bloco não deva ser considerado na aplicação das regras, ele deverá ser removido da configuração do evento.</p>
+<h3>Blocos de Legenda do Evento</h3>
+<p>Cada evento deverá possuir sua própria configuração de blocos de legenda.</p>
+<p>As ações de adicionar, remover ou reordenar um bloco deverão alterar somente a configuração do evento atual.</p>
+<p>Cada bloco deverá possuir um número (<strong>Nº</strong>), correspondente à sua posição na configuração do evento:</p>
+<ul>
+<li>o primeiro bloco deverá possuir Nº 1;</li>
+<li>o segundo, Nº 2;</li>
+<li>e assim sucessivamente.</li>
+</ul>
+<p>Ao alterar a ordem dos blocos, o sistema deverá recalcular automaticamente a numeração.</p>
+<p>A ordem dos blocos também deverá representar a prioridade de aplicação das regras.</p>
+<p>A numeração não será uma característica do bloco cadastrado no Catálogo, existindo exclusivamente no contexto da associação entre o bloco e o evento.</p>
+<h3>Catálogo de Blocos</h3>
+<p>Ao adicionar um bloco ao evento, o usuário deverá poder:</p>
+<ul>
+<li>pesquisar e selecionar um bloco já existente no Catálogo; ou</li>
+<li>criar um novo bloco.</li>
+</ul>
+<p>Para criação de um bloco, deverão ser informados:</p>
+<ul>
+<li>Nome;</li>
+<li>Cor da legenda;</li>
+<li>Composição de mesa.</li>
+</ul>
+<p>Ao pesquisar por um nome que não corresponda a nenhum bloco existente no Catálogo, o sistema deverá disponibilizar a opção:</p>
+<p><strong>Adicionar bloco &quot;&quot;</strong></p>
+<p>Ao selecionar essa opção, o sistema deverá abrir a criação de um novo bloco com o campo <strong>Nome</strong> previamente preenchido com o termo pesquisado.</p>
+<p>Ao salvar um novo bloco, ele deverá ser incluído no Catálogo e ficar disponível para utilização em outros eventos.</p>
+<p>O Catálogo representa uma biblioteca compartilhada de blocos e, portanto, os blocos cadastrados <strong>não deverão possuir número ou ordem</strong>.</p>
+<p>A numeração deverá existir exclusivamente na associação do bloco com o evento.</p>
+<h4>Gestão do Catálogo</h4>
+<p>O sistema deverá permitir:</p>
+<ul>
+<li>criar blocos;</li>
+<li>editar blocos existentes;</li>
+<li>excluir blocos.</li>
+</ul>
+<p>Não deverá ser disponibilizada funcionalidade para duplicar ou copiar blocos.</p>
+<p>A edição de um bloco do Catálogo deverá refletir nas configurações dos eventos que utilizam o respectivo bloco.</p>
+<p>Ao excluir um bloco que esteja associado a um ou mais eventos, o sistema deverá informar ao usuário que o bloco está em uso e que sua exclusão também o removerá das configurações desses eventos.</p>
+<p>A exclusão somente deverá ser realizada após a confirmação do usuário.</p>
+<h3>Condições de Aplicação</h3>
+<p>Cada bloco poderá possuir uma ou mais condições para determinar quais pessoas receberão a respectiva legenda.</p>
+<p>Cada condição deverá ser composta por:</p>
+<p><strong>Campo | Operador | Valor</strong></p>
+<p>Deverão estar disponíveis os seguintes campos:</p>
+<ul>
+<li>Grupo de Trabalho;</li>
+<li>Tema/Grupo Temático;</li>
+<li>Cargo;</li>
+<li>Nome Fantasia;</li>
+<li>Papel Desempenhado.</li>
+</ul>
+<p>Deverão estar disponíveis os seguintes operadores:</p>
+<ul>
+<li>Igual a;</li>
+<li>Diferente de;</li>
+<li>Contém;</li>
+<li>Em (lista).</li>
+</ul>
+<p>Quando houver mais de uma condição, a partir da segunda deverá ser possível definir o conector lógico:</p>
+<ul>
+<li><strong>E</strong>;</li>
+<li><strong>OU</strong>.</li>
+</ul>
+<p>Os campos <strong>Campo</strong>, <strong>Operador</strong> e <strong>Valor</strong> deverão permanecer alinhados entre as diferentes condições do bloco.</p>
+<h3>Presets</h3>
+<p>O sistema deverá permitir salvar a configuração atual do evento como um <strong>preset</strong>, informando um nome para identificação.</p>
+<p>O preset deverá armazenar o conjunto de blocos e suas respectivas regras, permitindo sua reutilização em outros eventos.</p>
+<p>Também deverá ser possível recuperar uma configuração:</p>
+<ul>
+<li>pela biblioteca de presets; ou</li>
+<li>pelas regras configuradas em outro evento.</li>
+</ul>
+<p>Ao carregar uma configuração, o usuário deverá escolher uma das seguintes opções:</p>
+<p><strong>Substituir:</strong> remove a configuração atual e aplica integralmente a configuração selecionada.</p>
+<p><strong>Mesclar:</strong> mantém os blocos configurados no evento atual e acrescenta os blocos da configuração selecionada.</p>
+<p>O sistema também deverá permitir excluir um preset existente.</p>
+<p>A exclusão de um preset deverá remover somente o preset da biblioteca, sem alterar as configurações dos eventos nos quais ele já tenha sido aplicado.</p>
+<h3>Associação Evento – Pessoa – Legenda</h3>
+<p>A legenda atribuída a uma pessoa deverá existir no contexto do evento.</p>
+<p>Dessa forma, a associação deverá considerar:</p>
+<p><strong>Evento – Pessoa – Legenda</strong></p>
+<p>A execução das regras deverá gerar novamente as associações das pessoas pertencentes ao evento atual, considerando os blocos configurados, suas respectivas condições e sua ordem de prioridade.</p>
+<p>A execução não deverá alterar:</p>
+<ul>
+<li>as legendas de outros eventos;</li>
+<li>o cadastro da pessoa;</li>
+<li>as legendas definidas manualmente.</li>
+</ul>
+<h3>Legendas Manuais</h3>
+<p>As legendas atribuídas manualmente, como <strong>Anfitrião</strong> e <strong>Palestrante</strong>, deverão ser preservadas.</p>
+<p>Essas legendas não deverão ser recalculadas pelas regras automáticas e não poderão ser removidas durante a regeneração das legendas do evento.</p>
+<h3>Simular</h3>
+<p>A ação <strong>Simular</strong> deverá permitir visualizar o resultado da configuração antes de efetivamente aplicá-la.</p>
+<p>A simulação deverá apresentar quantas e quais pessoas seriam associadas a cada legenda considerando os blocos, a ordem e as condições configuradas.</p>
+<p>A simulação não deverá realizar qualquer alteração nos dados do evento.</p>
+<h3>Executar</h3>
+<p>A ação <strong>Executar</strong> deverá aplicar as regras configuradas e regenerar as associações <strong>Evento – Pessoa – Legenda</strong> do evento atual.</p>
+<p>Antes da execução, o sistema deverá solicitar confirmação do usuário, informando que:</p>
+<ul>
+<li>as associações de legenda do evento serão recriadas;</li>
+<li>as legendas manuais serão preservadas;</li>
+<li>outros eventos não serão afetados.</li>
+</ul>
+<p>Após a confirmação, o sistema deverá executar as regras considerando os blocos configurados, suas condições e sua ordem de prioridade.</p>
+<h3>Observações Técnicas</h3>
+<p>A implementação requer adequação da modelagem para que a legenda atribuída à pessoa seja associada ao respectivo evento, seguindo a estrutura <strong>Evento – Pessoa – Legenda</strong>.</p>
+<p>Atualmente, a entidade Legenda mantém informações como número, nome, background e composição, sem os conceitos de bloco reutilizável ou preset.</p>
+<p>Deverão ser previstos novos elementos de persistência para:</p>
+<ul>
+<li>Catálogo de Blocos;</li>
+<li>Presets;</li>
+<li>configuração dos blocos por evento;</li>
+<li>associação Evento – Pessoa – Legenda.</li>
+</ul>
+<p>A numeração deverá deixar de ser uma característica do bloco e passar a representar exclusivamente sua posição dentro da configuração de cada evento.</p>
+<p>Os blocos do Catálogo não deverão possuir estado ativo/inativo no contexto do evento. A permanência do bloco na configuração determinará sua participação na aplicação das regras.</p>
+<p>A exclusão de um bloco do Catálogo deverá considerar suas associações existentes com eventos, removendo-as somente após a confirmação do usuário.</p>
+
+    </div>
+  </details>
+  <details class="doc-section" id="criterios-de-aceite" open>
+    <summary class="section-header">
+      <span class="section-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="3" y1="9" x2="21" y2="9"></line>
+          <line x1="9" y1="21" x2="9" y2="9"></line>
+        </svg>
+        Critérios de aceite
+      </span>
+      <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </summary>
+    <div class="section-body markdown-body">
+<blockquote>
+<p><strong>Numeração</strong>: a fonte numera os critérios, de <code>CA01</code> a <code>CA23</code>; aqui eles são <code>CA-01</code> a <code>CA-23</code> — o mesmo número da ferramenta.</p>
+</blockquote>
+<pre><code class="language-gherkin"># ── CA-01 ───────────────────────────────────────────────────
+Scenario: Adicionar bloco existente
+  Given que estou na Configuração de Legendas de um evento
+  When solicitar a inclusão de um bloco
+  Then o sistema deverá permitir pesquisar e selecionar um bloco existente no Catálogo
+
+# ── CA-02 ───────────────────────────────────────────────────
+Scenario: Criar novo bloco
+  Given que estou adicionando um bloco
+  When optar pela criação de um novo bloco
+  Then o sistema deverá permitir informar nome, cor da legenda e composição de mesa
+
+# ── CA-03 ───────────────────────────────────────────────────
+Scenario: Criar bloco a partir da busca
+  Given que pesquisei um nome que não corresponde a nenhum bloco existente no Catálogo
+  When o sistema não localizar o bloco
+  Then deverá disponibilizar a opção Adicionar bloco &quot;&quot;
+  And ao selecionar a opção, deverá abrir a criação do bloco com o campo Nome previamente preenchido com o termo pesquisado
+
+# ── CA-04 ───────────────────────────────────────────────────
+Scenario: Disponibilizar bloco no Catálogo
+  Given que criei um novo bloco
+  When salvar o cadastro
+  Then o bloco deverá ser incluído no Catálogo e ficar disponível para utilização em outros eventos
+
+# ── CA-05 ───────────────────────────────────────────────────
+Scenario: Catálogo sem numeração
+  Given que estou visualizando o Catálogo de Blocos
+  Then os blocos não deverão apresentar número ou ordem
+
+# ── CA-06 ───────────────────────────────────────────────────
+Scenario: Numeração por evento
+  Given que existem blocos configurados para o evento
+  When visualizar a configuração
+  Then o Nº de cada bloco deverá corresponder à sua posição na ordem do evento
+
+# ── CA-07 ───────────────────────────────────────────────────
+Scenario: Reordenar blocos
+  Given que alterei a ordem dos blocos
+  When a nova ordem for aplicada
+  Then o sistema deverá recalcular automaticamente a numeração dos blocos
+  And a nova ordem deverá definir a prioridade de aplicação das regras
+
+# ── CA-08 ───────────────────────────────────────────────────
+Scenario: Blocos sem estado ativo/inativo
+  Given que um bloco foi adicionado à configuração do evento
+  Then o bloco deverá estar em vigor enquanto permanecer associado ao evento
+  And não deverá ser disponibilizada opção para ativar ou desativar o bloco
+  And caso ele não deva ser considerado, deverá ser removido da configuração do evento
+
+# ── CA-09 ───────────────────────────────────────────────────
+Scenario: Remover bloco do evento
+  Given que um bloco está configurado para o evento
+  When solicitar sua remoção
+  Then o sistema deverá remover somente sua associação com o evento atual, sem excluir o bloco do Catálogo ou alterar outros eventos
+
+# ── CA-10 ───────────────────────────────────────────────────
+Scenario: Editar bloco do Catálogo
+  Given que existe um bloco cadastrado no Catálogo
+  When o usuário editar seus dados e salvar as alterações
+  Then o cadastro do bloco deverá ser atualizado
+  And as alterações deverão refletir nas configurações dos eventos que utilizam o respectivo bloco
+
+# ── CA-11 ───────────────────────────────────────────────────
+Scenario: Excluir bloco do Catálogo
+  Given que existe um bloco cadastrado no Catálogo
+  When o usuário solicitar sua exclusão
+  Then o sistema deverá excluir o bloco do Catálogo
+  And, caso o bloco esteja associado a um ou mais eventos, o sistema deverá informar que o bloco está em uso e que sua exclusão também o removerá das configurações desses eventos, solicitando confirmação antes de concluir a operação
+
+# ── CA-12 ───────────────────────────────────────────────────
+Scenario: Não duplicar blocos
+  Given que estou gerenciando os blocos do Catálogo
+  Then o sistema não deverá disponibilizar funcionalidade para duplicar ou copiar blocos
+
+# ── CA-13 ───────────────────────────────────────────────────
+Scenario: Configurar condições
+  Given que estou configurando um bloco
+  When adicionar uma condição
+  Then o sistema deverá permitir informar Campo, Operador e Valor
+
+# ── CA-14 ───────────────────────────────────────────────────
+Scenario: Utilizar múltiplas condições
+  Given que um bloco possui mais de uma condição
+  When visualizar ou editar suas condições
+  Then o sistema deverá manter Campo, Operador e Valor alinhados
+  And apresentar o conector E/OU a partir da segunda condição
+
+# ── CA-15 ───────────────────────────────────────────────────
+Scenario: Salvar preset
+  Given que configurei os blocos e regras de um evento
+  When solicitar o salvamento como preset
+  Then o sistema deverá permitir informar um nome e salvar a configuração para reutilização
+
+# ── CA-16 ───────────────────────────────────────────────────
+Scenario: Carregar preset
+  Given que existe um preset disponível
+  When carregá-lo em um evento
+  Then o sistema deverá permitir escolher entre Substituir ou Mesclar a configuração atual
+
+# ── CA-17 ───────────────────────────────────────────────────
+Scenario: Excluir preset
+  Given que existe um preset cadastrado
+  When o usuário solicitar sua exclusão
+  Then o sistema deverá remover o preset da biblioteca
+  And manter inalteradas as configurações dos eventos nos quais o preset já tenha sido aplicado
+
+# ── CA-18 ───────────────────────────────────────────────────
+Scenario: Recuperar configuração de outro evento
+  Given que outro evento possui uma configuração de legendas
+  When solicitar sua recuperação
+  Then o sistema deverá permitir utilizar seus blocos e regras na configuração do evento atual
+
+# ── CA-19 ───────────────────────────────────────────────────
+Scenario: Simular regras
+  Given que existem blocos e condições configurados
+  When acionar Simular
+  Then o sistema deverá apresentar quantas e quais pessoas seriam associadas a cada legenda, sem alterar os dados
+
+# ── CA-20 ───────────────────────────────────────────────────
+Scenario: Confirmar execução
+  Given que acionei Executar
+  When o sistema solicitar confirmação
+  Then deverá informar que as associações do evento serão recriadas, que as legendas manuais serão preservadas e que outros eventos não serão afetados
+
+# ── CA-21 ───────────────────────────────────────────────────
+Scenario: Regenerar legendas do evento
+  Given que confirmei a execução
+  When as regras forem processadas
+  Then o sistema deverá recriar as associações Evento – Pessoa – Legenda, considerando os blocos configurados, suas condições e a ordem de prioridade
+
+# ── CA-22 ───────────────────────────────────────────────────
+Scenario: Preservar legendas manuais
+  Given que uma pessoa possui uma legenda atribuída manualmente
+  When as regras forem executadas
+  Then essa legenda deverá ser preservada
+
+# ── CA-23 ───────────────────────────────────────────────────
+Scenario: Isolar configuração por evento
+  Given que executei ou alterei a configuração de um evento
+  Then as configurações e associações de legenda dos demais eventos não deverão ser alteradas
+</code></pre>
+
+    </div>
+  </details>
+  <details class="doc-section" id="features" open>
+    <summary class="section-header">
+      <span class="section-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="3" y1="9" x2="21" y2="9"></line>
+          <line x1="9" y1="21" x2="9" y2="9"></line>
+        </svg>
+        Features
+      </span>
+      <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </summary>
+    <div class="section-body markdown-body">
+<div class="table-container"><table class="custom-table">
+<thead>
+<tr>
+<th>Feature (N3)</th>
+<th>Domínio · Feature Set</th>
+<th class="col-id">Operação</th>
+<th>Critérios cobertos</th>
+<th class="col-id">Status</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="../modules/eventos/legendas/f-consultar-configuracao-legendas.md"><code>EVT-LEG-01</code>: Consultar Configuração de Legendas</a></td>
+<td>Eventos · Legendas</td>
+<td class="col-id">Alteração</td>
+<td><code>CA-06, CA-08</code></td>
+<td class="col-id">✏️ Rascunho</td>
+</tr>
+<tr>
+<td><a href="../modules/eventos/legendas/f-adicionar-bloco-legenda.md"><code>EVT-LEG-02</code>: Adicionar Bloco de Legenda ao Evento</a></td>
+<td>Eventos · Legendas</td>
+<td class="col-id">Alteração</td>
+<td><code>CA-01</code></td>
+<td class="col-id">✏️ Rascunho</td>
+</tr>
+<tr>
+<td><a href="../modules/eventos/legendas/f-configurar-condicoes-legenda.md"><code>EVT-LEG-03</code>: Configurar Condições de Legenda</a></td>
+<td>Eventos · Legendas</td>
+<td class="col-id">Alteração</td>
+<td><code>CA-13, CA-14</code></td>
+<td class="col-id">✏️ Rascunho</td>
+</tr>
+<tr>
+<td><a href="../modules/eventos/legendas/f-reordenar-blocos-legenda.md"><code>EVT-LEG-04</code>: Reordenar Blocos de Legenda</a></td>
+<td>Eventos · Legendas</td>
+<td class="col-id">Criação</td>
+<td><code>CA-07</code></td>
+<td class="col-id">✏️ Rascunho</td>
+</tr>
+<tr>
+<td><a href="../modules/eventos/legendas/f-remover-bloco-legenda.md"><code>EVT-LEG-05</code>: Remover Bloco de Legenda do Evento</a></td>
+<td>Eventos · Legendas</td>
+<td class="col-id">Criação</td>
+<td><code>CA-09</code></td>
+<td class="col-id">✏️ Rascunho</td>
+</tr>
+<tr>
+<td><a href="../modules/eventos/legendas/f-simular-aplicacao-legendas.md"><code>EVT-LEG-06</code>: Simular Aplicação de Legendas</a></td>
+<td>Eventos · Legendas</td>
+<td class="col-id">Alteração</td>
+<td><code>CA-19</code></td>
+<td class="col-id">✏️ Rascunho</td>
+</tr>
+<tr>
+<td><a href="../modules/eventos/legendas/f-gerar-legendas-evento.md"><code>EVT-LEG-07</code>: Gerar Legendas do Evento</a></td>
+<td>Eventos · Legendas</td>
+<td class="col-id">Alteração</td>
+<td><code>CA-20, CA-21, CA-22, CA-23</code></td>
+<td class="col-id">✏️ Rascunho</td>
+</tr>
+<tr>
+<td><a href="../modules/eventos/legendas/f-salvar-preset-legendas.md"><code>EVT-LEG-08</code>: Salvar Preset de Legendas</a></td>
+<td>Eventos · Legendas</td>
+<td class="col-id">Criação</td>
+<td><code>CA-15</code></td>
+<td class="col-id">✏️ Rascunho</td>
+</tr>
+<tr>
+<td><a href="../modules/eventos/legendas/f-carregar-configuracao-legendas.md"><code>EVT-LEG-09</code>: Carregar Configuração de Legendas</a></td>
+<td>Eventos · Legendas</td>
+<td class="col-id">Criação</td>
+<td><code>CA-16, CA-18</code></td>
+<td class="col-id">✏️ Rascunho</td>
+</tr>
+<tr>
+<td><a href="../modules/eventos/legendas/f-excluir-preset-legendas.md"><code>EVT-LEG-10</code>: Excluir Preset de Legendas</a></td>
+<td>Eventos · Legendas</td>
+<td class="col-id">Criação</td>
+<td><code>CA-17</code></td>
+<td class="col-id">✏️ Rascunho</td>
+</tr>
+<tr>
+<td><a href="../modules/eventos/legendas/f-pesquisar-blocos-legenda.md"><code>EVT-LEG-11</code>: Pesquisar Blocos de Legenda</a></td>
+<td>Eventos · Legendas</td>
+<td class="col-id">Criação</td>
+<td><code>CA-05</code></td>
+<td class="col-id">✏️ Rascunho</td>
+</tr>
+<tr>
+<td><a href="../modules/eventos/legendas/f-cadastrar-bloco-legenda.md"><code>EVT-LEG-12</code>: Cadastrar Bloco de Legenda</a></td>
+<td>Eventos · Legendas</td>
+<td class="col-id">Criação</td>
+<td><code>CA-02, CA-03, CA-04</code></td>
+<td class="col-id">✏️ Rascunho</td>
+</tr>
+<tr>
+<td><a href="../modules/eventos/legendas/f-editar-bloco-legenda.md"><code>EVT-LEG-13</code>: Editar Bloco de Legenda</a></td>
+<td>Eventos · Legendas</td>
+<td class="col-id">Criação</td>
+<td><code>CA-10</code></td>
+<td class="col-id">✏️ Rascunho</td>
+</tr>
+<tr>
+<td><a href="../modules/eventos/legendas/f-excluir-bloco-legenda.md"><code>EVT-LEG-14</code>: Excluir Bloco de Legenda</a></td>
+<td>Eventos · Legendas</td>
+<td class="col-id">Criação</td>
+<td><code>CA-11, CA-12</code></td>
+<td class="col-id">✏️ Rascunho</td>
+</tr>
+<tr>
+<td><a href="../modules/eventos/participantes/f-consultar-legenda-participante.md"><code>EVT-PAR-04</code>: Consultar Legenda do Participante</a></td>
+<td>Eventos · Participantes</td>
+<td class="col-id">Alteração</td>
+<td>—</td>
+<td class="col-id">✏️ Rascunho</td>
+</tr>
+<tr>
+<td><a href="../modules/eventos/participantes/f-alterar-legenda-participante.md"><code>EVT-PAR-05</code>: Alterar Legenda do Participante</a></td>
+<td>Eventos · Participantes</td>
+<td class="col-id">Alteração</td>
+<td>—</td>
+<td class="col-id">✏️ Rascunho</td>
+</tr>
+</tbody></table></div>
+<!-- trace-verified: EVT-LEG-01 @ c8018e9f8042 -->
+<!-- trace-verified: EVT-LEG-02 @ e185b8b34ad9 -->
+<!-- trace-verified: EVT-LEG-03 @ 55b8f3ef8821 -->
+<!-- trace-verified: EVT-LEG-04 @ 09f5bae316c8 -->
+<!-- trace-verified: EVT-LEG-05 @ 852e46630f8b -->
+<!-- trace-verified: EVT-LEG-06 @ 011c9cba8f9e -->
+<!-- trace-verified: EVT-LEG-07 @ 4976f9025e38 -->
+<!-- trace-verified: EVT-LEG-08 @ acdb750c668a -->
+<!-- trace-verified: EVT-LEG-09 @ 388c9c15f3cd -->
+<!-- trace-verified: EVT-LEG-10 @ 59e4201ad826 -->
+<!-- trace-verified: EVT-LEG-11 @ b8c2e77097a9 -->
+<!-- trace-verified: EVT-LEG-12 @ 6948c2456376 -->
+<!-- trace-verified: EVT-LEG-13 @ 10b2a5dddc91 -->
+<!-- trace-verified: EVT-LEG-14 @ af2e50e0e48b -->
+<!-- trace-verified: EVT-PAR-04 @ f05eedd48922 -->
+<!-- trace-verified: EVT-PAR-05 @ 22371e65c29a -->
+
+    </div>
+  </details>
+  <details class="doc-section" id="artefatos-impactados" open>
+    <summary class="section-header">
+      <span class="section-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="3" y1="9" x2="21" y2="9"></line>
+          <line x1="9" y1="21" x2="9" y2="9"></line>
+        </svg>
+        Artefatos impactados
+      </span>
+      <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </summary>
+    <div class="section-body markdown-body">
+<div class="table-container"><table class="custom-table">
+<thead>
+<tr>
+<th>Artefato</th>
+<th>Tipo</th>
+<th class="col-id">Operação</th>
+<th>Seção</th>
+<th class="col-id">Natureza</th>
+<th>O quê</th>
+<th>Proveniência</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>modules/eventos/legendas/f-consultar-configuracao-legendas.md</code></td>
+<td>N3</td>
+<td class="col-id">alterar</td>
+<td>Campos/Regras/Cenários</td>
+<td class="col-id">funcional</td>
+<td>só os blocos do evento, numerados pela posição; sem chave Ativa/Inativa; gravação a cada alteração</td>
+<td>derivado: âncora</td>
+<td>feito em 2026-09-30</td>
+</tr>
+<tr>
+<td><code>modules/eventos/legendas/f-adicionar-bloco-legenda.md</code></td>
+<td>N3</td>
+<td class="col-id">alterar</td>
+<td>Campos/Regras/Cenários</td>
+<td class="col-id">funcional</td>
+<td>bloco entra no evento pela busca no catálogo, em vez de ativar uma legenda fixa</td>
+<td>derivado: âncora</td>
+<td>feito em 2026-09-30</td>
+</tr>
+<tr>
+<td><code>modules/eventos/legendas/f-configurar-condicoes-legenda.md</code></td>
+<td>N3</td>
+<td class="col-id">alterar</td>
+<td>Campos/Regras/Cenários</td>
+<td class="col-id">funcional</td>
+<td>condições editadas no cartão do bloco, com conectivo a partir da segunda</td>
+<td>derivado: âncora</td>
+<td>feito em 2026-09-30</td>
+</tr>
+<tr>
+<td><code>modules/eventos/legendas/f-reordenar-blocos-legenda.md</code></td>
+<td>N3</td>
+<td class="col-id">alterar</td>
+<td>Campos/Regras/Cenários</td>
+<td class="col-id">funcional</td>
+<td>feature nascida do ticket: mover o bloco e renumerar</td>
+<td>derivado: âncora</td>
+<td>feito em 2026-09-30</td>
+</tr>
+<tr>
+<td><code>modules/eventos/legendas/f-remover-bloco-legenda.md</code></td>
+<td>N3</td>
+<td class="col-id">alterar</td>
+<td>Campos/Regras/Cenários</td>
+<td class="col-id">funcional</td>
+<td>feature nascida do ticket: tirar o bloco só do evento atual</td>
+<td>derivado: âncora</td>
+<td>feito em 2026-09-30</td>
+</tr>
+<tr>
+<td><code>modules/eventos/legendas/f-simular-aplicacao-legendas.md</code></td>
+<td>N3</td>
+<td class="col-id">alterar</td>
+<td>Campos/Regras/Cenários</td>
+<td class="col-id">funcional</td>
+<td>simulação passa a trazer totais e a relação nominal por legenda</td>
+<td>derivado: âncora</td>
+<td>feito em 2026-09-30</td>
+</tr>
+<tr>
+<td><code>modules/eventos/legendas/f-gerar-legendas-evento.md</code></td>
+<td>N3</td>
+<td class="col-id">alterar</td>
+<td>Campos/Regras/Cenários</td>
+<td class="col-id">funcional</td>
+<td>confirmação antes de gerar; legendas manuais preservadas; todo bloco presente vale</td>
+<td>derivado: âncora</td>
+<td>feito em 2026-09-30</td>
+</tr>
+<tr>
+<td><code>modules/eventos/legendas/f-salvar-preset-legendas.md</code></td>
+<td>N3</td>
+<td class="col-id">alterar</td>
+<td>Campos/Regras/Cenários</td>
+<td class="col-id">funcional</td>
+<td>feature nascida do ticket: guardar a configuração como preset</td>
+<td>derivado: âncora</td>
+<td>feito em 2026-09-30</td>
+</tr>
+<tr>
+<td><code>modules/eventos/legendas/f-carregar-configuracao-legendas.md</code></td>
+<td>N3</td>
+<td class="col-id">alterar</td>
+<td>Campos/Regras/Cenários</td>
+<td class="col-id">funcional</td>
+<td>feature nascida do ticket: trazer preset ou configuração de outro evento</td>
+<td>derivado: âncora</td>
+<td>feito em 2026-09-30</td>
+</tr>
+<tr>
+<td><code>modules/eventos/legendas/f-excluir-preset-legendas.md</code></td>
+<td>N3</td>
+<td class="col-id">alterar</td>
+<td>Campos/Regras/Cenários</td>
+<td class="col-id">funcional</td>
+<td>feature nascida do ticket: excluir preset da biblioteca</td>
+<td>derivado: âncora</td>
+<td>feito em 2026-09-30</td>
+</tr>
+<tr>
+<td><code>modules/eventos/legendas/f-pesquisar-blocos-legenda.md</code></td>
+<td>N3</td>
+<td class="col-id">alterar</td>
+<td>Campos/Regras/Cenários</td>
+<td class="col-id">funcional</td>
+<td>feature nascida do ticket: catálogo de blocos, sem número nem ordem</td>
+<td>derivado: âncora</td>
+<td>feito em 2026-09-30</td>
+</tr>
+<tr>
+<td><code>modules/eventos/legendas/f-cadastrar-bloco-legenda.md</code></td>
+<td>N3</td>
+<td class="col-id">alterar</td>
+<td>Campos/Regras/Cenários</td>
+<td class="col-id">funcional</td>
+<td>feature nascida do ticket: criar bloco no catálogo, inclusive a partir da busca</td>
+<td>derivado: âncora</td>
+<td>feito em 2026-09-30</td>
+</tr>
+<tr>
+<td><code>modules/eventos/legendas/f-editar-bloco-legenda.md</code></td>
+<td>N3</td>
+<td class="col-id">alterar</td>
+<td>Campos/Regras/Cenários</td>
+<td class="col-id">funcional</td>
+<td>feature nascida do ticket: alterar nome e cor do bloco, com reflexo nos eventos</td>
+<td>derivado: âncora</td>
+<td>feito em 2026-09-30</td>
+</tr>
+<tr>
+<td><code>modules/eventos/legendas/f-excluir-bloco-legenda.md</code></td>
+<td>N3</td>
+<td class="col-id">alterar</td>
+<td>Campos/Regras/Cenários</td>
+<td class="col-id">funcional</td>
+<td>feature nascida do ticket: excluir bloco, com aviso de uso e confirmação</td>
+<td>derivado: âncora</td>
+<td>feito em 2026-09-30</td>
+</tr>
+<tr>
+<td><code>modules/eventos/participantes/f-consultar-legenda-participante.md</code></td>
+<td>N3</td>
+<td class="col-id">alterar</td>
+<td>Campos/Regras/Cenários</td>
+<td class="col-id">funcional</td>
+<td>lista de legendas vinda do catálogo, com a marca &quot;Configurada neste evento&quot;</td>
+<td>derivado: âncora</td>
+<td>feito em 2026-09-30</td>
+</tr>
+<tr>
+<td><code>modules/eventos/participantes/f-alterar-legenda-participante.md</code></td>
+<td>N3</td>
+<td class="col-id">alterar</td>
+<td>Campos/Regras/Cenários</td>
+<td class="col-id">funcional</td>
+<td>a legenda atribuída é manual, única por participante e preservada na geração</td>
+<td>derivado: âncora</td>
+<td>feito em 2026-09-30</td>
+</tr>
+<tr>
+<td><code>global/data-models/eventos.md</code></td>
+<td>DATA-MODEL</td>
+<td class="col-id">alterar</td>
+<td>Legenda · EventoLegenda · EventoLegendaCondicao · EventoPessoaLegenda · PresetLegenda</td>
+<td class="col-id">dados</td>
+<td>as cinco entidades de legenda, como o ticket as deixou</td>
+<td>derivado: ## Campos → coluna</td>
+<td>feito em 2026-09-30</td>
+</tr>
+<tr>
+<td><code>global/MESSAGE-DICTIONARY.md</code></td>
+<td>MESSAGE-DICT</td>
+<td class="col-id">alterar</td>
+<td>Eventos — legendas</td>
+<td class="col-id">dados</td>
+<td>as 16 mensagens das telas de configuração, catálogo e presets</td>
+<td>elicitado</td>
+<td>feito em 2026-09-30</td>
+</tr>
+<tr>
+<td><code>global/DATA-MODEL.md</code></td>
+<td>DATA-MODEL</td>
+<td class="col-id">alterar</td>
+<td>Arquivos Lógicos (APF)</td>
+<td class="col-id">dados</td>
+<td>os três arquivos lógicos de Eventos dimensionados: Evento, Legenda e PresetLegenda</td>
+<td>elicitado</td>
+<td>feito em 2026-10-04</td>
+</tr>
+<tr>
+<td><code>global/CONTAGEM-PF.md</code></td>
+<td>MÉTRICA</td>
+<td class="col-id">alterar</td>
+<td>—</td>
+<td class="col-id">derivado</td>
+<td>contagem detalhada das 16 features e das funções de dados, pelo <code>PROMPT_CONTAGEM</code></td>
+<td>derivado: delta de dados</td>
+<td>feito em 2026-10-04</td>
+</tr>
+</tbody></table></div>
+
+    </div>
+  </details>
+  <details class="doc-section" id="contagem-estimada" open>
+    <summary class="section-header">
+      <span class="section-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="3" y1="9" x2="21" y2="9"></line>
+          <line x1="9" y1="21" x2="9" y2="9"></line>
+        </svg>
+        Contagem estimada
+      </span>
+      <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </summary>
+    <div class="section-body markdown-body">
+<p>Não houve — AIM aberta na entrega.</p>
+
+    </div>
+  </details>
+  <details class="doc-section" id="premissas" open>
+    <summary class="section-header">
+      <span class="section-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="3" y1="9" x2="21" y2="9"></line>
+          <line x1="9" y1="21" x2="9" y2="9"></line>
+        </svg>
+        Premissas
+      </span>
+      <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </summary>
+    <div class="section-body markdown-body">
+<ul>
+<li><strong>Linha do tempo.</strong> O ticket foi criado em 2026-09-04, estava <em>em teste</em> em 2026-09-30 e em <em>homologação</em> em 2026-10-04, na sprint que o Jira chama de <code>SP_SMC_5</code> e esta instância, de <code>SP005</code>; a data da entrega não consta em nenhuma fonte ❓. A especificação foi escrita em 2026-09-30, por engenharia reversa dos documentos legados e de um código que já continha a entrega. Não havia baseline de Pontos de Função: a primeira contagem é a de 2026-10-04, feita já com a entrega dentro — ela dá o tamanho de cada função depois do ticket, que é a base do cálculo da função alterada.</li>
+<li><strong>O &quot;antes&quot; é o documento legado.</strong> Os N3 já nasceram descrevendo o comportamento depois do ticket, então não há versão anterior do N3 nem do código para comparar. O contraste <em>Antes</em> e <em>Agora</em> usa GPE006 – Gerenciar Regras de Legendas v1.0 (03/10/2025) e GPE005 – Gerenciar Participante v1.1 (16/12/2025) como retrato do que existia. ⚠️ Onde o sistema já divergia desses documentos antes do ticket, o contraste atribui ao ticket uma mudança que não é dele.</li>
+<li><strong>Natureza é proposta.</strong> <code>alterada</code> é a feature que tem funcionalidade correspondente no documento legado; <code>incluída</code>, a que não tem. A contagem detalhada mediu o tamanho, não a natureza: ela segue como proposta, a confirmar com a equipe de métricas — ver as decisões pendentes.</li>
+<li><strong>Regras e Cenários.</strong> Nas features incluídas, o número é o total do N3, porque tudo nele veio com o ticket. Nas alteradas sai <code>—</code>: o N3 nasceu já com o delta, e não há como separar o que o ticket acrescentou do que já existia.</li>
+<li><strong>Dados declarados, não verificados.</strong> Os scripts de migração do banco não estão nesta instância; as fontes citam três deles, sem o conteúdo. As alterações de dados são as declaradas nas <em>Observações Técnicas</em> do ticket, confrontadas com <code>global/data-models/eventos.md</code>.</li>
+<li><strong>PFB e PFL.</strong> O PFB de cada feature é a soma dos processos elementares que o ticket incluiu ou alterou, como estão na <code>## Métricas de tamanho</code> do N3; o PFL é o PFB inteiro na feature incluída e a metade na alterada. Nas funções de dados, o tamanho é o de depois do ticket, do <code>global/DATA-MODEL.md</code>; o de antes só consta para a Legenda, pelo que o próprio ticket diz dela.</li>
+</ul>
+
+    </div>
+  </details>
+  <details class="doc-section" id="alteracoes-na-spec-por-feature-set" open>
+    <summary class="section-header">
+      <span class="section-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="3" y1="9" x2="21" y2="9"></line>
+          <line x1="9" y1="21" x2="9" y2="9"></line>
+        </svg>
+        Alterações na spec, por Feature Set
+      </span>
+      <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </summary>
+    <div class="section-body markdown-body">
+<h3>Legendas</h3>
+<div class="table-container"><table class="custom-table">
+<thead>
+<tr>
+<th class="col-nome">Feature</th>
+<th class="col-id">CA-n</th>
+<th class="col-id">Natureza</th>
+<th class="col-prosa">Mudança</th>
+<th class="col-id">Regras</th>
+<th class="col-id">Cenários</th>
+<th class="col-num">PFB</th>
+<th class="col-num">PFL</th>
+</tr>
+</thead>
+<tbody><tr>
+<td class="col-nome"><code>EVT-LEG-01</code><br><strong>Consultar Configuração de Legendas</strong></td>
+<td class="col-id">CA-06, CA-08</td>
+<td class="col-id">alterada</td>
+<td class="col-prosa"><strong>Alteração</strong> do que a consulta lista e de como numera. <em>Antes</em> a tela trazia as doze legendas configuráveis, ativas e inativas, cada uma com a chave Ativa/Inativa, sem número, e o que se alterava só valia depois de &quot;Salvar Regras&quot;. <em>Agora</em> a tela traz só os blocos adicionados ao evento, um cartão por bloco, numerado pela posição na configuração — que é também a prioridade —, não há bloco inativo, e cada alteração é gravada na hora, sem botão de salvar.</td>
+<td class="col-id">—</td>
+<td class="col-id">—</td>
+<td class="col-num">4</td>
+<td class="col-num">2</td>
+</tr>
+<tr>
+<td class="col-nome"><code>EVT-LEG-02</code><br><strong>Adicionar Bloco de Legenda ao Evento</strong></td>
+<td class="col-id">CA-01</td>
+<td class="col-id">alterada</td>
+<td class="col-prosa"><strong>Alteração</strong> de como a legenda entra em vigor no evento. <em>Antes</em> a legenda era uma das doze fixas e entrava em vigor quando o usuário a ativava, como primeiro passo de &quot;Incluir Regra de Legenda&quot;. <em>Agora</em> o usuário abre a janela Adicionar bloco, busca pelo nome no catálogo comum a todos os eventos, marca um ou mais blocos e os adiciona; cada bloco entra no fim da ordem, sem condições. A busca sem resultado oferece o atalho que leva a Cadastrar Bloco de Legenda.</td>
+<td class="col-id">—</td>
+<td class="col-id">—</td>
+<td class="col-num">6</td>
+<td class="col-num">3</td>
+</tr>
+<tr>
+<td class="col-nome"><code>EVT-LEG-03</code><br><strong>Configurar Condições de Legenda</strong></td>
+<td class="col-id">CA-13, CA-14</td>
+<td class="col-id">alterada</td>
+<td class="col-prosa"><strong>Alteração</strong> da edição das condições. <em>Antes</em> &quot;Incluir Regra&quot; e &quot;Editar Regra&quot; eram funcionalidades separadas, com Campo, Operador e Valor obrigatórios, o quadro &quot;Preview da condição&quot; e gravação por &quot;Salvar Regras&quot;. <em>Agora</em> a condição é incluída, alterada e excluída no próprio cartão do bloco e gravada a cada mudança, com as colunas Conectivo, Campo, Operador e Valor alinhadas e o conectivo E ou OU a partir da segunda; o preview não existe, e o valor vazio é aceito.</td>
+<td class="col-id">—</td>
+<td class="col-id">—</td>
+<td class="col-num">4</td>
+<td class="col-num">2</td>
+</tr>
+<tr>
+<td class="col-nome"><code>EVT-LEG-04</code><br><strong>Reordenar Blocos de Legenda</strong></td>
+<td class="col-id">CA-07</td>
+<td class="col-id">incluída</td>
+<td class="col-prosa"><strong>Inclusão</strong> da reordenação dos blocos. <em>Antes</em> não havia como mudar a ordem: GPE006 só dizia que as regras se aplicam &quot;na ordem de prioridade das legendas&quot;. <em>Agora</em> as setas Mover para cima e Mover para baixo trocam o bloco de lugar com o vizinho, os números são recalculados e a nova ordem passa a ser a prioridade.</td>
+<td class="col-id">+9</td>
+<td class="col-id">+9</td>
+<td class="col-num">3</td>
+<td class="col-num">3</td>
+</tr>
+<tr>
+<td class="col-nome"><code>EVT-LEG-05</code><br><strong>Remover Bloco de Legenda do Evento</strong></td>
+<td class="col-id">CA-09</td>
+<td class="col-id">incluída</td>
+<td class="col-prosa"><strong>Inclusão</strong> da remoção do bloco da configuração do evento. <em>Antes</em> a legenda que não devia valer era inativada pela chave Ativa/Inativa, e continuava na lista. <em>Agora</em> o bloco é removido do evento, com as condições que tinha ali, depois de confirmação; continua no catálogo, e os blocos que ficam são renumerados.</td>
+<td class="col-id">+8</td>
+<td class="col-id">+8</td>
+<td class="col-num">3</td>
+<td class="col-num">3</td>
+</tr>
+<tr>
+<td class="col-nome"><code>EVT-LEG-06</code><br><strong>Simular Aplicação de Legendas</strong></td>
+<td class="col-id">CA-19</td>
+<td class="col-id">alterada</td>
+<td class="col-prosa"><strong>Alteração</strong> do resultado da simulação. <em>Antes</em> &quot;Simular Execução&quot; apresentava só um resumo da quantidade de pessoas selecionadas para cada legenda. <em>Agora</em> &quot;Simular&quot; mostra quatro totais — Participantes, Legendas removidas, Legendas aplicadas e Manuais preservadas —, os blocos ignorados e, para cada legenda, a relação nominal dos participantes, e dá acesso direto à geração.</td>
+<td class="col-id">—</td>
+<td class="col-id">—</td>
+<td class="col-num">5</td>
+<td class="col-num">2,5</td>
+</tr>
+<tr>
+<td class="col-nome"><code>EVT-LEG-07</code><br><strong>Gerar Legendas do Evento</strong></td>
+<td class="col-id">CA-20, CA-21, CA-22, CA-23</td>
+<td class="col-id">alterada</td>
+<td class="col-prosa"><strong>Alteração</strong> do que a geração apaga e do que ela exige. <em>Antes</em> &quot;Executar Regras&quot; removia todas as legendas existentes do evento antes de aplicar as regras ativas, sem pedir confirmação. <em>Agora</em> &quot;Executar&quot; pede confirmação — informando que as associações do evento serão recriadas, que as manuais serão preservadas e que os outros eventos não serão afetados —, apaga só as legendas atribuídas por regra, preserva as manuais e aplica todos os blocos presentes na configuração, pela ordem.</td>
+<td class="col-id">—</td>
+<td class="col-id">—</td>
+<td class="col-num">4</td>
+<td class="col-num">2</td>
+</tr>
+<tr>
+<td class="col-nome"><code>EVT-LEG-08</code><br><strong>Salvar Preset de Legendas</strong></td>
+<td class="col-id">CA-15</td>
+<td class="col-id">incluída</td>
+<td class="col-prosa"><strong>Inclusão</strong> do preset. <em>Antes</em> a configuração de um evento não podia ser guardada para reúso. <em>Agora</em> &quot;Salvar como preset&quot; guarda na biblioteca, com um nome, os blocos, a ordem e as condições do evento.</td>
+<td class="col-id">+9</td>
+<td class="col-id">+10</td>
+<td class="col-num">4</td>
+<td class="col-num">4</td>
+</tr>
+<tr>
+<td class="col-nome"><code>EVT-LEG-09</code><br><strong>Carregar Configuração de Legendas</strong></td>
+<td class="col-id">CA-16, CA-18</td>
+<td class="col-id">incluída</td>
+<td class="col-prosa"><strong>Inclusão</strong> da carga de configuração. <em>Antes</em> cada evento era configurado do zero. <em>Agora</em> &quot;Carregar configuração&quot; traz a configuração de um preset ou de outro evento, no modo Substituir — troca a configuração atual pela selecionada — ou no modo Mesclar — acrescenta os blocos que faltam.</td>
+<td class="col-id">+11</td>
+<td class="col-id">+17</td>
+<td class="col-num">15</td>
+<td class="col-num">15</td>
+</tr>
+<tr>
+<td class="col-nome"><code>EVT-LEG-10</code><br><strong>Excluir Preset de Legendas</strong></td>
+<td class="col-id">CA-17</td>
+<td class="col-id">incluída</td>
+<td class="col-prosa"><strong>Inclusão</strong> da exclusão de preset. <em>Antes</em> não havia preset. <em>Agora</em> o preset é excluído da biblioteca, depois de confirmação, sem alterar os eventos em que já foi aplicado.</td>
+<td class="col-id">+5</td>
+<td class="col-id">+8</td>
+<td class="col-num">3</td>
+<td class="col-num">3</td>
+</tr>
+<tr>
+<td class="col-nome"><code>EVT-LEG-11</code><br><strong>Pesquisar Blocos de Legenda</strong></td>
+<td class="col-id">CA-05</td>
+<td class="col-id">incluída</td>
+<td class="col-prosa"><strong>Inclusão</strong> do catálogo de blocos como tela de consulta. <em>Antes</em> as legendas eram uma relação fixa e numerada, sem tela própria. <em>Agora</em> o Catálogo de blocos, comum a todos os eventos, é pesquisado pelo nome e mostra o nome e a cor de cada bloco, sem número nem ordem.</td>
+<td class="col-id">+5</td>
+<td class="col-id">+10</td>
+<td class="col-num">3</td>
+<td class="col-num">3</td>
+</tr>
+<tr>
+<td class="col-nome"><code>EVT-LEG-12</code><br><strong>Cadastrar Bloco de Legenda</strong></td>
+<td class="col-id">CA-02, CA-03, CA-04</td>
+<td class="col-id">incluída</td>
+<td class="col-prosa"><strong>Inclusão</strong> do cadastro de bloco. <em>Antes</em> não se criava legenda: a relação era fixa. <em>Agora</em> o bloco é criado no catálogo, com nome e cor, e fica disponível a todos os eventos; pode ser criado de dentro da configuração de um evento, com o nome já preenchido pelo termo buscado, e nesse caso já entra no evento.</td>
+<td class="col-id">+9</td>
+<td class="col-id">+14</td>
+<td class="col-num">3</td>
+<td class="col-num">3</td>
+</tr>
+<tr>
+<td class="col-nome"><code>EVT-LEG-13</code><br><strong>Editar Bloco de Legenda</strong></td>
+<td class="col-id">CA-10</td>
+<td class="col-id">incluída</td>
+<td class="col-prosa"><strong>Inclusão</strong> da edição de bloco. <em>Antes</em> o nome e a cor das legendas não eram alteráveis pela tela. <em>Agora</em> os dois são alterados no catálogo, e a mudança vale em todos os eventos que usam o bloco e nas legendas já atribuídas.</td>
+<td class="col-id">+9</td>
+<td class="col-id">+13</td>
+<td class="col-num">3</td>
+<td class="col-num">3</td>
+</tr>
+<tr>
+<td class="col-nome"><code>EVT-LEG-14</code><br><strong>Excluir Bloco de Legenda</strong></td>
+<td class="col-id">CA-11, CA-12</td>
+<td class="col-id">incluída</td>
+<td class="col-prosa"><strong>Inclusão</strong> da exclusão de bloco. <em>Antes</em> não se excluía legenda. <em>Agora</em> o bloco é excluído do catálogo depois de o sistema informar em que eventos ele está em uso e pedir confirmação; a exclusão o retira da configuração desses eventos e das legendas dos participantes. Não há cópia de bloco.</td>
+<td class="col-id">+12</td>
+<td class="col-id">+15</td>
+<td class="col-num">3</td>
+<td class="col-num">3</td>
+</tr>
+</tbody></table></div>
+<div class="table-container"><table class="custom-table">
+<thead>
+<tr>
+<th class="col-nome">Processo elementar</th>
+<th>Da feature</th>
+<th>Papel</th>
+<th>Tipo</th>
+<th class="col-num">PFB</th>
+<th class="col-id">Natureza</th>
+<th class="col-num">PFL</th>
+<th>Critérios</th>
+</tr>
+</thead>
+<tbody><tr>
+<td class="col-nome">Consultar Configuração de Legendas</td>
+<td><code>EVT-LEG-01</code></td>
+<td>principal</td>
+<td>CE</td>
+<td class="col-num">4</td>
+<td class="col-id">alterada</td>
+<td class="col-num">2</td>
+<td><code>CA-06, CA-08</code></td>
+</tr>
+<tr>
+<td class="col-nome">Adicionar Bloco de Legenda ao Evento</td>
+<td><code>EVT-LEG-02</code></td>
+<td>principal</td>
+<td>EE</td>
+<td class="col-num">3</td>
+<td class="col-id">alterada</td>
+<td class="col-num">1,5</td>
+<td><code>CA-01</code></td>
+</tr>
+<tr>
+<td class="col-nome">Consultar Lista de blocos (combo)</td>
+<td><code>EVT-LEG-02</code></td>
+<td>acessório</td>
+<td>CE</td>
+<td class="col-num">3</td>
+<td class="col-id">alterada</td>
+<td class="col-num">1,5</td>
+<td><code>CA-01</code></td>
+</tr>
+<tr>
+<td class="col-nome">Configurar Condições de Legenda</td>
+<td><code>EVT-LEG-03</code></td>
+<td>principal</td>
+<td>EE</td>
+<td class="col-num">4</td>
+<td class="col-id">alterada</td>
+<td class="col-num">2</td>
+<td><code>CA-13, CA-14</code></td>
+</tr>
+<tr>
+<td class="col-nome">Reordenar Blocos de Legenda</td>
+<td><code>EVT-LEG-04</code></td>
+<td>principal</td>
+<td>EE</td>
+<td class="col-num">3</td>
+<td class="col-id">incluída</td>
+<td class="col-num">3</td>
+<td><code>CA-07</code></td>
+</tr>
+<tr>
+<td class="col-nome">Remover Bloco de Legenda do Evento</td>
+<td><code>EVT-LEG-05</code></td>
+<td>principal</td>
+<td>EE</td>
+<td class="col-num">3</td>
+<td class="col-id">incluída</td>
+<td class="col-num">3</td>
+<td><code>CA-09</code></td>
+</tr>
+<tr>
+<td class="col-nome">Simular Aplicação de Legendas</td>
+<td><code>EVT-LEG-06</code></td>
+<td>principal</td>
+<td>SE</td>
+<td class="col-num">5</td>
+<td class="col-id">alterada</td>
+<td class="col-num">2,5</td>
+<td><code>CA-19</code></td>
+</tr>
+<tr>
+<td class="col-nome">Gerar Legendas do Evento</td>
+<td><code>EVT-LEG-07</code></td>
+<td>principal</td>
+<td>EE</td>
+<td class="col-num">4</td>
+<td class="col-id">alterada</td>
+<td class="col-num">2</td>
+<td><code>CA-20, CA-21, CA-22, CA-23</code></td>
+</tr>
+<tr>
+<td class="col-nome">Salvar Preset de Legendas</td>
+<td><code>EVT-LEG-08</code></td>
+<td>principal</td>
+<td>EE</td>
+<td class="col-num">4</td>
+<td class="col-id">incluída</td>
+<td class="col-num">4</td>
+<td><code>CA-15</code></td>
+</tr>
+<tr>
+<td class="col-nome">Carregar Configuração de Legendas</td>
+<td><code>EVT-LEG-09</code></td>
+<td>principal</td>
+<td>EE</td>
+<td class="col-num">6</td>
+<td class="col-id">incluída</td>
+<td class="col-num">6</td>
+<td><code>CA-16, CA-18</code></td>
+</tr>
+<tr>
+<td class="col-nome">Consultar Biblioteca de presets (combo)</td>
+<td><code>EVT-LEG-09</code></td>
+<td>acessório</td>
+<td>SE</td>
+<td class="col-num">5</td>
+<td class="col-id">incluída</td>
+<td class="col-num">5</td>
+<td><code>CA-16</code></td>
+</tr>
+<tr>
+<td class="col-nome">Consultar De outro evento (combo)</td>
+<td><code>EVT-LEG-09</code></td>
+<td>acessório</td>
+<td>SE</td>
+<td class="col-num">4</td>
+<td class="col-id">incluída</td>
+<td class="col-num">4</td>
+<td><code>CA-18</code></td>
+</tr>
+<tr>
+<td class="col-nome">Excluir Preset de Legendas</td>
+<td><code>EVT-LEG-10</code></td>
+<td>principal</td>
+<td>EE</td>
+<td class="col-num">3</td>
+<td class="col-id">incluída</td>
+<td class="col-num">3</td>
+<td><code>CA-17</code></td>
+</tr>
+<tr>
+<td class="col-nome">Pesquisar Blocos de Legenda</td>
+<td><code>EVT-LEG-11</code></td>
+<td>principal</td>
+<td>CE</td>
+<td class="col-num">3</td>
+<td class="col-id">incluída</td>
+<td class="col-num">3</td>
+<td><code>CA-05</code></td>
+</tr>
+<tr>
+<td class="col-nome">Cadastrar Bloco de Legenda</td>
+<td><code>EVT-LEG-12</code></td>
+<td>principal</td>
+<td>EE</td>
+<td class="col-num">3</td>
+<td class="col-id">incluída</td>
+<td class="col-num">3</td>
+<td><code>CA-02, CA-03, CA-04</code></td>
+</tr>
+<tr>
+<td class="col-nome">Editar Bloco de Legenda</td>
+<td><code>EVT-LEG-13</code></td>
+<td>principal</td>
+<td>EE</td>
+<td class="col-num">3</td>
+<td class="col-id">incluída</td>
+<td class="col-num">3</td>
+<td><code>CA-10</code></td>
+</tr>
+<tr>
+<td class="col-nome">Excluir Bloco de Legenda</td>
+<td><code>EVT-LEG-14</code></td>
+<td>principal</td>
+<td>EE</td>
+<td class="col-num">3</td>
+<td class="col-id">incluída</td>
+<td class="col-num">3</td>
+<td><code>CA-11, CA-12</code></td>
+</tr>
+</tbody></table></div>
+<p>Em <code>EVT-LEG-13</code> <em>Editar Bloco de Legenda</em> a leitura que abre a janela de edição não conta: a lista do catálogo já mostra o nome e a cor.</p>
+<h3>Participantes</h3>
+<div class="table-container"><table class="custom-table">
+<thead>
+<tr>
+<th class="col-nome">Feature</th>
+<th class="col-id">CA-n</th>
+<th class="col-id">Natureza</th>
+<th class="col-prosa">Mudança</th>
+<th class="col-id">Regras</th>
+<th class="col-id">Cenários</th>
+<th class="col-num">PFB</th>
+<th class="col-num">PFL</th>
+</tr>
+</thead>
+<tbody><tr>
+<td class="col-nome"><code>EVT-PAR-04</code><br><strong>Consultar Legenda do Participante</strong></td>
+<td class="col-id">—</td>
+<td class="col-id">alterada</td>
+<td class="col-prosa"><strong>Alteração</strong> da lista de legendas oferecida na consulta. <em>Antes</em> a janela trazia uma relação fixa e numerada, de &quot;1 – Anfitrião&quot; a &quot;16 – Assento livre&quot;, com a composição da mesa. <em>Agora</em> a lista vem do catálogo de blocos, em ordem alfabética, sem número nem composição, e marca &quot;Configurada neste evento&quot; nos blocos que fazem parte da configuração do evento. 🔍 Atribuída ao ticket por dedução: a lista e a marca dependem do catálogo e da configuração por evento, que só existem a partir dele.</td>
+<td class="col-id">—</td>
+<td class="col-id">—</td>
+<td class="col-num">3</td>
+<td class="col-num">1,5</td>
+</tr>
+<tr>
+<td class="col-nome"><code>EVT-PAR-05</code><br><strong>Alterar Legenda do Participante</strong></td>
+<td class="col-id">—</td>
+<td class="col-id">alterada</td>
+<td class="col-prosa"><strong>Alteração</strong> da natureza da legenda atribuída. <em>Antes</em> GPE005 falava só em alterar ou atribuir a legenda do participante, sem distinguir a manual, e a execução das regras removia todas as legendas do evento. <em>Agora</em> a legenda escolhida é manual, única por participante, guardada na associação Evento – Pessoa – Legenda, vale só para o evento aberto, prevalece sobre as recebidas por regra e não é desfeita pela geração.</td>
+<td class="col-id">—</td>
+<td class="col-id">—</td>
+<td class="col-num">3</td>
+<td class="col-num">1,5</td>
+</tr>
+</tbody></table></div>
+<div class="table-container"><table class="custom-table">
+<thead>
+<tr>
+<th class="col-nome">Processo elementar</th>
+<th>Da feature</th>
+<th>Papel</th>
+<th>Tipo</th>
+<th class="col-num">PFB</th>
+<th class="col-id">Natureza</th>
+<th class="col-num">PFL</th>
+<th>Critérios</th>
+</tr>
+</thead>
+<tbody><tr>
+<td class="col-nome">Consultar Selecione uma Legenda (combo)</td>
+<td><code>EVT-PAR-04</code></td>
+<td>acessório</td>
+<td>CE</td>
+<td class="col-num">3</td>
+<td class="col-id">alterada</td>
+<td class="col-num">1,5</td>
+<td>—</td>
+</tr>
+<tr>
+<td class="col-nome">Alterar Legenda do Participante</td>
+<td><code>EVT-PAR-05</code></td>
+<td>principal</td>
+<td>EE</td>
+<td class="col-num">3</td>
+<td class="col-id">alterada</td>
+<td class="col-num">1,5</td>
+<td>—</td>
+</tr>
+</tbody></table></div>
+<p>Em <code>EVT-PAR-04</code> <em>Consultar Legenda do Participante</em> o ticket alcançou só a lista de legendas; o processo principal da feature, de 4 PF, não entra no PFB.</p>
+
+    </div>
+  </details>
+  <details class="doc-section" id="funcoes-de-dados-alteradas" open>
+    <summary class="section-header">
+      <span class="section-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="3" y1="9" x2="21" y2="9"></line>
+          <line x1="9" y1="21" x2="9" y2="9"></line>
+        </svg>
+        Funções de dados alteradas
+      </span>
+      <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </summary>
+    <div class="section-body markdown-body">
+<h3>ALI: Evento — RLR ❓ → 6 · DER ❓ → 33 · 15 PF · alterada</h3>
+<div class="table-container"><table class="custom-table">
+<thead>
+<tr>
+<th>Migração</th>
+<th>Entidade · atributo</th>
+<th class="col-id">Natureza</th>
+<th class="col-prosa">Mudança</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>❓</td>
+<td>EventoLegenda · Legenda e Nº</td>
+<td class="col-id">registro lógico incluído 🔍</td>
+<td class="col-prosa"><strong>Inclusão</strong> do bloco de legenda do evento. <em>Antes</em> GPE006 já descrevia regras de legenda por evento, com cada legenda ativa ou inativa; como isso era guardado não consta em nenhuma fonte ❓. <em>Agora</em> cada bloco presente na configuração é um registro do evento, com o Nº que dá a ordem e a prioridade; não há atributo de ativo ou inativo.</td>
+</tr>
+<tr>
+<td>❓</td>
+<td>EventoLegendaCondicao · Ordem, Conectivo, Campo, Operador e Valor</td>
+<td class="col-id">registro lógico incluído 🔍</td>
+<td class="col-prosa"><strong>Inclusão</strong> da condição como registro do bloco. <em>Antes</em> a regra de uma legenda tinha Campo, Operador e Valor, segundo GPE006; a guarda anterior não consta ❓. <em>Agora</em> cada condição guarda também a ordem dentro do bloco e o conectivo E ou OU que a liga à anterior.</td>
+</tr>
+<tr>
+<td>❓</td>
+<td>EventoPessoaLegenda · Legenda do participante, Manual e Data de atribuição</td>
+<td class="col-id">registro lógico incluído 🔍</td>
+<td class="col-prosa"><strong>Inclusão</strong> da associação Evento – Pessoa – Legenda. <em>Antes</em> o ticket diz apenas que a legenda da pessoa &quot;deverá passar a ser vinculada ao evento&quot;; onde ela era guardada não consta ❓. <em>Agora</em> cada legenda que o participante recebe num evento é um registro, com a marca de manual e a data de atribuição, e o participante pode ter mais de uma legenda recebida por regra.</td>
+</tr>
+</tbody></table></div>
+<p>O arquivo lógico Evento já existia — o evento, os assentos e os participantes são anteriores ao ticket — e por isso é função alterada, medida pelo tamanho de depois: 6 registros lógicos e 33 DER, complexidade Alta. O tamanho de antes não consta ❓. Dos números de hoje, 3 registros e 10 DER são das três entidades acima; se as regras por evento e a legenda do participante já eram guardadas neste arquivo antes do ticket, veio menos do que isso.</p>
+<h3>ALI: Legenda — RLR 1 → 1 · DER 5 → 3 · 7 PF · alterada</h3>
+<div class="table-container"><table class="custom-table">
+<thead>
+<tr>
+<th>Migração</th>
+<th>Entidade · atributo</th>
+<th class="col-id">Natureza</th>
+<th class="col-prosa">Mudança</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>❓</td>
+<td>Legenda · número</td>
+<td class="col-id">atributo removido</td>
+<td class="col-prosa"><strong>Remoção</strong> do número da legenda. <em>Antes</em> a legenda tinha número próprio: o ticket registra que a entidade guardava &quot;número, nome, background e composição&quot;, e GPE005 lista as opções de &quot;1 – Anfitrião&quot; a &quot;16 – Assento livre&quot;. <em>Agora</em> o número não é do bloco: é a posição dele na configuração de cada evento.</td>
+</tr>
+<tr>
+<td><code>V00020</code> 🔍</td>
+<td>Legenda · composição</td>
+<td class="col-id">atributo removido</td>
+<td class="col-prosa"><strong>Remoção</strong> da composição de mesa. <em>Antes</em> a legenda guardava a composição, que a imagem de GPE005 mostra ao lado do nome. <em>Agora</em> o bloco só tem nome e cor. ⚠️ O ticket pede a composição na criação do bloco — ver as decisões pendentes.</td>
+</tr>
+</tbody></table></div>
+<p>Os 5 DER de antes são os quatro atributos que o ticket cita — número, nome, background e composição — mais o identificador 🔍. A complexidade é Baixa antes e depois.</p>
+<h3>ALI: PresetLegenda — RLR 0 → 1 · DER 0 → 5 · 7 PF · incluída</h3>
+<div class="table-container"><table class="custom-table">
+<thead>
+<tr>
+<th>Migração</th>
+<th>Entidade · atributo</th>
+<th class="col-id">Natureza</th>
+<th class="col-prosa">Mudança</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>V00018</code> 🔍</td>
+<td>PresetLegenda · Nome do preset, Descrição, Evento de origem e Configuração</td>
+<td class="col-id">entidade incluída</td>
+<td class="col-prosa"><strong>Inclusão</strong> do preset. <em>Antes</em> não havia como guardar uma configuração: o ticket registra que a Legenda existia &quot;sem os conceitos de bloco reutilizável ou preset&quot;. <em>Agora</em> o preset guarda, com nome único, o retrato dos blocos, da ordem e das condições, mais a descrição e o nome do evento de origem.</td>
+</tr>
+</tbody></table></div>
+
+    </div>
+  </details>
+  <details class="doc-section" id="impacto-em-dicionarios" open>
+    <summary class="section-header">
+      <span class="section-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="3" y1="9" x2="21" y2="9"></line>
+          <line x1="9" y1="21" x2="9" y2="9"></line>
+        </svg>
+        Impacto em dicionários
+      </span>
+      <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </summary>
+    <div class="section-body markdown-body">
+<ul>
+<li><strong><code>global/MESSAGE-DICTIONARY.md</code></strong> — as 16 mensagens da seção <em>Eventos — legendas</em> pertencem às telas que o ticket reformulou ou criou: três da configuração do evento (<code>EVT_LEG_EVENTO_NAO_INFORMADO</code>, <code>EVT_LEG_EVENTO_NAO_ENCONTRADO</code> e <code>EVT_LEG_BLOCO_REPETIDO</code>), seis de preset (<code>EVT_LEG_PRESET_SALVO</code>, <code>EVT_LEG_PRESET_NOME_OBRIGATORIO</code>, <code>EVT_LEG_PRESET_NOME_DUPLICADO</code>, <code>EVT_LEG_PRESET_ILEGIVEL</code>, <code>EVT_LEG_PRESET_REMOVIDO</code> e <code>EVT_LEG_PRESET_NAO_ENCONTRADO</code>) e sete do catálogo de blocos (<code>EVT_LEG_BLOCO_CRIADO</code>, <code>EVT_LEG_BLOCO_ATUALIZADO</code>, <code>EVT_LEG_BLOCO_EXCLUIDO</code>, <code>EVT_LEG_NOME_OBRIGATORIO</code>, <code>EVT_LEG_COR_INVALIDA</code>, <code>EVT_LEG_NOME_DUPLICADO</code> e <code>EVT_LEG_BLOCO_NAO_ENCONTRADO</code>). Também são dessas telas as duas mensagens de lista vazia, <code>EMPTY_BLOCOS</code> e <code>EMPTY_CONFIGURACAO</code>. O dicionário foi levantado do código em 2026-09-30: não há texto anterior para comparar.</li>
+<li><strong>Regras e campos canônicos</strong> — nenhum: <code>global/RULES-DICTIONARY.md</code> e <code>global/FIELD-DICTIONARY.md</code> não têm entrada de legenda.</li>
+</ul>
+
+    </div>
+  </details>
+  <details class="doc-section" id="decisoes-de-produto-pendentes" open>
+    <summary class="section-header">
+      <span class="section-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="3" y1="9" x2="21" y2="9"></line>
+          <line x1="9" y1="21" x2="9" y2="9"></line>
+        </svg>
+        Decisões de produto pendentes
+      </span>
+      <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </summary>
+    <div class="section-body markdown-body">
+<ul>
+<li><strong>Composição de mesa na criação do bloco.</strong> O critério <code>CA-02</code> pede nome, cor da legenda e composição de mesa; a entrega tem só nome e cor, e a composição que a legenda guardava foi retirada. Decidir se o critério é aceito sem a composição ou se ela volta. <strong>Trava</strong> o aceite do critério na homologação e a aprovação de <code>EVT-LEG-12</code> <em>Cadastrar Bloco de Legenda</em>; se a composição voltar, mudam também <code>EVT-LEG-13</code> <em>Editar Bloco de Legenda</em>, a entidade Legenda e a contagem.</li>
+<li><strong>Exclusão de bloco apaga legendas manuais.</strong> O critério <code>CA-11</code> diz que excluir um bloco em uso o remove das configurações dos eventos; a entrega apaga também todas as legendas desse bloco atribuídas a participantes, em todos os eventos, inclusive as manuais — que o próprio ticket manda preservar na geração. E o aviso de uso só olha a configuração dos eventos: o bloco que está fora de todas elas, mas foi atribuído manualmente, é excluído como se não estivesse em uso. Decidir se a exclusão deve preservar, impedir ou avisar. <strong>Trava</strong> a aprovação de <code>EVT-LEG-14</code> <em>Excluir Bloco de Legenda</em>.</li>
+<li><strong>Uma legenda por participante ou várias.</strong> O critério <code>CA-21</code> fala em aplicar os blocos pela &quot;ordem de prioridade&quot;; a entrega atribui uma legenda por bloco atendido e usa a ordem só para escolher qual aparece. Decidir qual é a intenção. <strong>Trava</strong> a aprovação de <code>EVT-LEG-07</code> <em>Gerar Legendas do Evento</em> e de <code>EVT-LEG-06</code> <em>Simular Aplicação de Legendas</em>, cujo total &quot;Legendas aplicadas&quot; conta atribuições e não pessoas.</li>
+<li><strong>Mesclar descarta as condições da origem.</strong> O critério <code>CA-16</code> define Mesclar como manter os blocos do evento e acrescentar os da configuração selecionada; a entrega acrescenta só os blocos cuja legenda ainda não está no evento, e para a legenda presente dos dois lados ficam as condições do evento. Substituir, que apaga a configuração atual, não pede confirmação. <strong>Trava</strong> a aprovação de <code>EVT-LEG-09</code> <em>Carregar Configuração de Legendas</em>.</li>
+<li><strong>&quot;Resetar Regras&quot; deixou de existir.</strong> GPE006 traz a funcionalidade, a tela entregue não tem o botão e o ticket não a menciona. Decidir se ela foi retirada por este ticket ou se precisa voltar. <strong>Trava</strong> a contagem da sprint — função retirada é função excluída, e as tabelas desta AIM só têm <code>incluída</code> e <code>alterada</code> — e a pendência &quot;Resetar Regras de Legenda&quot; do <code>modules/INDEX.md</code>.</li>
+<li><strong>Natureza de duas features de configuração.</strong> <code>EVT-LEG-02</code> <em>Adicionar Bloco de Legenda ao Evento</em> saiu aqui como alterada, porque descende de &quot;Incluir Regra de Legenda&quot;; <code>EVT-LEG-05</code> <em>Remover Bloco de Legenda do Evento</em> saiu como incluída, embora substitua a chave Ativa/Inativa. As duas leituras são defensáveis. A contagem de 2026-10-04 tratou adicionar, configurar condições, reordenar e remover como quatro processos elementares, porque diferem nos dados ou na lógica, embora as quatro gravem a configuração inteira do evento; a equipe de métricas pode ler de outro modo. <strong>Trava</strong> o PFL das features de configuração, que vale 100% na incluída e 50% na alterada.</li>
+<li><strong>Arquivos lógicos novos ou alterados.</strong> O ticket declara quatro &quot;novos elementos de persistência&quot; — catálogo, presets, configuração por evento e associação Evento – Pessoa – Legenda —, mas GPE006 já tinha regras por evento e GPE005 já tinha legenda do participante. Sem o modelo anterior, só o preset é seguramente novo e só a Legenda é seguramente alterada. <strong>Encaminhada pela contagem de 2026-10-04</strong>, a confirmar com a equipe de métricas: a configuração por evento e a legenda do participante entraram como registros do arquivo lógico Evento, que já existia e conta como alterado — 15 PF, PFL 7,5 —; a Legenda, como alterada — 7 PF, PFL 3,5 —; e o preset, como incluído — 7 PF. Se a configuração ou o participante forem lidos como arquivos lógicos próprios, mudam esses números e o ALR das transações. <strong>Trava</strong> o PF das funções de dados.</li>
+<li><strong>Dois critérios que tocam duas features.</strong> O critério <code>CA-03</code> ficou em <code>EVT-LEG-12</code> <em>Cadastrar Bloco de Legenda</em>, que faz a criação, embora o atalho que a abre esteja na janela de <code>EVT-LEG-02</code> <em>Adicionar Bloco de Legenda ao Evento</em>; o critério <code>CA-22</code> ficou em <code>EVT-LEG-07</code> <em>Gerar Legendas do Evento</em>, que é quem preserva a legenda manual, e não em <code>EVT-PAR-05</code> <em>Alterar Legenda do Participante</em>, que a atribui. Confirmar essa fronteira no aval. <strong>Trava</strong> só o critério que a planilha da sprint leva a cada feature.</li>
+<li><strong>Alcance sobre as features de Participantes.</strong> A nova guarda da legenda é lida por seis features que esta AIM não lista: <code>EVT-PAR-01</code> <em>Pesquisar Participantes</em>, <code>EVT-PAR-06</code> <em>Remover Legenda do Participante</em>, <code>EVT-PAR-07</code> <em>Consultar Mapa de Assentos</em>, <code>EVT-PAR-12</code> <em>Buscar Pessoa na Mesa</em>, <code>EVT-PAR-14</code> <em>Exportar Participantes</em> e <code>EVT-PAR-15</code> <em>Exportar Mapa de Assentos</em>. Entraram só <code>EVT-PAR-04</code> <em>Consultar Legenda do Participante</em> e <code>EVT-PAR-05</code> <em>Alterar Legenda do Participante</em>, cujos N3 já atribuíam a mudança ao ticket. Confirmar com o time de desenvolvimento quais das seis o ticket alterou. <strong>Trava</strong> a completude da <code>## Features</code> e da contagem.</li>
+</ul>
+
+    </div>
+  </details>
+  <details class="doc-section" id="reconciliacao" open>
+    <summary class="section-header">
+      <span class="section-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="3" y1="9" x2="21" y2="9"></line>
+          <line x1="9" y1="21" x2="9" y2="9"></line>
+        </svg>
+        Reconciliação
+      </span>
+      <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </summary>
+    <div class="section-body markdown-body">
+<blockquote>
+<p>Preenchida no fechamento (estado <code>concluído</code>): declarado × tocado. Escreva o resultado abaixo desta citação.</p>
+</blockquote>
+<p>AIM aberta na entrega: o ticket foi entregue antes de haver escopo avalizado, então não há declarado × tocado a reconciliar. O changeset registra o que a especificação já tinha absorvido do ticket na engenharia reversa de 2026-09-30 e a contagem detalhada, feita e confirmada em 2026-10-04. Ficaram fora dele, de propósito, quatro tipos de artefato: o plano de testes, porque a instância roda no perfil <code>requisitos</code>, cuja esteira para no modelo de dados; o protótipo, porque a instância não tem nenhum — o ticket traz o anexo <code>prototipo_regras_legenda_v3 (2).html</code>, que não foi trazido, e a referência dos N3 é a tela implementada —; os repositórios de código, que estão fora do aval; e o <code>global/NFR.md</code>, porque o ticket não traz requisito não-funcional.</p>
+
+    </div>
+  </details>
+  <details class="doc-section" id="changelog" open>
+    <summary class="section-header">
+      <span class="section-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="3" y1="9" x2="21" y2="9"></line>
+          <line x1="9" y1="21" x2="9" y2="9"></line>
+        </svg>
+        Changelog
+      </span>
+      <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </summary>
+    <div class="section-body markdown-body">
+<div class="table-container"><table class="custom-table changelog-table">
+<thead>
+<tr>
+<th>Data</th>
+<th>Autor</th>
+<th>Tipo</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>04/10/2026</td>
+<td>Claude (apf-cpm)</td>
+<td>Contagem detalhada</td>
+<td>PFB e PFL das 16 features e das três funções de dados, espelhados dos N3 e do <code>global/DATA-MODEL.md</code>: 98 PFB e 72,5 PFL — transações 69 e 54,5, dados 29 e 18. Changeset sem linha <code>previsto</code>. A sprint passa a <code>SP005</code>. Continua em <code>em-análise</code>: falta só o aval do PO</td>
+</tr>
+<tr>
+<td>04/10/2026</td>
+<td>Claude (analise-impacto)</td>
+<td>AIM aberta na entrega</td>
+<td>ticket <code>PDTIC25148-34</code> registrado a partir da exportação do Jira de 2026-10-04, em homologação; 16 features mapeadas — 14 de Legendas e 2 de Participantes —, com os 23 critérios distribuídos sem repetição; elo fechado na <code>## Origem</code> dos N3 e no <code>modules/INDEX.md</code>. Fica em <code>em-análise</code>: faltam o aval do PO e a contagem detalhada</td>
+</tr>
+</tbody></table></div>
+
+    </div>
+  </details>
+
+  <footer class="rodape">
+    Gerado de <code>analise-impacto/AIM-PDTIC25148-34.md</code> por <code>scripts/gera-html-impacto.mjs</code>.
+    O <strong>.md é a fonte</strong> — edite lá e regenere; alterações feitas neste HTML se perdem.
+  </footer>
+</div>
+</body>
+</html>

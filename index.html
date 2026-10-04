@@ -1,0 +1,3756 @@
+<!-- Redirecionamento e espelhamento idêntico ao index.html com design FDD AVAL -->
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Documentação — GPE</title>
+  <link rel="icon" type="image/svg+xml" href="identidade-visual/logos/aval-simbolo-azul-mini.svg">
+
+  <!-- Configuração por repositório (nome do projeto) -->
+  <script src="assets/js/config.js"></script>
+
+  <!-- Google Fonts: Archivo (títulos) + IBM Plex Sans (corpo) + IBM Plex Mono (código/IDs) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Bibliotecas externas locais -->
+  <script src="assets/vendor/marked.min.js"></script>
+  <script src="assets/vendor/mermaid.min.js"></script>
+  <link rel="stylesheet" href="assets/css/mapa.css">
+
+  <style>
+    /* ==========================================================================
+       TOKENS & VARIÁVEIS — Design System AVAL + Clean Doc Theme
+       Marca: o azul constrói, o verde aprova.
+       ========================================================================== */
+    :root {
+      /* Identidade AVAL */
+      --brand-blue: #005CA9;
+      --brand-blue-dark: #0A2440;
+      --brand-blue-light: #E5F2FC;
+      --brand-blue-hover: #004B8A;
+      --brand-accent: #0078E0;
+      
+      /* Aviso é Dourado no AVAL (regra: nunca laranja) */
+      --brand-gold: #B45309;
+      --brand-gold-light: #FFFBEB;
+      --brand-gold-border: #FDE68A;
+      
+      /* Superfícies & Bordas */
+      --bg-app: #F6FAFD;
+      --bg-sidebar: #FFFFFF;
+      --bg-card: #FFFFFF;
+      --bg-hover: #EDF3F9;
+      --bg-active: #E3EEF8;
+      --border-color: #D6E3F0;
+      --border-subtle: #E8F0F8;
+      
+      /* Compatibilidade mapa.css */
+      --primary-color: #005CA9;
+      --surface-ground: #F6FAFD;
+      --surface-card: #FFFFFF;
+      --surface-border: #D6E3F0;
+      --surface-hover: #EDF3F9;
+      --text-color: #0A2440;
+      --shadow-1: 0 1px 3px rgba(10, 36, 64, 0.06);
+      --focus-ring: 0 0 0 3px rgba(0, 92, 169, 0.18);
+      --dsc-font-family-1: 'IBM Plex Sans', 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+      --dsc-font-title: 'Archivo', 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+      --dsc-font-mono: 'IBM Plex Mono', ui-monospace, "SFMono-Regular", "Courier New", monospace;
+      --dsc-border-radius-pill: 999px;
+      --dsc-border-radius-medium: 6px;
+      --transition-duration: 0.15s;
+      
+      /* Tipografia & Cores */
+      --text-main: #0A2440;
+      --text-secondary: #2B3A4A;
+      --text-muted: #526981;
+      --text-blue: #005CA9;
+      
+      /* Status & Badges */
+      --badge-success-bg: #ECFDF5;
+      --badge-success-text: #047857;
+      --badge-success-border: #A7F3D0;
+      
+      --badge-warning-bg: #FFFBEB;
+      --badge-warning-text: #B45309;
+      --badge-warning-border: #FDE68A;
+      
+      --badge-info-bg: #EFF6FF;
+      --badge-info-text: #1D4ED8;
+      --badge-info-border: #BFDBFE;
+      
+      --badge-purple-bg: #F5F3FF;
+      --badge-purple-text: #6D28D9;
+      --badge-purple-border: #DDD6FE;
+
+      /* Sombras & Raios */
+      --shadow-sm: 0 1px 2px 0 rgba(10, 36, 64, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(10, 36, 64, 0.08), 0 2px 4px -2px rgba(10, 36, 64, 0.05);
+      --radius-sm: 4px;
+      --radius-md: 6px;
+      --radius-lg: 10px;
+      --radius-full: 999px;
+
+      /* Dimensões */
+      --header-height: 60px;
+      --sidebar-width: 320px;
+    }
+
+    /* ---- Modo Árvore Sintética (Exclusivo para os cards do canvas do Mapa) ---- */
+    .mm-wrap.mm-synthetic .mm-card {
+      width: auto !important;
+      min-width: 160px !important;
+      max-width: 400px !important;
+      flex: 0 0 auto !important;
+      padding: 4px 10px !important;
+      display: inline-flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      gap: 6px !important;
+      border-radius: var(--radius-sm) !important;
+    }
+    .mm-wrap.mm-synthetic .mm-card .mm-badge {
+      margin-bottom: 0 !important;
+      font-size: 9.5px !important;
+      padding: 1px 5px !important;
+      border-radius: 3px !important;
+      background: var(--bg-hover) !important;
+      border: 1px solid var(--border-color) !important;
+      flex-shrink: 0 !important;
+      white-space: nowrap !important;
+    }
+    .mm-wrap.mm-synthetic .mm-card .mm-name {
+      font-size: 11.5px !important;
+      font-weight: 600 !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      flex: 1 1 auto !important;
+    }
+    /* O card sintético é uma LINHA (flex-direction: row): tudo o que não for o
+       badge e o nome precisa sair, senão vira coluna irmã e espreme o nome até
+       o reticências. Vale para as camadas 2 e 3 da descrição também. */
+    .mm-wrap.mm-synthetic .mm-card .mm-desc,
+    .mm-wrap.mm-synthetic .mm-card .mm-camada,
+    .mm-wrap.mm-synthetic .mm-card .mm-foot,
+    .mm-wrap.mm-synthetic .mm-card .mm-open {
+      display: none !important;
+    }
+    .mm-btn.is-on {
+      background: var(--brand-blue) !important;
+      color: #ffffff !important;
+      border-color: var(--brand-blue) !important;
+    }
+
+    /* Alinhamento à direita para os controles do Mapa */
+    .mm-right {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 10px !important;
+      align-items: flex-end !important;
+    }
+    .mm-controls {
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+      flex-wrap: wrap !important;
+      justify-content: flex-end !important;
+    }
+    .mm-actions {
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+      flex-wrap: wrap !important;
+      justify-content: flex-end !important;
+    }
+
+    /* Linhas conectoras dos cards do Mapa */
+    .mm-bus,
+    .mm-node:not(.mm-collapsed):not(.mm-leaf) > .mm-card::after,
+    .mm-kids > .mm-node > .mm-card::before {
+      background: #8AA0B8 !important;
+    }
+    [data-theme="dark"] .mm-bus,
+    [data-theme="dark"] .mm-node:not(.mm-collapsed):not(.mm-leaf) > .mm-card::after,
+    [data-theme="dark"] .mm-kids > .mm-node > .mm-card::before {
+      background: #4A6382 !important;
+    }
+
+    [data-theme="dark"] {
+      --bg-app: #0A1A2E;
+      --bg-sidebar: #0F2036;
+      --bg-card: #0F2036;
+      --bg-hover: #162941;
+      --bg-active: #1C3554;
+      --border-color: #1F3A5A;
+      --border-subtle: #162941;
+      
+      --text-main: rgba(255, 255, 255, 0.92);
+      --text-secondary: rgba(255, 255, 255, 0.78);
+      --text-muted: #8AA0B8;
+      --text-blue: #33A0FF;
+      
+      --brand-blue-light: rgba(51, 160, 255, 0.15);
+      --brand-gold-light: rgba(180, 83, 9, 0.2);
+
+      --primary-color: #33A0FF;
+      --surface-ground: #0A1A2E;
+      --surface-card: #0F2036;
+      --surface-border: #1F3A5A;
+      --surface-hover: #162941;
+      --text-color: rgba(255, 255, 255, 0.92);
+    }
+
+    /* Reset & Base */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--dsc-font-family-1);
+      background-color: var(--bg-app);
+      color: var(--text-main);
+      font-size: 14px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* Layout Estrutural */
+    .app-container {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    /* ==========================================================================
+       HEADER FULL-WIDTH
+       ======================================================================== */
+    .app-header {
+      height: var(--header-height);
+      background: var(--bg-sidebar);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      flex-shrink: 0;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--dsc-font-title);
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--brand-blue);
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .brand-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .brand-icon img.logo-light,
+    .brand-icon img.logo-dark {
+      height: 26px;
+      width: auto;
+      object-fit: contain;
+      display: block;
+    }
+    .brand-icon img.logo-dark {
+      display: none;
+    }
+    [data-theme="dark"] .brand-icon img.logo-light {
+      display: none;
+    }
+    [data-theme="dark"] .brand-icon img.logo-dark {
+      display: block;
+    }
+
+    #brandName {
+      font-family: var(--dsc-font-title);
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--text-main);
+      padding-left: 10px;
+      border-left: 1px solid var(--border-color);
+      white-space: nowrap;
+    }
+
+    .brand-badge {
+      font-size: 10px;
+      font-family: var(--dsc-font-mono);
+      background: var(--brand-blue-light);
+      color: var(--brand-blue);
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: var(--radius-full);
+      border: 1px solid rgba(0, 92, 169, 0.25);
+    }
+    [data-theme="dark"] .brand-badge {
+      background: rgba(51, 160, 255, 0.18);
+      color: #8FCBFF;
+      border-color: rgba(51, 160, 255, 0.35);
+    }
+
+    .btn-icon {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-secondary);
+      transition: all 0.2s;
+    }
+    .btn-icon:hover {
+      background: var(--bg-hover);
+      color: var(--text-main);
+      border-color: var(--text-muted);
+    }
+
+    .header-center {
+      flex: 1;
+      max-width: 580px;
+      margin: 0 24px;
+      position: relative;
+    }
+
+    .search-box {
+      position: relative;
+      width: 100%;
+    }
+
+    .search-box input {
+      width: 100%;
+      height: 38px;
+      padding: 0 40px 0 36px;
+      background: var(--bg-app);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-family: var(--dsc-font-family-1);
+      color: var(--text-main);
+      transition: all 0.2s;
+      outline: none;
+    }
+    .search-box input:focus {
+      background: var(--bg-sidebar);
+      border-color: var(--brand-blue);
+      box-shadow: var(--focus-ring);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .search-shortcut {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: var(--bg-sidebar);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-size: 11px;
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-family: var(--dsc-font-mono);
+    }
+
+    /* Modal / Popover de Busca */
+    .search-results-modal {
+      position: absolute;
+      top: 44px;
+      left: 0;
+      right: 0;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-md);
+      max-height: 380px;
+      overflow-y: auto;
+      z-index: 100;
+      display: none;
+    }
+    .search-results-modal.show {
+      display: block;
+    }
+    .search-result-item {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border-subtle);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      text-decoration: none;
+    }
+    .search-result-item:hover, .search-result-item.selected {
+      background: var(--bg-hover);
+    }
+    .search-result-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--brand-blue);
+    }
+    [data-theme="dark"] .search-result-title {
+      color: var(--text-blue);
+    }
+    .search-result-path {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      font-family: var(--dsc-font-mono);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Toggle Modo PO vs Técnico */
+    .view-mode-toggle {
+      display: flex;
+      background: var(--bg-app);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 2px;
+      gap: 2px;
+    }
+
+    .mode-btn {
+      border: none;
+      background: transparent;
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 500;
+      font-family: var(--dsc-font-family-1);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      color: var(--text-secondary);
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .mode-btn.active {
+      background: var(--bg-sidebar);
+      color: var(--brand-blue);
+      font-weight: 600;
+      box-shadow: var(--shadow-sm);
+    }
+    [data-theme="dark"] .mode-btn.active {
+      color: var(--text-blue);
+    }
+
+    /* ==========================================================================
+       APP BODY: SIDEBAR + RESIZER + CONTEÚDO 100%
+       ========================================================================== */
+    .app-body {
+      display: flex;
+      flex: 1;
+      height: calc(100vh - var(--header-height));
+      overflow: hidden;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: var(--sidebar-width);
+      min-width: 220px;
+      max-width: 640px;
+      background: var(--bg-sidebar);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      flex-shrink: 0;
+      transition: margin-left 0.2s ease;
+    }
+    .sidebar.collapsed {
+      display: none;
+    }
+
+    /* RESIZER (Alça de redimensionamento da sidebar) */
+    .sidebar-resizer {
+      width: 5px;
+      cursor: col-resize;
+      background: transparent;
+      position: relative;
+      flex-shrink: 0;
+      transition: background 0.15s;
+      z-index: 20;
+    }
+    .sidebar-resizer:hover,
+    .sidebar-resizer.is-resizing {
+      background: var(--brand-blue);
+    }
+    .sidebar-resizer::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: -3px;
+      right: -3px;
+    }
+    body.is-resizing-sidebar {
+      cursor: col-resize !important;
+      user-select: none !important;
+    }
+
+    .sidebar-section {
+      padding: 8px 12px 4px 12px;
+    }
+
+    .sidebar-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      padding: 0 8px 8px 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .nav-item-fixed a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 13px;
+      transition: all 0.15s;
+    }
+    .nav-item-fixed a:hover {
+      background: var(--bg-hover);
+      color: var(--text-main);
+    }
+    .nav-item-fixed a.active {
+      background: var(--brand-blue-light);
+      color: var(--brand-blue);
+      font-weight: 600;
+    }
+
+    /* Pastas de navegação internas */
+    .nav-folder {
+      margin: 2px 0;
+    }
+    .nav-folder summary {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 8px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      transition: all 0.15s;
+      user-select: none;
+    }
+    .nav-folder summary::-webkit-details-marker {
+      display: none;
+    }
+    .nav-folder summary:hover {
+      background: var(--bg-hover);
+      color: var(--text-main);
+    }
+    .nav-folder summary.active {
+      background: var(--brand-blue-light);
+      color: var(--brand-blue);
+      font-weight: 600;
+    }
+    .nav-folder-title {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      overflow: hidden;
+      white-space: nowrap;
+      /* Sem isto o título não encolhe abaixo do próprio conteúdo e empurra o
+         contador e a seta para fora do menu. */
+      min-width: 0;
+    }
+    /* O `text-outflow` vivia no contêiner flex, onde não tem efeito: quem corta é
+       o item de texto. Sem isto o nome longo era cortado a seco, sem reticências —
+       e a seta, que ocupa ~19px à direita, deixou o corte visível. */
+    .nav-folder-title > span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      min-width: 0;
+    }
+    .nav-folder-icon {
+      color: #4DA8DA;
+      flex-shrink: 0;
+    }
+    .domain-tag {
+      font-size: 10px;
+      font-weight: 700;
+      font-family: var(--dsc-font-mono);
+      background: var(--brand-blue);
+      color: #fff;
+      padding: 1px 5px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+      flex-shrink: 0;
+    }
+    .chevron-icon {
+      color: var(--text-muted);
+      transition: transform 0.2s, background 0.15s, color 0.15s;
+      flex-shrink: 0;
+      /* Alvo de clique maior que o desenho. A seta é o único jeito de expandir um
+         menu SEM trocar a página aberta (o resto do summary navega), e 11px é alvo
+         difícil: errar por um pixel navega — exatamente o que a seta evita. O
+         padding cresce a área sensível e a margem negativa devolve o espaço, então
+         o leiaute não muda. */
+      box-sizing: content-box;
+      padding: 7px;
+      margin: -7px;
+      border-radius: var(--radius-sm);
+    }
+    .chevron-icon:hover {
+      background: var(--bg-app);
+      color: var(--text-primary);
+    }
+    /* Descendente, não filho direto: no feature set a seta fica dentro de
+       .nav-folder-aside, ao lado do contador. Só alcança o summary do próprio
+       nó — o summary de um filho não é descendente do summary do pai. */
+    .nav-folder[open] > summary .chevron-icon {
+      transform: rotate(90deg);
+    }
+    /* Contador e seta juntos, à direita, sem brigar pelo espaço do título. */
+    .nav-folder-aside {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .nav-folder-content {
+      padding-left: 12px;
+      margin-left: 10px;
+      border-left: 1px dashed var(--border-color);
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      margin-top: 2px;
+      margin-bottom: 4px;
+    }
+
+    .fs-count {
+      font-size: 11px;
+      color: var(--text-muted);
+      background: var(--bg-app);
+      padding: 1px 6px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      flex-shrink: 0;
+    }
+
+    /* Nível 3: Feature (MD) e Itens de Navegação */
+    .feature-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 8px;
+      margin: 2px 0;
+      border-radius: var(--radius-sm);
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .feature-item:hover {
+      background: var(--bg-hover);
+      color: var(--text-main);
+    }
+    .feature-item.active,
+    .nav-item-fixed a.active,
+    .nav-folder summary.active {
+      background: var(--brand-blue-light) !important;
+      color: var(--brand-blue) !important;
+      font-weight: 700 !important;
+      border-left: 3px solid var(--brand-blue) !important;
+      box-shadow: inset 0 0 0 1px rgba(0, 92, 169, 0.15);
+    }
+    .feature-item.active .feature-code {
+      background: var(--brand-blue) !important;
+      color: #ffffff !important;
+      border-color: var(--brand-blue) !important;
+    }
+    [data-theme="dark"] .feature-item.active,
+    [data-theme="dark"] .nav-item-fixed a.active,
+    [data-theme="dark"] .nav-folder summary.active {
+      background: rgba(51, 160, 255, 0.15) !important;
+      color: var(--text-blue) !important;
+      border-left: 3px solid var(--text-blue) !important;
+    }
+    [data-theme="dark"] .feature-item.active .feature-code {
+      background: var(--text-blue) !important;
+      color: #0A1A2E !important;
+      border-color: var(--text-blue) !important;
+    }
+    .feature-title-text {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      margin-right: 6px;
+    }
+    .feature-code {
+      font-size: 10px;
+      font-family: var(--dsc-font-mono);
+      color: var(--text-muted);
+      background: var(--bg-sidebar);
+      padding: 1px 4px;
+      border-radius: 4px;
+      border: 1px solid var(--border-color);
+      flex-shrink: 0;
+    }
+
+    /* Seção de Governança e Apoio */
+    .sidebar-footer-tools {
+      margin-top: auto;
+      border-top: 1px solid var(--border-color);
+      padding: 12px;
+      background: var(--bg-app);
+    }
+    .support-group-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+
+    /* ==========================================================================
+       CONTEÚDO PRINCIPAL (100% LARGURA ÚTIL)
+       ========================================================================== */
+    .main-viewport {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 32px;
+      background: var(--bg-app);
+      scroll-behavior: smooth;
+    }
+
+    .content-wrapper {
+      width: 100%;
+      max-width: 100%;
+      margin: 0;
+    }
+
+    /* Breadcrumbs semânticos */
+    .breadcrumb-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .breadcrumb-bar a {
+      color: var(--text-secondary);
+      text-decoration: none;
+    }
+    .breadcrumb-bar a:hover {
+      color: var(--brand-blue);
+    }
+    .breadcrumb-sep {
+      color: var(--text-muted);
+    }
+    .breadcrumb-current {
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    /* HERO DO DOCUMENTO */
+    .doc-hero-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 24px 32px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 24px;
+      position: relative;
+    }
+
+    .doc-meta-tags {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+      line-height: 1.3;
+    }
+
+    .badge-fdd-level {
+      background: var(--brand-blue-light);
+      color: var(--brand-blue);
+      border: 1px solid rgba(0, 92, 169, 0.25);
+    }
+    .badge-id {
+      background: var(--bg-app);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      font-family: var(--dsc-font-mono);
+      font-size: 11.5px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .badge-id:hover {
+      background: var(--border-subtle);
+      border-color: var(--brand-blue);
+    }
+
+    .doc-title {
+      font-family: var(--dsc-font-title);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+      margin-bottom: 6px;
+    }
+
+    .doc-hierarchy-info {
+      font-size: 13.5px;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .hero-description-block {
+      margin-top: 20px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    /* A Descrição do N3 tem duas camadas em parágrafos consecutivos — a entrega e o
+       "como se usa". Renderizada como bloco (e não inline), para que a segunda comece
+       na linha de baixo; a margem do <p> é controlada aqui para não colar no título
+       nem herdar o respiro padrão do navegador. */
+    .hero-desc-text p {
+      margin: 0 0 10px;
+    }
+
+    .hero-desc-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* SEÇÕES DE CONTEÚDO PRINCIPAIS */
+    .doc-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 26px 32px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 0;
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-family: var(--dsc-font-title);
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* REGRAS DE NEGÓCIO ESTRUTURADAS */
+    .rn-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .rn-card {
+      background: var(--bg-app);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 14px 20px;
+      transition: all 0.2s;
+    }
+    .rn-card:hover {
+      border-color: var(--brand-blue);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .rn-card-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .rn-num {
+      font-size: 11px;
+      font-weight: 700;
+      font-family: var(--dsc-font-mono);
+      background: var(--brand-blue);
+      color: #fff;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .rn-name {
+      font-weight: 600;
+      font-size: 13.5px;
+      color: var(--text-main);
+    }
+
+    .rn-body {
+      font-size: 13.5px;
+      color: var(--text-main);
+      line-height: 1.6;
+    }
+
+    .rn-tag {
+      display: inline-block;
+      font-family: var(--dsc-font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 1px 6px;
+      border-radius: 4px;
+      background: var(--badge-purple-bg);
+      color: var(--badge-purple-text);
+      border: 1px solid var(--badge-purple-border);
+      text-decoration: none;
+    }
+
+    /* CENÁRIOS GHERKIN FORMATADOS */
+    .scenario-card {
+      background: var(--bg-app);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    .scenario-header {
+      background: var(--bg-sidebar);
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border-color);
+      font-weight: 600;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .scenario-body {
+      padding: 14px 18px;
+      font-family: var(--dsc-font-mono);
+      font-size: 12.5px;
+      line-height: 1.7;
+    }
+
+    .gherkin-keyword {
+      font-weight: 700;
+    }
+    .gherkin-given { color: #0284C7; }
+    .gherkin-when { color: #D97706; }
+    .gherkin-then { color: #059669; }
+    .gherkin-and { color: #526981; }
+
+    /* TABELAS */
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      margin-top: 12px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+    }
+
+    .custom-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13px;
+    }
+
+    .custom-table th {
+      background: var(--bg-hover);
+      color: var(--text-main);
+      font-weight: 600;
+      font-family: var(--dsc-font-title);
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-color);
+      white-space: nowrap;
+    }
+
+    .custom-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+
+    .custom-table th:first-child,
+    .custom-table td:first-child,
+    .changelog-table th:first-child,
+    .changelog-table td:first-child,
+    .table-container table th:first-child,
+    .table-container table td:first-child {
+      white-space: nowrap !important;
+    }
+
+    .custom-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .custom-table tbody tr:hover {
+      background: var(--bg-hover);
+    }
+
+    .req-tag {
+      font-weight: 600;
+      color: #E11D48;
+      font-size: 11px;
+      background: #FFE4E6;
+      padding: 2px 6px;
+      border-radius: 4px;
+      display: inline-block;
+    }
+    .opt-tag {
+      font-weight: 500;
+      color: var(--text-secondary);
+      font-size: 11px;
+      background: var(--bg-hover);
+      padding: 2px 6px;
+      border-radius: 4px;
+      display: inline-block;
+    }
+
+    /* CHANGELOG FORMATADO */
+    .changelog-table td {
+      font-size: 12.5px;
+    }
+    .changelog-table th:first-child,
+    .changelog-table td:first-child {
+      white-space: nowrap;
+      width: 120px;
+      min-width: 110px;
+    }
+    .changelog-table th:nth-child(2),
+    .changelog-table td:nth-child(2) {
+      white-space: nowrap;
+      width: 100px;
+    }
+    .changelog-table th:nth-child(3),
+    .changelog-table td:nth-child(3) {
+      white-space: nowrap;
+      width: 170px;
+    }
+
+    /* DIAGRAMAS MERMAID */
+    .mermaid {
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      text-align: center !important;
+      padding: 32px 20px !important;
+      margin: 20px 0 !important;
+      border: 1px solid var(--border-color) !important;
+      border-radius: var(--radius-lg) !important;
+      background: radial-gradient(circle at 1.5px 1.5px, var(--border-color) 1.5px, transparent 0) 0 0 / 22px 22px, var(--bg-app) !important;
+      overflow-x: auto !important;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.02) !important;
+    }
+
+    /* O Mermaid roda com `useMaxWidth: true` e emite `width="100%"` mais um
+       `max-width` inline com a largura NATURAL do diagrama. Um
+       `max-width: 100% !important` aqui atropelava essa medida — regra de folha
+       de estilo com `!important` vence estilo inline sem `!important` — e todo
+       diagrama era esticado até a largura do container: o fluxo do N2 Painel do
+       Gestor, natural de 586px, abria com 1103px (1,88x), texto gigante. Os que
+       pareciam certos só eram largos o bastante para a conta dar ~1x. A trava
+       abaixo mantém as duas restrições ao mesmo tempo: nunca mais largo que o
+       container, nunca maior que o tamanho natural. `--largura-natural` é gravada
+       por `ajustaLarguraDiagramas()` a partir do viewBox; sem ela o valor cai
+       para 100% e o comportamento é o de antes. */
+    .mermaid svg {
+      width: 100% !important;
+      max-width: min(100%, var(--largura-natural, 100%)) !important;
+      height: auto !important;
+      margin: 0 auto !important;
+      display: block !important;
+    }
+
+    .changelog-badge {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      background: var(--bg-hover);
+      color: var(--text-main);
+      white-space: nowrap;
+    }
+
+    /* DETALHES TÉCNICOS (DEV ONLY) */
+    .dev-only {
+      border: 1px dashed var(--brand-gold);
+      background: var(--brand-gold-light);
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      margin: 16px 0;
+      display: block;
+      transition: all 0.3s;
+    }
+    /* Marcador só de visibilidade — some no Modo PO, sem estilo próprio.
+       Usado em cards (.doc-section) que já têm sua própria aparência e só
+       precisam desaparecer fora do Modo DEV, sem virar a caixa tracejada. */
+    html:not(.app-show-dev) .dev-only,
+    html:not(.app-show-dev) .dev-only-container {
+      display: none !important;
+    }
+    /* Lista dentro da Superfície: inventário de telas, não texto corrido.
+       Um N3 pode ter várias rotas — uma por Tipo de Fornecedor, por canal, por
+       variante — e em parágrafo corrido não se percebe quantas são. Em lista,
+       conta-se de relance. O estilo é deliberadamente mais compacto que a lista
+       comum do documento, para a Superfície não competir com as regras. */
+    .dev-only ul {
+      list-style: none;
+      margin: 10px 0 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .dev-only ul li {
+      position: relative;
+      padding: 4px 0 4px 18px;
+      line-height: 1.55;
+      border-bottom: 1px solid var(--brand-gold);
+    }
+    .dev-only ul li:last-child { border-bottom: 0; }
+    /* O marcador é um "├" de árvore, não um bullet: cada linha é uma rota do
+       mesmo processo, não um item solto. */
+    .dev-only ul li::before {
+      content: "";
+      position: absolute;
+      left: 4px;
+      top: 12px;
+      width: 8px;
+      height: 1px;
+      background: var(--brand-gold);
+      opacity: 0.8;
+    }
+    .dev-only ul li code {
+      white-space: nowrap;
+    }
+    .dev-badge {
+      font-size: 10.5px;
+      font-weight: 700;
+      background: var(--brand-gold);
+      color: #fff;
+      padding: 2px 7px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+      display: inline-block;
+    }
+
+    /* Ocultar réguas horizontais residuais */
+    hr {
+      display: none !important;
+    }
+
+    /* Estilos Gerais de Markdown Renderizado */
+    .generic-markdown-body h1 {
+      font-family: var(--dsc-font-title);
+      font-size: 24px;
+      font-weight: 700;
+      margin: 20px 0 12px 0;
+      color: var(--text-main);
+    }
+    .generic-markdown-body h2 {
+      font-family: var(--dsc-font-title);
+      font-size: 18px;
+      font-weight: 700;
+      margin: 24px 0 10px 0;
+      color: var(--text-main);
+    }
+    .generic-markdown-body h3 {
+      font-family: var(--dsc-font-title);
+      font-size: 15px;
+      font-weight: 600;
+      margin: 16px 0 8px 0;
+      color: var(--text-main);
+    }
+    .generic-markdown-body p, .generic-markdown-body ul, .generic-markdown-body ol {
+      margin-bottom: 14px;
+    }
+    .generic-markdown-body ul, .generic-markdown-body ol {
+      padding-left: 24px;
+    }
+    .generic-markdown-body blockquote {
+      border-left: 4px solid var(--brand-blue);
+      background: var(--brand-blue-light);
+      padding: 12px 16px;
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      margin-bottom: 16px;
+    }
+    .generic-markdown-body pre {
+      background: #0A1A2E;
+      color: #F6FAFD;
+      padding: 14px 18px;
+      border-radius: var(--radius-md);
+      overflow-x: auto;
+      font-family: var(--dsc-font-mono);
+      font-size: 12.5px;
+      margin-bottom: 16px;
+    }
+    .generic-markdown-body code {
+      font-family: var(--dsc-font-mono);
+      font-size: 12px;
+      background: var(--bg-hover);
+      padding: 2px 5px;
+      border-radius: 4px;
+      border: 1px solid var(--border-subtle);
+    }
+    .generic-markdown-body pre code {
+      background: transparent;
+      padding: 0;
+      border: none;
+      color: inherit;
+    }
+
+    /* IFRAME DE PROTÓTIPOS */
+    .prototype-iframe-container {
+      width: 100%;
+      height: calc(100vh - var(--header-height) - 100px);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      background: #fff;
+      overflow: hidden;
+    }
+    .prototype-iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* RODAPÉ DO DOCUMENTO */
+    .doc-footer {
+      margin-top: 32px;
+      padding: 20px 0;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--text-secondary);
+      font-size: 12.5px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .doc-footer a {
+      color: var(--brand-blue);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .doc-footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Loader */
+    .doc-loader {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 280px;
+      gap: 14px;
+      color: var(--text-secondary);
+    }
+    .spinner {
+      width: 36px;
+      height: 36px;
+      border: 3px solid var(--border-color);
+      border-top-color: var(--brand-blue);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Toast de feedback de cópia */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #0A2440;
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: var(--radius-md);
+      font-size: 12.5px;
+      font-weight: 500;
+      box-shadow: var(--shadow-md);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+      transform: translateY(10px);
+      z-index: 100;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    /* ======================================================================
+       MOBILE (≤900px) — a sidebar vira gaveta sobreposta
+       O layout nasceu de duas colunas fixas: no celular a lateral de 320px
+       comia a tela inteira e o documento ficava fora do viewport. Aqui ela
+       sai do fluxo e passa a deslizar por cima, fechada por padrão; o mesmo
+       botão ☰ do cabeçalho abre e fecha, e tocar num documento fecha.
+       ====================================================================== */
+    .sidebar-backdrop { display: none; }
+
+    @media (max-width: 900px) {
+      .app-header { flex-wrap: wrap; gap: 8px; padding: 8px 12px; height: auto; }
+      .header-left { flex: 1 1 auto; min-width: 0; }
+      .header-center { flex: 1 1 100%; order: 3; }
+      .header-right { flex: 0 0 auto; }
+      #brandName { font-size: 15px; }
+      .brand-badge { display: none; }
+      .view-mode-toggle .mode-btn { padding: 6px 8px; font-size: 11px; }
+      .view-mode-toggle .mode-btn svg { display: none; }
+
+      .sidebar {
+        position: fixed;
+        top: 0; bottom: 0; left: 0;
+        width: min(86vw, 340px);
+        max-width: none;
+        z-index: 1200;
+        box-shadow: 4px 0 24px rgba(0,0,0,.28);
+        transform: translateX(0);
+        transition: transform .22s ease;
+      }
+      /* Gaveta fechada continua no DOM (só deslocada), para o estado de
+         abertura dos nós da árvore sobreviver ao abre-e-fecha. */
+      .sidebar.collapsed { display: flex; transform: translateX(-102%); }
+      .sidebar-resizer { display: none !important; }
+
+      .sidebar-backdrop {
+        display: block;
+        position: fixed; inset: 0;
+        background: rgba(0,0,0,.45);
+        z-index: 1100;
+        opacity: 0; pointer-events: none;
+        transition: opacity .22s ease;
+      }
+      body.drawer-open .sidebar-backdrop { opacity: 1; pointer-events: auto; }
+
+      .main-viewport { width: 100%; }
+      .content-wrapper { padding: 14px 12px 48px; }
+      /* O cartão do documento nasceu com 32px de respiro lateral: em 390px de
+         tela isso come 64px e joga o título para três linhas. */
+      #documentContainer > div { padding: 18px 16px; }
+      #documentContainer h1 { font-size: 24px; line-height: 1.2; }
+
+      /* Conteúdo largo nunca empurra a página: rola dentro de si mesmo. */
+      #documentContainer table { display: block; overflow-x: auto; max-width: 100%; }
+      #documentContainer pre { overflow-x: auto; }
+      #documentContainer img, #documentContainer svg { max-width: 100%; height: auto; }
+
+      /* Mapa de features: cartões estreitos e rolagem própria. */
+      .mm-wrap { overflow-x: auto; }
+      .mm-card { width: 240px; flex-basis: 240px; }
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+
+  <!-- ========================================================================
+       1. HEADER FULL-WIDTH
+       ======================================================================== -->
+  <header class="app-header">
+    <div class="header-left">
+      <a class="brand-logo" href="#README.md" onclick="navigateTo('README.md'); return false;">
+        <span class="brand-icon">
+          <img class="logo-light" src="identidade-visual/logos/aval-logo.svg" alt="Aval">
+          <img class="logo-dark" src="identidade-visual/logos/aval-logo-branca.svg" alt="Aval">
+        </span>
+        <span id="brandName">GPE</span>
+        <span class="brand-badge">FDD</span>
+        <span class="brand-badge" id="engineVersion" title="Versão do engine docqui em que esta instância está" style="display:none"></span>
+      </a>
+      
+      <button class="btn-icon" id="toggleSidebarBtn" title="Recolher/expandir menu lateral" aria-label="Menu lateral">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <div class="header-center">
+      <div class="search-box">
+        <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="searchInput" placeholder="Buscar requisitos, regras de negócio ou termos..." oninput="handleSearch(this.value)">
+        <span class="search-shortcut">⌘K</span>
+      </div>
+
+      <!-- Popover de Resultados de Busca -->
+      <div class="search-results-modal" id="searchResultsModal"></div>
+    </div>
+
+    <div class="header-right">
+      <!-- Toggle Modo PO / Desenvolvedor -->
+      <div class="view-mode-toggle" title="Alternar visão entre Foco de Negócio (PO) e Visão Técnica">
+        <button class="mode-btn active" id="btnModePO" onclick="setDocMode('po')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          Visão PO
+        </button>
+        <button class="mode-btn" id="btnModeTech" onclick="setDocMode('tech')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="16 18 22 12 16 6"></polyline>
+            <polyline points="8 6 2 12 8 18"></polyline>
+          </svg>
+          Técnico
+        </button>
+      </div>
+
+      <!-- Toggle Dark/Light Mode -->
+      <button class="btn-icon" id="themeToggleBtn" onclick="toggleTheme()" title="Alternar tema claro/escuro">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       2. CORPO PRINCIPAL
+       ======================================================================== -->
+  <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="fecharGaveta()" aria-hidden="true"></div>
+  <div class="app-body">
+    
+    <!-- SIDEBAR DE NAVEGAÇÃO EM 3 NÍVEIS -->
+    <aside class="sidebar" id="sidebar">
+      
+      <!-- Visões Fixas -->
+      <div class="sidebar-section">
+        <div class="sidebar-label">Visões do Sistema</div>
+        <ul class="nav-list" id="fixedNavList">
+          <li class="nav-item-fixed">
+            <a href="#README.md" data-path="README.md" onclick="navigateTo('README.md'); return false;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+              </svg>
+              Início / Visão Geral
+            </a>
+          </li>
+          <li class="nav-item-fixed">
+            <a href="#global/MASTER.md" data-path="global/MASTER.md" onclick="navigateTo('global/MASTER.md'); return false;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+              </svg>
+              Visão do Produto (MASTER)
+            </a>
+          </li>
+          <li class="nav-item-fixed">
+            <a href="#__mapa__" data-path="__mapa__" onclick="navigateTo('__mapa__'); return false;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="6" cy="6" r="3"></circle>
+                <circle cx="18" cy="18" r="3"></circle>
+                <path d="M6 9v12M18 9a9 9 0 0 0-9 9"></path>
+              </svg>
+              Mapa de Features (Árvore)
+            </a>
+          </li>
+          <li class="nav-item-fixed">
+            <a href="documentos/index.html" target="_blank" rel="noopener" title="Especificações Funcionais em .docx + pendências">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+              </svg>
+              Docs (.docx) ↗
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Seção Principal de Navegação — ordem: Global, Demandas e Impacto, Requisitos por Domínio, Protótipos -->
+      <!-- Global -->
+      <div class="sidebar-section" style="padding-top: 4px; padding-bottom: 4px;">
+        <details class="nav-folder" id="globalFolder" style="margin-bottom: 3px;">
+          <summary>
+            <div class="nav-folder-title">
+              <svg class="nav-folder-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+              </svg>
+              <span style="font-weight:600; color:var(--text-main);">Global</span>
+            </div>
+            <svg class="chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </summary>
+          <div class="nav-folder-content" id="globalNavList">
+            <!-- Renderizado dinamicamente -->
+          </div>
+        </details>
+      </div>
+
+      <!-- Demandas e análises de impacto (oculta até haver demandas — display controlado por renderDemandaFiles) -->
+      <div class="sidebar-section" id="sidebarDemandas" style="display:none; padding-top:4px; padding-bottom:4px;">
+        <details class="nav-folder" id="demandasFolder">
+          <summary>
+            <div class="nav-folder-title">
+              <svg class="nav-folder-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+              </svg>
+              <span style="font-weight:600; color:var(--text-main);">Demandas e Impacto</span>
+            </div>
+            <svg class="chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </summary>
+          <div class="nav-folder-content">
+            <ul class="nav-list" id="demandasNavList"></ul>
+          </div>
+        </details>
+      </div>
+
+      <!-- Requisitos por Domínio (FDD) + Protótipos -->
+      <div class="sidebar-section" style="padding-top: 4px; padding-bottom: 4px;">
+        <!-- Requisitos por Domínio (FDD) -->
+        <details class="nav-folder" id="fddFolder" open style="margin-bottom: 3px;">
+          <summary data-path="modules/INDEX.md" title="Abrir o Índice geral de módulos — domínios, rastreabilidade e painel de pendências" onclick="if(event.target.closest('.chevron-icon')) return; navigateTo('modules/INDEX.md');">
+            <div class="nav-folder-title">
+              <svg class="nav-folder-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+              </svg>
+              <span style="font-weight:600; color:var(--text-main);">Requisitos por Domínio</span>
+            </div>
+            <svg class="chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </summary>
+          <div class="nav-folder-content" id="fddTreeContainer">
+            <div class="doc-loader">
+              <div class="spinner"></div>
+              <span>Carregando requisitos...</span>
+            </div>
+          </div>
+        </details>
+
+        <!-- Protótipos -->
+        <details class="nav-folder" id="prototypesFolder">
+          <summary>
+            <div class="nav-folder-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--brand-blue);">
+                <rect x="2" y="3" width="20" height="14" rx="2"></rect>
+                <line x1="8" y1="21" x2="16" y2="21"></line>
+                <line x1="12" y1="17" x2="12" y2="21"></line>
+              </svg>
+              <span style="font-weight:600; color:var(--text-main);">Protótipos</span>
+            </div>
+            <svg class="chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </summary>
+          <div class="nav-folder-content" id="prototypesNavList">
+            <!-- Renderizado dinamicamente -->
+          </div>
+        </details>
+
+      </div>
+
+    </aside>
+
+    <!-- Alça arrastável de redimensionamento da sidebar -->
+    <div class="sidebar-resizer" id="sidebarResizer" role="separator" aria-orientation="vertical" aria-label="Redimensionar menu lateral" title="Arraste para ajustar a largura do menu"></div>
+
+    <!-- CONTEÚDO PRINCIPAL (100% LARGURA ÚTIL) -->
+    <main class="main-viewport">
+      <div class="content-wrapper" id="contentWrapper">
+        
+        <!-- Breadcrumbs Dinâmicos -->
+        <nav class="breadcrumb-bar" id="breadcrumbBar" aria-label="Hierarquia FDD">
+          <a href="#README.md" onclick="navigateTo('README.md'); return false;">Início</a>
+        </nav>
+
+        <!-- Container do Documento -->
+        <div id="documentContainer">
+          <div class="doc-loader">
+            <div class="spinner"></div>
+            <span>Carregando documento...</span>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+  </div>
+
+</div>
+
+<!-- Toast de Notificação -->
+<div class="toast" id="toastMessage">Identificador copiado!</div>
+
+<!-- Dados do repositório gerados por assets/generate-tree.js -->
+<script src="assets/tree.js"></script>
+
+<!-- Dados do mapa de features se existirem -->
+<script src="assets/mapa-data.js"></script>
+
+<script>
+  // ============================================================================
+  // LOGICA DO COMPORTAMENTO DO TEMPLATE FDD (AVAL / GPE)
+  // ============================================================================
+
+  const APP_NAME = (globalThis.DOCS_CONFIG && DOCS_CONFIG.name) || "GPE";
+  const brandNameEl = document.getElementById('brandName');
+  if (brandNameEl) brandNameEl.innerText = APP_NAME;
+  // A versão do engine em que a instância está — o arquivo VERSION, embutido no tree.js pelo generate-tree.
+  const engineVersionEl = document.getElementById('engineVersion');
+  if (engineVersionEl && typeof engineVersion !== 'undefined' && engineVersion) {
+    engineVersionEl.innerText = `docqui ${engineVersion}`;
+    engineVersionEl.style.display = '';
+  }
+  document.title = `Documentação — ${APP_NAME}`;
+
+  let currentFilePath = "";
+  let fddStructure = {};
+
+  // Inicializar Marked com renderizador customizado
+  const renderer = new marked.Renderer();
+  const origCode = renderer.code;
+  renderer.code = function(code, language, escaped) {
+    let lang = language;
+    let text = code;
+    if (typeof code === 'object' && code !== null) {
+      text = code.text;
+      lang = code.lang;
+    }
+    if (lang === 'mermaid') {
+      return `<div class="mermaid">${text}</div>`;
+    }
+    return origCode.call(this, code, language, escaped);
+  };
+
+  // Links para protótipos abrem em outra aba: o protótipo é uma página inteira, e
+  // trocar o documento em leitura pelo protótipo faz o leitor perder o lugar.
+  const origLink = renderer.link;
+  renderer.link = function (href, title, text) {
+    let h = href, ti = title, tx = text;
+    if (typeof href === 'object' && href !== null) { h = href.href; ti = href.title; tx = href.text; }
+    const html = origLink.call(this, href, title, text);
+    return /^prototypes\/.*\.html$/.test(String(h || ''))
+      ? html.replace('<a ', '<a target="_blank" rel="noopener" ')
+      : html;
+  };
+
+  marked.setOptions({
+    renderer: renderer,
+    gfm: true,
+    breaks: false,
+    headerIds: true,
+    mangle: false
+  });
+
+  // Tema Claro / Escuro
+  function initTheme() {
+    const savedTheme = localStorage.getItem('theme-pref') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  }
+  initTheme();
+
+  function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme-pref', next);
+    initMermaid();
+  }
+
+  // Inicializar Mermaid
+  function initMermaid() {
+    if (typeof mermaid === 'undefined') return;
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: isDark ? 'dark' : 'default',
+      securityLevel: 'loose',
+      flowchart: { useMaxWidth: true, htmlLabels: true }
+    });
+  }
+  initMermaid();
+
+  // Grava em cada SVG a largura natural que o Mermaid calculou, lida do viewBox,
+  // para o CSS travar o diagrama nela (ver `.mermaid svg`). Sem isso um fluxo
+  // estreito é esticado até a largura do container e fica ilegível de tão grande.
+  function ajustaLarguraDiagramas(container) {
+    container.querySelectorAll('.mermaid svg').forEach(svg => {
+      const viewBox = (svg.getAttribute('viewBox') || '').trim().split(/[\s,]+/);
+      const natural = Number(viewBox[2]);
+      if (!Number.isFinite(natural) || natural <= 0) return;
+      svg.style.setProperty('--largura-natural', Math.ceil(natural) + 'px');
+    });
+  }
+
+  // Modo PO vs Técnico
+  function setDocMode(mode) {
+    const btnPO = document.getElementById('btnModePO');
+    const btnTech = document.getElementById('btnModeTech');
+    
+    if (mode === 'tech') {
+      document.documentElement.classList.add('app-show-dev');
+      btnTech.classList.add('active');
+      btnPO.classList.remove('active');
+      localStorage.setItem('dev-only-pref', 'show');
+      showToast('Modo Técnico ativo: detalhes de rotas e superfícies exibidos.');
+    } else {
+      document.documentElement.classList.remove('app-show-dev');
+      btnPO.classList.add('active');
+      btnTech.classList.remove('active');
+      localStorage.setItem('dev-only-pref', 'hide');
+      showToast('Modo PO ativo: detalhes técnicos ocultados.');
+    }
+  }
+
+  if (localStorage.getItem('dev-only-pref') === 'show') {
+    setDocMode('tech');
+  }
+
+  // Redimensionamento da Sidebar
+  (function initResizer() {
+    const sidebar = document.getElementById('sidebar');
+    const resizer = document.getElementById('sidebarResizer');
+    const MIN_SIDEBAR_WIDTH = 220;
+    const MAX_SIDEBAR_WIDTH = 640;
+
+    const savedWidth = localStorage.getItem('tw-sidebar-width') || localStorage.getItem('simpf-sidebar-width');
+    if (savedWidth) {
+      const widthNum = parseInt(savedWidth, 10);
+      if (widthNum >= MIN_SIDEBAR_WIDTH && widthNum <= MAX_SIDEBAR_WIDTH) {
+        sidebar.style.width = `${widthNum}px`;
+      }
+    }
+
+    let isResizing = false;
+
+    resizer.addEventListener('mousedown', (e) => {
+      isResizing = true;
+      document.body.classList.add('is-resizing-sidebar');
+      resizer.classList.add('is-resizing');
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+      e.preventDefault();
+    });
+
+    function handleMouseMove(e) {
+      if (!isResizing) return;
+      let newWidth = e.clientX;
+      if (newWidth < MIN_SIDEBAR_WIDTH) newWidth = MIN_SIDEBAR_WIDTH;
+      if (newWidth > MAX_SIDEBAR_WIDTH) newWidth = MAX_SIDEBAR_WIDTH;
+      sidebar.style.width = `${newWidth}px`;
+    }
+
+    function handleMouseUp() {
+      if (!isResizing) return;
+      isResizing = false;
+      document.body.classList.remove('is-resizing-sidebar');
+      resizer.classList.remove('is-resizing');
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+      localStorage.setItem('tw-sidebar-width', parseInt(sidebar.style.width, 10));
+    }
+
+    document.getElementById('toggleSidebarBtn').addEventListener('click', () => {
+      sidebar.classList.toggle('collapsed');
+      resizer.style.display = sidebar.classList.contains('collapsed') ? 'none' : 'block';
+      sincronizaGaveta();
+    });
+
+    // ── Gaveta no celular ────────────────────────────────────────────────
+    // No desktop a sidebar é coluna; abaixo de 900px ela vira gaveta sobre o
+    // conteúdo. Nasce fechada no estreito — senão o documento abre escondido
+    // atrás dela — e o backdrop acompanha o estado.
+    const ESTREITO = () => window.matchMedia('(max-width: 900px)').matches;
+
+    window.sincronizaGaveta = function () {
+      const aberta = ESTREITO() && !sidebar.classList.contains('collapsed');
+      document.body.classList.toggle('drawer-open', aberta);
+    };
+    window.fecharGaveta = function () {
+      if (!ESTREITO()) return;
+      sidebar.classList.add('collapsed');
+      sincronizaGaveta();
+    };
+
+    if (ESTREITO()) sidebar.classList.add('collapsed');
+    sincronizaGaveta();
+    window.addEventListener('resize', sincronizaGaveta);
+    // Tocar num documento fecha a gaveta e deixa a leitura em tela cheia.
+    sidebar.addEventListener('click', (e) => { if (e.target.closest('a, summary')) setTimeout(fecharGaveta, 0); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') fecharGaveta(); });
+  })();
+
+  // Parser de YAML Frontmatter
+  function parseFrontMatter(content) {
+    if (!content) return { data: {}, content: "" };
+    // Cada grupo casa UM comentário só. Com `[\s\S]*?-->` solto, o documento que abre com
+    // o carimbo docqui, não tem front-matter e traz adiante outro comentário seguido de
+    // `---` (o `<!-- GATES:FIM -->` do modules/INDEX.md) tinha tudo até ali lido como
+    // front-matter — e as seções do começo sumiam da página, sem erro.
+    const match = content.match(/^\uFEFF?(?:\s*<!--(?:(?!-->)[\s\S])*-->)*\s*---[ \t]*\r?\n([\s\S]*?)\r?\n---[ \t]*\r?\n?/);
+    if (!match) return { data: {}, content };
+
+    const yamlStr = match[1];
+    const rest = content.slice(match[0].length);
+    const data = {};
+
+    yamlStr.split('\n').forEach(line => {
+      const parts = line.split(':');
+      if (parts.length >= 2) {
+        const key = parts[0].trim();
+        const val = parts.slice(1).join(':').trim().replace(/^["']|["']$/g, '');
+        if (key && !key.startsWith('#')) {
+          data[key] = val;
+        }
+      }
+    });
+
+    return { data, content: rest };
+  }
+
+  // Extrair título Markdown
+  function extractTitle(content) {
+    if (!content) return "";
+    const match = content.match(/^#\s+(.+)$/m);
+    if (!match) return "";
+    return match[1].replace(/^\s*(Major Feature Set|Domínio|Dominio|Feature Set|Data[\s-]Model|História de Usuário|Historia de Usuario)\s*[:\-—]*\s*/i, '').replace(/`/g, '').trim();
+  }
+
+  // Formatar data em dd/mm/aaaa
+  function formatDateBR(dateStr) {
+    if (!dateStr) return "";
+    const m = dateStr.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (m) {
+      return `${m[3]}/${m[2]}/${m[1]}`;
+    }
+    return dateStr;
+  }
+
+  // ============================================================================
+  // CONSTRUÇÃO DA ÁRVORE FDD EM 3 NÍVEIS E SEÇÕES RECOLHÍVEIS
+  // ============================================================================
+  function buildFDDTree() {
+    if (typeof repoFiles === 'undefined' || typeof repoFilesContent === 'undefined') {
+      document.getElementById('fddTreeContainer').innerHTML = `<p style="padding:10px; color:var(--text-muted); font-size:12px;">Árvore não disponível (execute assets/generate-tree.js).</p>`;
+      return;
+    }
+
+    // Checar se há rastreabilidade disponível para exibir item fixo
+    if (repoFiles.some(f => f.startsWith('rastreabilidade/'))) {
+      const fixedNav = document.getElementById('fixedNavList');
+      if (fixedNav && !document.getElementById('navItemRastreabilidade')) {
+        const li = document.createElement('li');
+        li.className = 'nav-item-fixed';
+        li.id = 'navItemRastreabilidade';
+        li.innerHTML = `
+          <a href="rastreabilidade/index.html" target="_blank" rel="noopener">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="18" cy="5" r="3"></circle>
+              <circle cx="6" cy="12" r="3"></circle>
+              <circle cx="18" cy="19" r="3"></circle>
+              <line x1="8.5" y1="10.5" x2="15.5" y2="6.5"></line>
+              <line x1="8.5" y1="13.5" x2="15.5" y2="17.5"></line>
+            </svg>
+            Grafo de Rastreabilidade ↗
+          </a>
+        `;
+        fixedNav.appendChild(li);
+      }
+    }
+
+    const domains = {};
+    const globalFiles = [];
+    const prototypeFiles = [];
+    const supportFiles = [];
+    const demandaFiles = [];
+
+    // Modelos em branco do framework (`_template-*`, `_TEMPLATE_*`) moram no
+    // repositório de propósito — são a partida de um artefato novo — mas não são
+    // documentação e não entram no menu. O mesmo corte já valia para os domínios
+    // `modules/_*` e para o `_TEMPLATE_IMPACTO`; aqui ele passa a valer em todas as
+    // seções. Nenhuma pasta `_` é cortada por ser `_`: `prototypes/_capturas` e
+    // `prototypes/_biblioteca-ds` são conteúdo e continuam visíveis.
+    // O engine nomeia modelo em branco de dois jeitos: prefixo (`_template-dominio.md`,
+    // pasta `_template/`) e sufixo (`pending_changes_template.md`). O corte é pelo papel
+    // do arquivo, não pela grafia — os dois saem do menu.
+    const eModeloEmBranco = (caminho) => {
+      const partes = caminho.split('/');
+      const base = partes[partes.length - 1].replace(/\.[^.]+$/, '').toLowerCase();
+      return partes.some(parte => parte.toLowerCase().startsWith('_template')) ||
+        /[_-]template$/.test(base);
+    };
+
+    repoFiles.forEach(file => {
+      if (eModeloEmBranco(file)) return;
+      if (file.startsWith('modules/')) {
+        const parts = file.split('/');
+        // Ocultar arquivos soltos em modules/ (ex: modules/INDEX.md)
+        if (parts.length <= 2 || parts[1].toLowerCase().endsWith('.md')) return;
+        const domainKey = parts[1];
+        if (!domainKey || domainKey.startsWith('_')) return;
+
+        if (!domains[domainKey]) {
+          domains[domainKey] = {
+            key: domainKey,
+            title: domainKey,
+            sigla: domainKey.toUpperCase().slice(0, 4),
+            readme: `modules/${domainKey}/README.md`,
+            featureSets: {}
+          };
+        }
+
+        if (parts.length === 3 && parts[2] === 'README.md') {
+          const content = repoFilesContent[file] || "";
+          const t = extractTitle(content);
+          if (t) domains[domainKey].title = t;
+          const siglaMatch = content.match(/- `([A-Z0-9]+)`/);
+          if (siglaMatch) domains[domainKey].sigla = siglaMatch[1];
+        } else if (parts.length >= 3) {
+          const fsKey = parts[2];
+          if (!domains[domainKey].featureSets[fsKey]) {
+            domains[domainKey].featureSets[fsKey] = {
+              key: fsKey,
+              title: fsKey,
+              readme: `modules/${domainKey}/${fsKey}/README.md`,
+              features: []
+            };
+          }
+
+          if (parts.length === 4 && parts[3] === 'README.md') {
+            const content = repoFilesContent[file] || "";
+            const t = extractTitle(content);
+            if (t) domains[domainKey].featureSets[fsKey].title = t;
+            // Sigla do Feature Set: o SFS do `DOM-SFS` que o N2 declara no subtítulo
+            // (`> **Nível 2** - Domínio: … - \`TEM-FAQ\``). O menu mostra só o SFS — o
+            // domínio já está no nó de cima, e a árvore lê TEM › FAQ › 02, como o ID
+            // da feature.
+            const siglaFS = content.match(/Nível 2[^`\n]*`[A-Z0-9]+-([A-Z0-9]+)`/);
+            if (siglaFS) domains[domainKey].featureSets[fsKey].sigla = siglaFS[1];
+          } else if (parts.length === 4 && parts[3].endsWith('.md')) {
+            const content = repoFilesContent[file] || "";
+            const { data } = parseFrontMatter(content);
+            const title = extractTitle(content) || parts[3].replace(/^f-|\.md$/g, '');
+            const code = (data.id ? data.id.split('-').pop() : parts[3].replace(/^f-|\.md$/g, '')).slice(0, 4);
+            // N2 sem a sigla no subtítulo: vale a do meio do ID das suas features.
+            const partesId = String(data.id || '').split('-');
+            if (!domains[domainKey].featureSets[fsKey].sigla && partesId.length === 3) {
+              domains[domainKey].featureSets[fsKey].sigla = partesId[1];
+            }
+
+            domains[domainKey].featureSets[fsKey].features.push({
+              path: file,
+              title,
+              id: data.id || "",
+              code
+            });
+          }
+        }
+      } else if (file.startsWith('global/')) {
+        globalFiles.push(file);
+      } else if (file.startsWith('prototypes/')) {
+        prototypeFiles.push(file);
+      } else if (file.startsWith('arquivos/demandas/')) {
+        demandaFiles.push(file);
+      } else if (file.startsWith('analise-impacto/')) {
+        // AIMs (par .md/.html): renderDemandaFiles prefere o .html diagramado quando
+        // existe o par. Os moldes `_TEMPLATE_AIM*`, prefixados com '_', ficam fora.
+        if (!file.split('/').pop().startsWith('_')) demandaFiles.push(file);
+      } else {
+        supportFiles.push(file);
+      }
+    });
+
+    fddStructure = domains;
+    renderFDDTreeHTML(domains);
+    renderGlobalFiles(globalFiles);
+    renderPrototypeFiles(prototypeFiles);
+    renderSupportFiles(supportFiles);
+    renderDemandaFiles(demandaFiles);
+  }
+
+  function renderFDDTreeHTML(domains) {
+    const container = document.getElementById('fddTreeContainer');
+    let html = '';
+
+    const domList = Object.values(domains);
+    if (domList.length === 0) {
+      container.innerHTML = `<div style="padding:8px 10px; font-size:12px; color:var(--text-muted);">Nenhum domínio FDD em modules/.</div>`;
+      return;
+    }
+
+    domList.forEach((dom, dIdx) => {
+      const domId = `dom-${dom.key}`;
+      // Recolhido por padrão: na carga só "Requisitos por Domínio" abre; domínios e
+      // feature-sets expandem pelo clique ou pelo loadFile ao ativar um item.
+      const isOpen = '';
+      const clickHandler = dom.readme ? `onclick="if(event.target.closest('.chevron-icon')) return; navigateTo('${dom.readme}');"` : '';
+
+      html += `
+        <details class="nav-folder" id="${domId}" data-path="${dom.readme}" ${isOpen}>
+          <summary ${clickHandler}>
+            <div class="nav-folder-title">
+              <svg class="nav-folder-icon" width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+              </svg>
+              <span class="domain-tag">${dom.sigla}</span>
+              <span title="${dom.title}">${dom.title}</span>
+            </div>
+            <svg class="chevron-icon" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </summary>
+          
+          <div class="nav-folder-content">
+      `;
+
+      Object.values(dom.featureSets).forEach((fs, fsIdx) => {
+        const fsId = `fs-${dom.key}-${fs.key}`;
+        const isFSOpen = '';
+        const fsClickHandler = fs.readme ? `onclick="if(event.target.closest('.chevron-icon')) return; navigateTo('${fs.readme}');"` : '';
+
+        html += `
+          <details class="nav-folder" id="${fsId}" data-path="${fs.readme}" ${isFSOpen}>
+            <summary ${fsClickHandler}>
+              <div class="nav-folder-title">
+                <svg class="nav-folder-icon" width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                </svg>
+                ${fs.sigla ? `<span class="domain-tag">${fs.sigla}</span>` : ''}
+                <span title="${fs.title}">${fs.title}</span>
+              </div>
+              <div class="nav-folder-aside">
+                <span class="fs-count">${fs.features.length}</span>
+                <svg class="chevron-icon" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </div>
+            </summary>
+            
+            <div class="nav-folder-content">
+        `;
+
+        fs.features.forEach(f => {
+          html += `
+            <a class="feature-item" href="#${f.path}" data-path="${f.path}" onclick="navigateTo('${f.path}'); return false;">
+              <span class="feature-title-text" title="${f.title}">${f.title}</span>
+              <span class="feature-code">${f.code}</span>
+            </a>
+          `;
+        });
+
+        html += `
+            </div>
+          </details>
+        `;
+      });
+
+      html += `
+          </div>
+        </details>
+      `;
+    });
+
+    container.innerHTML = html;
+  }
+
+  const FOLDER_LABELS = {
+    'global': 'Global',
+    'global/data-models': 'Mapa de Entidades por Domínio',
+    'prototypes': 'Protótipos',
+    'prototypes/_biblioteca-ds': 'Biblioteca Design System AVAL',
+    'prototypes/_biblioteca-caixa': 'Biblioteca CAIXA',
+    'prototypes/aval': 'Avaliação e Mapas',
+    'identidade-visual': 'Identidade Visual AVAL',
+    'scripts': 'Scripts de Manutenção',
+    'repos': 'Repositórios',
+    'engine': 'Engine do Framework'
+  };
+
+  const FILE_LABELS = {
+    'global/MASTER.md': 'Visão do Produto (MASTER)',
+    'global/N0_PRODUCT_VISION.md': 'Visão do Produto (N0)',
+    'global/API-PATTERNS.md': 'Padrões de API',
+    'global/AUTHZ.md': 'Autorização e Acessos (AUTHZ)',
+    'global/CODE-STYLE.md': 'Guia de Estilo de Código',
+    'global/CONTAGEM-PF.md': 'Contagem de Pontos de Função',
+    'global/DATA-MODEL.md': 'Modelo de Dados Global',
+    'global/DESIGN-SYSTEM.md': 'Design System AVAL',
+    'global/ERROR-DICTIONARY.md': 'Dicionário de Erros',
+    'global/FIELD-DICTIONARY.md': 'Dicionário de Campos',
+    'global/MESSAGE-DICTIONARY.md': 'Dicionário de Mensagens',
+    'global/NFR.md': 'Requisitos Não Funcionais (NFR)',
+    'global/PATTERNS.md': 'Padrões Arquiteturais',
+    'global/RULES-DICTIONARY.md': 'Dicionário de Regras de Negócio',
+    'global/SIZING.md': 'Dimensionamento (Sizing)',
+    'global/VOCABULARY-OVERRIDES.md': 'Sobrescrita de Vocabulário',
+    'global/ALI-AIE-MAP.md': 'Mapeamento de ALI e AIE',
+    'prototypes/_biblioteca-ds/index.html': 'Biblioteca de Componentes AVAL',
+    'prototypes/_biblioteca-ds/shell-responsive.html': 'Shell Responsivo AVAL',
+    'identidade-visual/aval-identidade.html': 'Manual da Identidade Visual AVAL'
+  };
+
+  function getFolderDisplayName(item) {
+    if (item.path in FOLDER_LABELS) return FOLDER_LABELS[item.path];
+    const parts = item.path.split('/');
+    const last = parts[parts.length - 1];
+    return last.charAt(0).toUpperCase() + last.slice(1).replace(/[-_]/g, ' ');
+  }
+
+  function getFileDisplayName(item) {
+    if (item.path in FILE_LABELS) return FILE_LABELS[item.path];
+    if (typeof repoFilesContent !== 'undefined') {
+      const content = repoFilesContent[item.path];
+      if (content) {
+        const title = extractTitle(content);
+        if (title) return title;
+      }
+    }
+    const parts = item.path.split('/');
+    const last = parts[parts.length - 1];
+    return last.replace(/\.(md|html?)$/i, '').replace(/[-_]/g, ' ');
+  }
+
+  function getNodeDisplayName(item) {
+    return item.type === 'dir' ? getFolderDisplayName(item) : getFileDisplayName(item);
+  }
+
+  function findFolderIndexFile(dirNode) {
+    if (!dirNode || !dirNode.children) return null;
+    const keys = Object.keys(dirNode.children);
+    const pick = (name) => keys.find(k => k.toLowerCase() === name);
+    const key = pick('index.md') || pick('readme.md');
+    const child = key ? dirNode.children[key] : null;
+    return child && child.type === 'file' ? child : null;
+  }
+
+  function buildSubTree(files, prefix) {
+    const root = { name: prefix, type: "dir", children: {}, path: prefix };
+    files.forEach(filePath => {
+      const relPath = filePath.startsWith(prefix + '/') ? filePath.slice(prefix.length + 1) : filePath;
+      const parts = relPath.split('/');
+      let current = root;
+      parts.forEach((part, index) => {
+        const isLast = index === parts.length - 1;
+        const currentPath = prefix + '/' + parts.slice(0, index + 1).join('/');
+        if (isLast) {
+          current.children[part] = {
+            name: part,
+            type: "file",
+            path: currentPath
+          };
+        } else {
+          if (!current.children[part]) {
+            current.children[part] = {
+              name: part,
+              type: "dir",
+              children: {},
+              path: currentPath
+            };
+          }
+          current = current.children[part];
+        }
+      });
+    });
+    return root;
+  }
+
+  function renderSubTreeHTML(node, getSigla) {
+    let html = '';
+    const indexFile = findFolderIndexFile(node);
+    const keys = Object.keys(node.children).sort((a, b) => {
+      const itemA = node.children[a];
+      const itemB = node.children[b];
+      if (itemA.type !== itemB.type) return itemA.type === "dir" ? -1 : 1;
+      return getNodeDisplayName(itemA).localeCompare(getNodeDisplayName(itemB), 'pt', { sensitivity: 'base' });
+    });
+
+    keys.forEach(key => {
+      const item = node.children[key];
+      if (item === indexFile && node.path !== item.path) return;
+
+      if (item.type === "dir") {
+        const folderIndex = findFolderIndexFile(item);
+        // Pasta que corresponde a um nó do FDD (o domínio ou o Feature Set, ver
+        // renderPrototypeFiles) herda o título e a sigla dele; as demais
+        // (_template, _biblioteca-ds, f-<feature>) caem no nome genérico.
+        const noFdd = getSigla ? getSigla(item.path) : null;
+        const folderName = noFdd ? noFdd.title : getFolderDisplayName(item);
+        const siglaBadge = (noFdd && noFdd.sigla) ? `<span class="domain-tag">${noFdd.sigla}</span>` : '';
+        const clickHandler = folderIndex ? `onclick="if(event.target.closest('.chevron-icon')) return; navigateTo('${folderIndex.path}');"` : '';
+
+        html += `
+          <details class="nav-folder" data-path="${item.path}">
+            <summary ${clickHandler}>
+              <div class="nav-folder-title">
+                <svg class="nav-folder-icon" width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                </svg>
+                ${siglaBadge}
+                <span title="${folderName}">${folderName}</span>
+              </div>
+              <svg class="chevron-icon" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </summary>
+            <div class="nav-folder-content">
+              ${renderSubTreeHTML(item, getSigla)}
+            </div>
+          </details>
+        `;
+      } else {
+        const fileTitle = getFileDisplayName(item);
+        const isHtml = /\.html?$/i.test(item.path);
+        const icon = isHtml
+          ? `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>`
+          : `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>`;
+
+        html += `
+          <a class="feature-item" href="#${item.path}" data-path="${item.path}" onclick="navigateTo('${item.path}'); return false;" style="font-size: 12.5px; padding: 5px 8px;">
+            <div style="display:flex; align-items:center; gap:7px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+              ${icon}
+              <span title="${fileTitle}">${fileTitle}</span>
+            </div>
+          </a>
+        `;
+      }
+    });
+
+    return html || `<div style="padding: 6px 10px; font-size:12px; color:var(--text-muted)">Sem itens.</div>`;
+  }
+
+  function renderGlobalFiles(files) {
+    const list = document.getElementById('globalNavList');
+    if (!list) return;
+    const tree = buildSubTree(files, 'global');
+    list.innerHTML = renderSubTreeHTML(tree);
+  }
+
+  function renderPrototypeFiles(files) {
+    const list = document.getElementById('prototypesNavList');
+    if (!list) return;
+    const tree = buildSubTree(files, 'prototypes');
+    // prototypes/<domínio>/<feature-set> espelha modules/ (REP-004), então o domínio
+    // (N1) e o Feature Set (N2) reaproveitam o que o parse do FDD já leu — título e
+    // sigla —, com o mesmo badge de "Requisitos por Domínio". Pastas sem par em
+    // modules/ (_template, _biblioteca-ds) e as de feature (f-*) não casam.
+    list.innerHTML = renderSubTreeHTML(tree, (caminho) => {
+      const [, dom, fs, ...resto] = caminho.split('/');
+      const n1 = fddStructure[dom];
+      if (!n1 || resto.length) return null;
+      return fs ? (n1.featureSets || {})[fs] || null : n1;
+    });
+  }
+
+  // Documentos de demanda (análise, impacto, questionamentos). Preferimos a
+  // versão .html quando existe o par .md/.html — é a diagramada; o .md fica
+  // acessível pelo mesmo nome de base, sem duplicar a linha no menu.
+  function renderDemandaFiles(files) {
+    const list = document.getElementById('demandasNavList');
+    const box = document.getElementById('sidebarDemandas');
+    if (!list || !box) return;
+    if (!files.length) { box.style.display = 'none'; return; }
+
+    const temHtml = new Set(files.filter(f => f.endsWith('.html')).map(f => f.replace(/\.html$/, '')));
+    const escolhidos = files.filter(f => !(f.endsWith('.md') && temHtml.has(f.replace(/\.md$/, ''))));
+
+    // Nomes legíveis dos documentos conhecidos; o resto cai no derivado do
+    // arquivo (que não tem acento nem sabe onde ficam as siglas).
+    const NOMES = {
+    };
+    const rotulo = f => {
+      const base = f.split('/').pop().replace(/\.(md|html)$/, '');
+      // Rótulo curado vem primeiro; senão, o título da própria AIM — o nome do
+      // arquivo é a chave, que não diz nada sozinha.
+      if (NOMES[base]) return NOMES[base];
+      if (f.startsWith('analise-impacto/') && typeof repoFilesContent !== 'undefined') {
+        const mdKey = f.endsWith('.html') ? f.replace(/\.html$/, '.md') : f;
+        const t = extractTitle(repoFilesContent[mdKey] || '');
+        if (t) return t;
+      }
+      return base.replace(/_/g, ' ').toLowerCase()
+        .replace(/(^|\s)\S/g, c => c.toUpperCase())
+        // A chave da ferramenta de origem é identificador, não palavra: PDTIC25024-262,
+        // STRY0012345, SP05. Em caixa de título vira "Pdtic25024-262", que ninguém
+        // procura nem reconhece. Qualquer token com dígito sai inteiro em maiúscula.
+        .replace(/\S*\d\S*/g, t => t.toUpperCase());
+    };
+
+    const ordenados = escolhidos.sort((x, y) => x.localeCompare(y, 'pt'));
+
+    list.innerHTML = ordenados.map(f => `
+        <li class="nav-item-fixed">
+          <a href="#${f}" data-path="${f}" onclick="navigateTo('${f}'); return false;" style="font-size:12px; padding:4px 8px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+            </svg>
+            <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${f}">${rotulo(f)}</span>
+          </a>
+        </li>
+      `).join('');
+    box.style.display = '';
+  }
+
+  function renderSupportFiles(files) {
+    const list = document.getElementById('supportNavList');
+    if (!list) return;
+    let html = '';
+
+    files.slice(0, 20).forEach(file => {
+      const fileName = file.split('/').pop().replace(/\.md|\.html/g, '');
+      html += `
+        <li class="nav-item-fixed">
+          <a href="#${file}" data-path="${file}" onclick="navigateTo('${file}'); return false;" style="font-size: 12px; padding: 4px 8px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            </svg>
+            <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${file}">${fileName}</span>
+          </a>
+        </li>
+      `;
+    });
+
+    list.innerHTML = html;
+  }
+
+  function toggleSupportSection() {
+    const list = document.getElementById('supportNavList');
+    const chev = document.getElementById('supportChevron');
+    const isHidden = list.style.display === 'none';
+    list.style.display = isHidden ? 'flex' : 'none';
+    chev.style.transform = isHidden ? 'rotate(90deg)' : 'rotate(0deg)';
+  }
+
+  // ============================================================================
+  // RENDERIZAÇÃO E FORMATAÇÃO DE DOCUMENTOS (TRANSFORMER CLEAN)
+  // ============================================================================
+  function loadFile(filePath) {
+    if (!filePath) filePath = "README.md";
+    currentFilePath = filePath;
+
+    // Atualizar item ativo na sidebar e expandir ancestrais
+    document.querySelectorAll('.feature-item, .nav-item-fixed a, .nav-folder summary').forEach(el => {
+      const p = el.getAttribute('data-path') || el.getAttribute('data-index-path');
+      if (p === filePath) {
+        el.classList.add('active');
+        let curr = el;
+        while (curr && curr !== document.body) {
+          if (curr.tagName === 'DETAILS') curr.open = true;
+          if (curr.classList.contains('fdd-domain') || curr.classList.contains('fdd-featureset')) curr.classList.add('open');
+          curr = curr.parentElement;
+        }
+      } else {
+        el.classList.remove('active');
+      }
+    });
+
+    // Se for tela interativa do Mapa de Features
+    if (filePath === '__mapa__') {
+      renderMapaView();
+      return;
+    }
+
+    // Se for iframe para protótipo HTML
+    if (filePath.endsWith('.html') && (filePath.startsWith('prototypes/') || filePath.startsWith('identidade-visual/') || filePath.startsWith('arquivos/demandas/') || filePath.startsWith('analise-impacto/'))) {
+      renderPrototypeIframe(filePath);
+      return;
+    }
+
+    // Obter conteúdo Markdown do tree.js
+    const rawContent = (typeof repoFilesContent !== 'undefined' && repoFilesContent[filePath]) || `# Documento não encontrado\n\nO arquivo \`${filePath}\` não está disponível em \`assets/tree.js\`.`;
+    renderMarkdownContent(filePath, rawContent);
+  }
+
+  function renderPrototypeIframe(path) {
+    updateBreadcrumbs(path, getFileDisplayName({ path, name: path.split('/').pop() }));
+    const container = document.getElementById('documentContainer');
+    container.innerHTML = `
+      <div style="margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; background:var(--bg-card); padding:10px 16px; border:1px solid var(--border-color); border-radius:var(--radius-md);">
+        <span style="font-family:var(--dsc-font-mono); font-size:12px; color:var(--text-secondary);">${path}</span>
+        <a href="${path}" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:6px; font-size:12.5px; color:var(--brand-blue); text-decoration:none; font-weight:600;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <line x1="10" y1="14" x2="21" y2="3"></line>
+          </svg>
+          Abrir em nova aba
+        </a>
+      </div>
+      <div class="prototype-iframe-container">
+        <iframe class="prototype-iframe" src="${path}" title="Protótipo: ${path}"></iframe>
+      </div>
+    `;
+  }
+
+  function renderMarkdownContent(path, rawMd) {
+    const { data: frontmatter, content: cleanMd } = parseFrontMatter(rawMd);
+    const title = extractTitle(cleanMd) || path.split('/').pop().replace(/\.md$/i, '');
+    updateBreadcrumbs(path, title, frontmatter);
+
+    const isN3Feature = path.startsWith('modules/') && path.split('/').length === 4 && path.split('/').pop().startsWith('f-');
+    const isN2FeatureSet = path.startsWith('modules/') && path.split('/').length === 4 && path.split('/')[3] === 'README.md';
+    const isN1Domain = path.startsWith('modules/') && path.split('/').length === 3 && path.split('/')[2] === 'README.md';
+
+    if (isN3Feature) {
+      renderN3FeatureTemplate(path, title, frontmatter, cleanMd);
+    } else if (isN2FeatureSet) {
+      renderN2FeatureSetTemplate(path, title, frontmatter, cleanMd);
+    } else if (isN1Domain) {
+      renderN1DomainTemplate(path, title, frontmatter, cleanMd);
+    } else {
+      renderGenericDocumentTemplate(path, title, frontmatter, cleanMd);
+    }
+
+    const container = document.getElementById('documentContainer');
+
+    // Link .md é navegação DENTRO do visualizador, e o hash é a rota
+    // (handleHashRoute lê o caminho dele). O reescreveLinksInternos já fazia
+    // isso — mas só é chamado no template de documento GENÉRICO. Nos templates
+    // de N1/N2/N3 o href relativo sobrevivia e o clique tirava o leitor do
+    // visualizador, entregando o Markdown cru. Aqui a reescrita é no DOM já
+    // montado, então vale para todo template de uma vez, em vez de repetir a
+    // chamada em cada ponto que faz marked.parse. (REP-039 do `portal-compras`.)
+    // Alvo fora de repoFiles (placeholder de template, './[dominio]/[x].md')
+    // fica intacto: link inerte é melhor que link errado.
+    // Link que NÃO é .md tem ramo próprio, logo abaixo: aqui ele pode vir escrito a
+    // partir da raiz ou relativo ao arquivo, e vale a forma que existe.
+    const baseDoDoc = path.includes('/') ? path.slice(0, path.lastIndexOf('/')) : '';
+    // Rubricas ganham `id` para que âncora dentro do documento tenha alvo. O marked
+    // desta versão não gera `id` nenhum, apesar do `headerIds: true` — por isso as 47
+    // âncoras do REPLICACAO.md e as 2 do NFR.md apontavam para o nada, e clicar numa
+    // delas trocava a ROTA (o hash é o caminho do documento) e abria "Documento não
+    // encontrado". A regra do slug é a do GitHub, que é como essas âncoras foram
+    // escritas à mão: minúsculas, fora tudo que não é letra/número/espaço/hífen —
+    // acento fica —, espaços viram hífen.
+    const usados = new Set();
+    container.querySelectorAll('h1, h2, h3, h4').forEach((h) => {
+      if (h.id) { usados.add(h.id); return; }
+      const base = slugDeTitulo(h.textContent || '');
+      if (!base) return;
+      let id = base, n = 1;
+      while (usados.has(id)) id = `${base}-${n++}`;
+      usados.add(id);
+      h.id = id;
+    });
+
+    container.querySelectorAll('a[href]').forEach((a) => {
+      const href = a.getAttribute('href');
+      // Âncora pura: rola até a rubrica e NÃO deixa o hash mudar — o hash é a rota.
+      if (href && href.startsWith('#') && href.length > 1) {
+        const alvoId = decodeURIComponent(href.slice(1));
+        a.addEventListener('click', (ev) => {
+          const el = container.querySelector(`[id="${CSS.escape(alvoId)}"]`);
+          if (!el) return;            // âncora sem alvo: deixa como estava, não engole o clique
+          ev.preventDefault();
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+        return;
+      }
+      // esquema próprio (http:, mailto:), âncora e caminho absoluto ficam como estão
+      if (!href || /^[a-z][a-z0-9+.-]*:/i.test(href) || href.startsWith('#') || href.startsWith('/')) return;
+      const corte = href.indexOf('#');
+      const doc = corte === -1 ? href : href.slice(0, corte);
+      if (!doc) return;
+      if (!/\.md$/i.test(doc)) {
+        // Link que não é .md — o protótipo, uma planilha de exemplo, uma pasta. O
+        // navegador resolveria o href contra a PÁGINA do visualizador, que mora na
+        // raiz, e aqui convivem duas formas de escrevê-lo: a partir da RAIZ, que é a
+        // convenção dos N3 desta instância (`prototypes/…`, ver CLAUDE.md), e relativa
+        // ao ARQUIVO, que é a dos READMEs de protótipo (`./conteudo.html`) e a que
+        // funciona no GitHub. Vale a que existe: primeiro a relativa ao documento,
+        // depois a da raiz; o link relativo explícito (`./`, `../`) a um arquivo que o
+        // tree.js não lista (`.ods`, `.xlsx`) fica com a relativa. Pasta com README
+        // abre o README, dentro do visualizador. (REP-031 do `portal-compras`, que lá
+        // resolve sempre contra o documento — aqui isso quebraria o elo dos N3.)
+        const relativo = resolveCaminhoRelativo(baseDoDoc, doc);
+        if (/\/$/.test(doc) && repoFiles.includes(relativo + '/README.md')) {
+          a.setAttribute('href', '#' + relativo + '/README.md');
+          return;
+        }
+        const alvo = repoFiles.includes(relativo) ? relativo
+          : repoFiles.includes(doc) ? doc
+          : /^\.\.?\//.test(doc) ? relativo : null;
+        if (!alvo) return;
+        a.setAttribute('href', alvo + (corte === -1 ? '' : href.slice(corte)));
+        a.setAttribute('target', '_blank');
+        a.setAttribute('rel', 'noopener');
+        return;
+      }
+      let decodificado = doc;
+      try { decodificado = decodeURIComponent(doc); } catch (e) { /* mantém como veio */ }
+      // A âncora, quando o link tem uma, viaja junto no formato `#<rota>#<âncora>` —
+      // o `handleHashRoute` separa as duas no ÚLTIMO `#`, porque caminho de arquivo
+      // não contém `#`. (REP-049 do `portal-compras`.)
+      const ancora = corte === -1 ? '' : href.slice(corte);
+      for (const candidato of [doc, decodificado]) {
+        const alvo = resolveCaminhoRelativo(baseDoDoc, candidato);
+        if (repoFiles.includes(alvo)) { a.setAttribute('href', '#' + alvo + ancora); return; }
+      }
+    });
+
+    // Pré-processamento e renderização de diagramas Mermaid
+    container.querySelectorAll('pre code.language-mermaid, pre code.mermaid, code.language-mermaid').forEach(el => {
+      const div = document.createElement('div');
+      div.className = 'mermaid';
+      div.textContent = el.textContent;
+      const pre = el.closest('pre') || el;
+      pre.parentNode.replaceChild(div, pre);
+    });
+
+    if (typeof mermaid !== 'undefined') {
+      initMermaid();
+      setTimeout(async () => {
+        try {
+          const nodes = container.querySelectorAll('.mermaid');
+          if (nodes.length > 0) {
+            await mermaid.run({ nodes });
+            ajustaLarguraDiagramas(container);
+          }
+        } catch (e) {
+          console.warn('Erro ao renderizar Mermaid:', e);
+        }
+      }, 40);
+    }
+  }
+
+  function updateBreadcrumbs(path, title, frontmatter) {
+    const bar = document.getElementById('breadcrumbBar');
+    let html = `<a href="#README.md" onclick="navigateTo('README.md'); return false;">Início</a>`;
+
+    if (path.startsWith('modules/')) {
+      const parts = path.split('/');
+      const domKey = parts[1];
+      const fsKey = parts[2];
+      const dom = fddStructure[domKey];
+      const fs = dom && dom.featureSets && dom.featureSets[fsKey];
+
+      if (dom) {
+        html += ` <span class="breadcrumb-sep">/</span> <a href="#${dom.readme}" onclick="navigateTo('${dom.readme}'); return false;">Domínio: ${dom.title}</a>`;
+      }
+      if (fs) {
+        html += ` <span class="breadcrumb-sep">/</span> <a href="#${fs.readme}" onclick="navigateTo('${fs.readme}'); return false;">Feature Set: ${fs.title}</a>`;
+      }
+    }
+
+    html += ` <span class="breadcrumb-sep">/</span> <span class="breadcrumb-current">${title}</span>`;
+    bar.innerHTML = html;
+  }
+
+  // Template Especial para Features Nível 3
+  function renderN3FeatureTemplate(path, title, frontmatter, md) {
+    const idCode = frontmatter.id || path.split('/').pop().replace(/^f-|\.md$/g, '').toUpperCase();
+    const parts = path.split('/');
+    const dom = fddStructure[parts[1]];
+    const fs = dom && dom.featureSets && dom.featureSets[parts[2]];
+
+    const domName = dom ? dom.title : parts[1];
+    const fsName = fs ? fs.title : parts[2];
+
+    // Extrair Descrição e Não Faz
+    let descText = "Registra as operações da funcionalidade.";
+    let naoFazText = "";
+
+    const descMatch = md.match(/## Descrição\s*\n([\s\S]*?)(?=\n---|\n##|\n<div|$)/);
+    if (descMatch) {
+      const fullDesc = descMatch[1].trim();
+      const naoFazMatch = fullDesc.match(/\*\*Não faz\*\*:\s*([\s\S]*)$/i);
+      if (naoFazMatch) {
+        naoFazText = naoFazMatch[1].trim();
+        descText = fullDesc.replace(/\*\*Não faz\*\*:\s*[\s\S]*$/i, '').trim();
+      } else {
+        descText = fullDesc;
+      }
+    }
+
+    // Extrair blocos dev-only. O N3 tem, em geral, DOIS: a Superfície (curto,
+    // vira o badge "SUPERFÍCIE TÉCNICA" abaixo) e um segundo, maior, com as
+    // seções técnicas (Mapeamento de campos, Cenários técnicos, API, …) — esse
+    // deve virar cards normais (mesma seção do resto do doc, classe
+    // dev-only-container: some no Modo PO sem a caixa tracejada da Superfície).
+    // Usar matchAll (global): com o regex sem 'g', só o primeiro bloco era
+    // achado/removido, e os demais ficavam com a tag de abertura órfã no meio
+    // do documento (virava uma caixa tracejada vazia) e o conteúdo saía sem
+    // marca alguma de dev-only (visível também no Modo PO).
+    const devBlocks = [...md.matchAll(/<div class="dev-only">([\s\S]*?)<\/div>/g)];
+    let devOnlyHtml = '';
+    const devSectionTitles = new Set();
+    devBlocks.forEach((block, i) => {
+      if (i === 0) {
+        devOnlyHtml = `
+          <div class="dev-only">
+            <span class="dev-badge">⚙️ SUPERFÍCIE TÉCNICA (DEV ONLY)</span>
+            ${marked.parse(block[1])}
+          </div>
+        `;
+        return;
+      }
+      for (const m of block[1].matchAll(/^##\s+(.+)$/gm)) devSectionTitles.add(m[1].trim());
+    });
+
+    // Extrair Regras de Negócio
+    let regrasHtml = '';
+    // `\s*\n`, e não `\s*\n\n`: com a lista colada ao título (sem linha em branco) a
+    // leitura não casava, e o corte logo abaixo tirava a seção do corpo — as regras sumiam.
+    const regrasMatch = md.match(/## Regras de negócio\s*\n([\s\S]*?)(?=\n---|\n##|$)/);
+    if (regrasMatch) {
+      const rawRules = regrasMatch[1].trim();
+      const ruleLines = rawRules.split(/\n(?=\d+\.\s+)/);
+      let cards = '';
+
+      ruleLines.forEach(line => {
+        const m = line.match(/^(\d+)\.\s+([\s\S]*)$/);
+        if (m) {
+          const num = m[1].padStart(2, '0');
+          let text = m[2];
+          text = text.replace(/`([A-Z0-9_\-]+)`/g, '<span class="rn-tag">$1</span>');
+          text = marked.parseInline(text);
+
+          cards += `
+            <div class="rn-card">
+              <div class="rn-card-header">
+                <span class="rn-num">RN-${num}</span>
+              </div>
+              <div class="rn-body">${text}</div>
+            </div>
+          `;
+        }
+      });
+
+      if (cards) {
+        regrasHtml = `
+          <div class="doc-section">
+            <div class="section-header">
+              <h2 class="section-title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--brand-blue);">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                </svg>
+                Regras de Negócio
+              </h2>
+            </div>
+            <div class="rn-list">${cards}</div>
+          </div>
+        `;
+      }
+    }
+
+    // Extrair Cenários Gherkin e formatar
+    let cenariosHtml = '';
+    const cenariosMatch = md.match(/## Cenários\s*\n\n```gherkin([\s\S]*?)```/);
+    if (cenariosMatch) {
+      const gherkinText = cenariosMatch[1].trim();
+      const blocks = gherkinText.split(/\n(?=(?:# ←|\s*Scenario:|\s*Cenário:))/);
+      let scCards = '';
+
+      blocks.forEach(b => {
+        const scTitleMatch = b.match(/(?:Scenario|Cenário):\s*(.+)/);
+        if (scTitleMatch) {
+          const scTitle = scTitleMatch[1].trim();
+          const tagMatch = b.match(/# ← MESSAGE-DICTIONARY:\s*([A-Z0-9_]+)/);
+          const tagBadge = tagMatch ? `<span class="rn-tag">${tagMatch[1]}</span>` : '';
+
+          let linesHtml = '';
+          b.split('\n').forEach(l => {
+            const lineTrim = l.trim();
+            if (lineTrim.startsWith('Given') || lineTrim.startsWith('Dado')) {
+              linesHtml += `<div><span class="gherkin-keyword gherkin-given">Dado</span> ${lineTrim.replace(/^(Given|Dado)\s+/i, '')}</div>`;
+            } else if (lineTrim.startsWith('When') || lineTrim.startsWith('Quando')) {
+              linesHtml += `<div><span class="gherkin-keyword gherkin-when">Quando</span> ${lineTrim.replace(/^(When|Quando)\s+/i, '')}</div>`;
+            } else if (lineTrim.startsWith('Then') || lineTrim.startsWith('Então') || lineTrim.startsWith('Entao')) {
+              linesHtml += `<div><span class="gherkin-keyword gherkin-then">Então</span> ${lineTrim.replace(/^(Then|Então|Entao)\s+/i, '')}</div>`;
+            } else if (lineTrim.startsWith('And') || lineTrim.startsWith('E ')) {
+              linesHtml += `<div><span class="gherkin-keyword gherkin-and">E</span> ${lineTrim.replace(/^(And|E)\s+/i, '')}</div>`;
+            }
+          });
+
+          scCards += `
+            <div class="scenario-card">
+              <div class="scenario-header">
+                <span><strong>Cenário:</strong> ${scTitle}</span>
+                ${tagBadge}
+              </div>
+              <div class="scenario-body">${linesHtml}</div>
+            </div>
+          `;
+        }
+      });
+
+      if (scCards) {
+        cenariosHtml = `
+          <div class="doc-section">
+            <div class="section-header">
+              <h2 class="section-title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--badge-success-text);">
+                  <polyline points="9 11 12 14 22 4"></polyline>
+                  <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                </svg>
+                Cenários de Teste & Aceite (Gherkin BDD)
+              </h2>
+            </div>
+            ${scCards}
+          </div>
+        `;
+      }
+    }
+
+    // Demais seções
+    let restOfDoc = md
+      .replace(/#\s+.*?\n/, '')
+      .replace(/>\s*\*\*Nível 3\*\*.*?\n/, '')
+      // A linha de metadado "> **Prioridade**: … · **MVP**: …" não vira seção: sem
+      // título de `##`, ela caía num card só com o ícone, à toa no topo do documento.
+      .replace(/>\s*\*\*Prioridade\*\*.*?(\n|$)/, '')
+      .replace(/## Descrição[\s\S]*?(?=\n---|\n##|<div|$)/, '')
+      .replace(/## Regras de negócio[\s\S]*?(?=\n---|\n##|$)/, '')
+      .replace(/## Cenários[\s\S]*?(?=\n---|\n##|$)/, '');
+
+    // 1º bloco dev-only (Superfície) já virou devOnlyHtml acima — remove por
+    // completo. Os demais despem só o wrapper: o conteúdo segue no fluxo
+    // normal de seções (cada ## vira card), marcado via devSectionTitles para
+    // sair com class="dev-only-container" e sumir no Modo PO.
+    devBlocks.forEach((block, i) => {
+      restOfDoc = i === 0 ? restOfDoc.replace(block[0], '') : restOfDoc.replace(block[0], block[1]);
+    });
+
+    restOfDoc = restOfDoc.replace(/^[ \t]*---[ \t]*$/gm, '').trim();
+
+    const sections = restOfDoc.split(/\n(?=##\s+)/);
+    let sectionsHtml = '';
+
+    sections.forEach(sec => {
+      if (!sec.trim()) return;
+      const secTitleMatch = sec.match(/^##\s+(.+)$/m);
+      let secTitle = secTitleMatch ? secTitleMatch[1].trim() : '';
+      let secBody = sec.replace(/^##\s+.*?(\n|$)/, '').trim();
+
+      secBody = secBody.replace(/\*Feature Set:[\s\S]*$/i, '').trim();
+      secBody = secBody.replace(/\*Links:[\s\S]*$/i, '').trim();
+      secBody = secBody.replace(/\| (\d{4}-\d{2}-\d{2}) \|/g, (match, d) => `| ${formatDateBR(d)} |`);
+
+      let parsedSec = marked.parse(secBody);
+
+      const isChangelog = secTitle.toLowerCase().includes('changelog') || secTitle.toLowerCase().includes('histórico');
+      const tableClass = isChangelog ? 'custom-table changelog-table' : 'custom-table';
+      parsedSec = parsedSec.replace(/<table>/g, `<div class="table-container"><table class="${tableClass}">`).replace(/<\/table>/g, '</table></div>');
+      parsedSec = parsedSec.replace(/<td>Sim<\/td>/g, '<td><span class="req-tag">Sim</span></td>');
+      parsedSec = parsedSec.replace(/<td>Não<\/td>/g, '<td><span class="opt-tag">Não</span></td>');
+      parsedSec = parsedSec.replace(/<hr\s*\/?>/g, '');
+
+      if (isChangelog) {
+        parsedSec = parsedSec.replace(/<td>(Aval do PO|Requisitos aprovados|Saneamento|Catalogação|Correção|Ajuste|Feature criada)(.*?)<\/td>/g, (m, p1, p2) => {
+          let color = '';
+          if (p1 === 'Aval do PO' || p1 === 'Requisitos aprovados') color = 'style="background:#ECFDF5; color:#047857;"';
+          else if (p1 === 'Correção') color = 'style="background:#FFFBEB; color:#B45309;"';
+          return `<td><span class="changelog-badge" ${color}>${p1}${p2}</span></td>`;
+        });
+      }
+
+      sectionsHtml += `
+        <div class="doc-section${devSectionTitles.has(secTitle) ? ' dev-only-container' : ''}">
+          <div class="section-header">
+            <h2 class="section-title">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--brand-blue);">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="3" y1="9" x2="21" y2="9"></line>
+                <line x1="9" y1="21" x2="9" y2="9"></line>
+              </svg>
+              ${secTitle}
+            </h2>
+          </div>
+          <div class="generic-markdown-body">
+            ${parsedSec}
+          </div>
+        </div>
+      `;
+    });
+
+    const html = `
+      <!-- HERO CARD -->
+      <div class="doc-hero-card">
+        <div class="doc-meta-tags">
+          <span class="badge badge-fdd-level">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+              <polyline points="2 17 12 22 22 17"></polyline>
+              <polyline points="2 12 12 17 22 12"></polyline>
+            </svg>
+            Nível 3 · Feature
+          </span>
+          <span class="badge badge-id" onclick="copyId('${idCode}')" title="Clique para copiar">
+            ${idCode}
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+          </span>
+        </div>
+
+        <h1 class="doc-title">${title}</h1>
+        <div class="doc-hierarchy-info">
+          <span><strong>Nível 3</strong></span> &bull; 
+          <span>Feature Set: <strong>${fsName}</strong></span> &bull; 
+          <span>Domínio: <strong>${domName}</strong></span>
+        </div>
+
+        <div class="hero-description-block">
+          <h2 style="font-size: 16px; font-weight: 700; color: var(--text-main); margin-bottom: 8px;">Descrição</h2>
+          <div class="hero-desc-text" style="font-size: 14px; color: var(--text-main); line-height: 1.6; margin-bottom: ${naoFazText ? '10px' : '0'};">
+            ${marked.parse(descText)}
+          </div>
+          ${naoFazText ? `
+            <p style="font-size: 13.5px; color: var(--text-secondary); line-height: 1.6;">
+              <strong style="color: var(--text-main);">Não faz:</strong> ${marked.parseInline(naoFazText)}
+            </p>
+          ` : ''}
+        </div>
+      </div>
+
+      ${devOnlyHtml}
+      ${regrasHtml}
+      ${cenariosHtml}
+      ${sectionsHtml}
+
+      <footer class="doc-footer">
+        <div>Feature Set: <strong>${fsName}</strong> &bull; Domínio: <strong>${domName}</strong></div>
+        <div><a href="#README.md" onclick="navigateTo('README.md'); return false;">Voltar ao Início</a></div>
+      </footer>
+    `;
+
+    document.getElementById('documentContainer').innerHTML = html;
+  }
+
+  // Template para Feature Sets Nível 2
+  function renderN2FeatureSetTemplate(path, title, frontmatter, md) {
+    const parts = path.split('/');
+    const dom = fddStructure[parts[1]];
+    const fsObj = dom && dom.featureSets && dom.featureSets[parts[2]];
+
+    const domName = dom ? dom.title : parts[1];
+    const fsName = fsObj ? fsObj.title : title.replace(/^Feature Set:\s*/i, '');
+    
+    const siglaMatch = md.match(/`([A-Z0-9-]+)`/);
+    const idCode = siglaMatch ? siglaMatch[1] : (dom ? dom.sigla : 'N2');
+
+    let descText = "";
+    let naoFazText = "";
+    const descMatch = md.match(/## Descrição\s*\n([\s\S]*?)(?=\n---|\n##|$)/);
+    if (descMatch) {
+      const fullDesc = descMatch[1].trim();
+      const naoFazMatch = fullDesc.match(/\*\*Não faz\*\*:\s*([\s\S]*)$/i);
+      if (naoFazMatch) {
+        naoFazText = naoFazMatch[1].trim();
+        descText = fullDesc.replace(/\*\*Não faz\*\*:\s*[\s\S]*$/i, '').trim();
+      } else {
+        descText = fullDesc;
+      }
+    }
+
+    const bodyMd = md
+      .replace(/^#\s+[^\n]+\n(?:>\s*[^\n]+\n)?/m, '')
+      .replace(/## Descrição\s*\n[\s\S]*?(?=\n---|\n##|$)/, '')
+      .trim();
+
+    const rawSections = bodyMd.split(/\n(?=##\s+)/);
+    let sectionsHtml = '';
+
+    rawSections.forEach(sec => {
+      let secClean = sec.replace(/^---\s*\n?/m, '').trim();
+      if (!secClean) return;
+
+      const secTitleMatch = secClean.match(/^##\s+(.+)$/m);
+      if (!secTitleMatch) return;
+      const secTitle = secTitleMatch[1].trim();
+      let secContent = secClean.replace(/^##\s+.+$/m, '').trim();
+
+      secContent = secContent.replace(/href="(?!\/|#|http)(f-[^"]+\.md)"/g, `href="#modules/${parts[1]}/${parts[2]}/$1" onclick="navigateTo('modules/${parts[1]}/${parts[2]}/$1'); return false;"`);
+      secContent = secContent.replace(/\]\((f-[^\)]+\.md)\)/g, `](#modules/${parts[1]}/${parts[2]}/$1)`);
+
+      let renderedSec = marked.parse(secContent);
+      
+      const isChangelog = secTitle.toLowerCase().includes('histórico') || secTitle.toLowerCase().includes('changelog');
+      const tableClass = isChangelog ? 'custom-table changelog-table' : 'custom-table';
+
+      renderedSec = renderedSec
+        .replace(/<table>/g, `<div class="table-container"><table class="${tableClass}">`)
+        .replace(/<\/table>/g, '</table></div>');
+
+      renderedSec = renderedSec.replace(/\| (\d{4}-\d{2}-\d{2}) \|/g, (match, d) => `| ${formatDateBR(d)} |`);
+
+      let icon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg>`;
+      if (secTitle.toLowerCase().includes('feature')) {
+        icon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>`;
+      } else if (secTitle.toLowerCase().includes('fluxo')) {
+        icon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"></circle><circle cx="18" cy="18" r="3"></circle><path d="M6 9v12M18 9a9 9 0 0 0-9 9"></path></svg>`;
+      } else if (secTitle.toLowerCase().includes('tela')) {
+        icon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>`;
+      } else if (secTitle.toLowerCase().includes('permiss')) {
+        icon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>`;
+      } else if (secTitle.toLowerCase().includes('depend')) {
+        icon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.5" y1="10.5" x2="15.5" y2="6.5"></line><line x1="8.5" y1="13.5" x2="15.5" y2="17.5"></line></svg>`;
+      } else if (isChangelog) {
+        icon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`;
+      }
+
+      sectionsHtml += `
+        <div class="doc-section">
+          <div class="section-header">
+            <h2 class="section-title">
+              ${icon}
+              ${secTitle}
+            </h2>
+          </div>
+          <div class="generic-markdown-body">
+            ${renderedSec}
+          </div>
+        </div>
+      `;
+    });
+
+    const html = `
+      <!-- HERO CARD N2 -->
+      <div class="doc-hero-card">
+        <div class="doc-meta-tags">
+          <span class="badge badge-fdd-level">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+              <polyline points="2 17 12 22 22 17"></polyline>
+              <polyline points="2 12 12 17 22 12"></polyline>
+            </svg>
+            Nível 2 · Feature Set
+          </span>
+          <span class="badge badge-id" onclick="copyId('${idCode}')" title="Clique para copiar">
+            ${idCode}
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+          </span>
+        </div>
+
+        <h1 class="doc-title">${fsName}</h1>
+        <div class="doc-hierarchy-info">
+          <span><strong>Nível 2</strong></span> &bull; 
+          <span>Domínio: <strong>${domName}</strong></span>
+        </div>
+
+        ${descText ? `
+          <div class="hero-description-block">
+            <h2 style="font-size: 16px; font-weight: 700; color: var(--text-main); margin-bottom: 8px;">Descrição</h2>
+            <div class="hero-desc-text" style="font-size: 14px; color: var(--text-main); line-height: 1.6; margin-bottom: ${naoFazText ? '10px' : '0'};">
+              ${marked.parse(descText)}
+            </div>
+            ${naoFazText ? `
+              <p style="font-size: 13.5px; color: var(--text-secondary); line-height: 1.6;">
+                <strong style="color: var(--text-main);">Não faz:</strong> ${marked.parseInline(naoFazText)}
+              </p>
+            ` : ''}
+          </div>
+        ` : ''}
+      </div>
+
+      ${sectionsHtml}
+
+      <footer class="doc-footer">
+        <div>Domínio: <strong>${domName}</strong> &bull; Feature Set: <strong>${fsName}</strong></div>
+        <div><a href="#README.md" onclick="navigateTo('README.md'); return false;">Voltar ao Início</a></div>
+      </footer>
+    `;
+
+    document.getElementById('documentContainer').innerHTML = html;
+  }
+
+  // Template para Domínios Nível 1
+  function renderN1DomainTemplate(path, title, frontmatter, md) {
+    const parts = path.split('/');
+    const dom = fddStructure[parts[1]];
+    const domName = dom ? dom.title : title.replace(/^(?:Major Feature Set|Domínio):\s*/i, '');
+    const idCode = dom ? dom.sigla : 'N1';
+
+    // `\n##` sozinho também "acha" o início de um `### ` — um N1 pode ter sub-seção
+    // (ex.: "### O que este domínio NÃO faz", com tabela) DENTRO de "## Descrição", e
+    // o corte batia ali, perdendo o H3 e a tabela por inteiro. `##\s` (só duas
+    // cardinais) não bate no terceiro `#` de `### `. (Correção trazida do `portal-compras`.)
+    let descText = "";
+    const descMatch = md.match(/## Descrição\s*\n([\s\S]*?)(?=\n---|\n##\s|$)/);
+    if (descMatch) {
+      descText = descMatch[1].trim();
+    }
+
+    const bodyMd = md
+      .replace(/^#\s+[^\n]+\n(?:>\s*[^\n]+\n)?/m, '')
+      .replace(/## Descrição\s*\n[\s\S]*?(?=\n---|\n##\s|$)/, '')
+      .trim();
+
+    const rawSections = bodyMd.split(/\n(?=##\s+)/);
+    let sectionsHtml = '';
+
+    rawSections.forEach(sec => {
+      let secClean = sec.replace(/^---\s*\n?/m, '').trim();
+      if (!secClean) return;
+
+      const secTitleMatch = secClean.match(/^##\s+(.+)$/m);
+      if (!secTitleMatch) return;
+      const secTitle = secTitleMatch[1].trim();
+      let secContent = secClean.replace(/^##\s+.+$/m, '').trim();
+
+      // Só o link para um Feature Set DESTE domínio (`./fs/README.md`) é reescrito aqui. O
+      // link para outro N1 (`../pessoas/README.md`) fica como está: quem o resolve é o
+      // pós-processamento do DOM, contra a pasta do documento — reescrito aqui, virava
+      // `modules/<este-domínio>/./pessoas/README.md`, que não existe.
+      secContent = secContent.replace(/href="(?!\/|#|http|\.\.\/)\.?\/?([^"]+\/README\.md)"/g, `href="#modules/${parts[1]}/$1" onclick="navigateTo('modules/${parts[1]}/$1'); return false;"`);
+      secContent = secContent.replace(/\]\((?!\.\.\/)\.?\/?([^\)]+\/README\.md)\)/g, `](#modules/${parts[1]}/$1)`);
+
+      let renderedSec = marked.parse(secContent);
+      const isChangelog = secTitle.toLowerCase().includes('histórico') || secTitle.toLowerCase().includes('changelog');
+      const tableClass = isChangelog ? 'custom-table changelog-table' : 'custom-table';
+
+      renderedSec = renderedSec
+        .replace(/<table>/g, `<div class="table-container"><table class="${tableClass}">`)
+        .replace(/<\/table>/g, '</table></div>');
+      renderedSec = renderedSec.replace(/\| (\d{4}-\d{2}-\d{2}) \|/g, (match, d) => `| ${formatDateBR(d)} |`);
+
+      let icon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg>`;
+      if (secTitle.toLowerCase().includes('feature set')) {
+        icon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>`;
+      } else if (secTitle.toLowerCase().includes('regras')) {
+        icon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline></svg>`;
+      } else if (secTitle.toLowerCase().includes('integra')) {
+        icon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.5" y1="10.5" x2="15.5" y2="6.5"></line><line x1="8.5" y1="13.5" x2="15.5" y2="17.5"></line></svg>`;
+      }
+
+      sectionsHtml += `
+        <div class="doc-section">
+          <div class="section-header">
+            <h2 class="section-title">
+              ${icon}
+              ${secTitle}
+            </h2>
+          </div>
+          <div class="generic-markdown-body">
+            ${renderedSec}
+          </div>
+        </div>
+      `;
+    });
+
+    const html = `
+      <!-- HERO CARD N1 -->
+      <div class="doc-hero-card">
+        <div class="doc-meta-tags">
+          <span class="badge badge-fdd-level">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+              <polyline points="2 17 12 22 22 17"></polyline>
+              <polyline points="2 12 12 17 22 12"></polyline>
+            </svg>
+            Nível 1 · Domínio
+          </span>
+          <span class="badge badge-id" onclick="copyId('${idCode}')" title="Clique para copiar">
+            ${idCode}
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+          </span>
+        </div>
+
+        <h1 class="doc-title">${domName}</h1>
+        <div class="doc-hierarchy-info">
+          <span><strong>Nível 1</strong></span> &bull; 
+          <span>Visão Estratégica do Domínio</span>
+        </div>
+
+        ${descText ? `
+          <div class="hero-description-block">
+            <h2 style="font-size: 16px; font-weight: 700; color: var(--text-main); margin-bottom: 8px;">Descrição</h2>
+            <div style="font-size: 14px; color: var(--text-main); line-height: 1.6;">
+              ${marked.parse(descText)}
+            </div>
+          </div>
+        ` : ''}
+      </div>
+
+      ${sectionsHtml}
+
+      <footer class="doc-footer">
+        <div>Domínio: <strong>${domName}</strong></div>
+        <div><a href="#README.md" onclick="navigateTo('README.md'); return false;">Voltar ao Início</a></div>
+      </footer>
+    `;
+
+    document.getElementById('documentContainer').innerHTML = html;
+  }
+
+  // Resolve um caminho relativo contra o diretório de um documento ('a/b' + '../c' → 'a/c')
+  function resolveCaminhoRelativo(base, rel) {
+    const partes = base ? base.split('/') : [];
+    rel.split('/').forEach(seg => {
+      if (seg === '' || seg === '.') return;
+      if (seg === '..') partes.pop(); else partes.push(seg);
+    });
+    return partes.join('/');
+  }
+
+  // Um link relativo para .md dentro de um documento aponta para outro arquivo DESTE
+  // repositório. Sem reescrita, clicar nele tira o navegador do visualizador e entrega
+  // o Markdown cru. Alvo que não existe em repoFiles (placeholder de template) fica intacto.
+  function reescreveLinksInternos(html, path) {
+    const base = path.includes('/') ? path.slice(0, path.lastIndexOf('/')) : '';
+    return html.replace(/href="(?!#|\/|[a-z]+:)([^"']+?\.md)"/gi, (bruto, rel) => {
+      let decodificado = rel;
+      try { decodificado = decodeURIComponent(rel); } catch (e) { /* mantém como veio */ }
+      for (const candidato of [rel, decodificado]) {
+        const alvo = resolveCaminhoRelativo(base, candidato);
+        if (alvo.indexOf("'") === -1 && repoFiles.includes(alvo)) {
+          return `href="#${alvo}" onclick="navigateTo('${alvo}'); return false;"`;
+        }
+      }
+      return bruto;
+    });
+  }
+
+  // Template para Documentos Gerais (MASTER, README, etc.)
+  // Slug no padrão GitHub — mesma regra com que as âncoras dos documentos foram
+  // escritas à mão (`#rep-041--o-verifica-texto-corrido-...`): minúsculas, fora o que
+  // não é letra/número/espaço/hífen (acento fica, emoji e crase saem), espaço vira hífen.
+  function slugDeTitulo(texto) {
+    // Espaço a espaço, não `\s+`: o travessão some e deixa DOIS espaços, que viram dois
+    // hífens (`rep-041--o-verifica…`). Colapsar aqui produziria um hífen só e a âncora
+    // escrita à mão no documento não casaria com a rubrica.
+    return texto.toLowerCase().replace(/[^\p{L}\p{N}\s-]/gu, '').trim().replace(/\s/g, '-');
+  }
+
+  // Cabeçalho de card idêntico ao das seções do N3 — mesmo ícone, mesma tipografia.
+  // É a forma que o leitor já associa a "um bloco de conteúdo" no visualizador.
+  function cabecalhoDeCard(titulo) {
+    return `
+      <div class="section-header">
+        <h2 class="section-title" id="${slugDeTitulo(titulo)}">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--brand-blue);">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="3" y1="9" x2="21" y2="9"></line>
+            <line x1="9" y1="21" x2="9" y2="9"></line>
+          </svg>
+          ${titulo}
+        </h2>
+      </div>`;
+  }
+
+  function renderizaBloco(md, path, tiraRegua) {
+    let r = marked.parse(md);
+    r = reescreveLinksInternos(r, path);
+    r = r.replace(/<table>/g, '<div class="table-container"><table class="custom-table">').replace(/<\/table>/g, '</table></div>');
+    r = r.replace(/\| (\d{4}-\d{2}-\d{2}) \|/g, (match, d) => `| ${formatDateBR(d)} |`);
+    if (tiraRegua) r = r.replace(/<hr\s*\/?>/g, '');
+    return r;
+  }
+
+  // Dicionário canônico: cada entrada `### <nome>` da seção `## Entradas` vira um card
+  // próprio. Numa lista corrida — 12 campos ou 6 regras dentro de um card só — não se
+  // enxerga onde uma entrada acaba e a seguinte começa, e é justamente a entrada que
+  // se consulta. Devolve null quando o documento não tem a seção, e aí nada muda.
+  function entradasDeDicionario(md) {
+    const linhas = md.split('\n');
+    const ini = linhas.findIndex((l) => /^##\s+Entradas\s*$/.test(l));
+    if (ini === -1) return null;
+    let fim = linhas.length;
+    let cerca = false;
+    for (let i = ini + 1; i < linhas.length; i++) {
+      if (/^\s*(```|~~~)/.test(linhas[i])) { cerca = !cerca; continue; }
+      if (!cerca && /^##\s+/.test(linhas[i])) { fim = i; break; }
+    }
+    // Dentro da seção, quebra em `### <nome>` — ignorando o que estiver em cerca de
+    // código, porque a entrada traz cenários Gherkin.
+    const corpo = linhas.slice(ini + 1, fim);
+    const intro = [];
+    const entradas = [];
+    cerca = false;
+    for (const l of corpo) {
+      if (/^\s*(```|~~~)/.test(l)) cerca = !cerca;
+      const h = !cerca && l.match(/^###\s+(.+?)\s*$/);
+      if (h) { entradas.push({ titulo: h[1], linhas: [] }); continue; }
+      (entradas.length ? entradas[entradas.length - 1].linhas : intro).push(l);
+    }
+    if (!entradas.length) return null;
+    return { antes: linhas.slice(0, ini + 1).concat(intro).join('\n'), entradas, depois: linhas.slice(fim).join('\n') };
+  }
+
+  function renderGenericDocumentTemplate(path, title, frontmatter, md) {
+    const dicionario = /-DICTIONARY\.md$/i.test(path) ? entradasDeDicionario(md) : null;
+
+    let rendered;
+    if (dicionario) {
+      rendered =
+        `<div class="doc-section generic-markdown-body">${renderizaBloco(dicionario.antes, path, true)}</div>` +
+        dicionario.entradas.map((e) => `
+          <div class="doc-section">
+            ${cabecalhoDeCard(e.titulo)}
+            <div class="generic-markdown-body">${renderizaBloco(e.linhas.join('\n'), path, true)}</div>
+          </div>`).join('') +
+        (dicionario.depois.trim()
+          ? `<div class="doc-section generic-markdown-body">${renderizaBloco(dicionario.depois, path, true)}</div>`
+          : '');
+    } else {
+      rendered = `<div class="doc-section generic-markdown-body">${renderizaBloco(md, path, false)}</div>`;
+    }
+
+    const html = `
+      ${rendered}
+      <footer class="doc-footer">
+        <div>Arquivo: <code>${path}</code></div>
+        <div><a href="#README.md" onclick="navigateTo('README.md'); return false;">Voltar ao Início</a></div>
+      </footer>
+    `;
+
+    document.getElementById('documentContainer').innerHTML = html;
+  }
+
+  // Navegação Global
+  function navigateTo(path) {
+    window.location.hash = path;
+    loadFile(path);
+  }
+
+  // ============================================================================
+  // TELA INTERATIVA: MAPA DE FEATURES (FDD CANVAS)
+  // ============================================================================
+  // Escapa também as aspas: o retorno alimenta atributos (data-text, title), e um
+  // texto com " fechava o atributo antes da hora — truncava a busca do mapa.
+  function mmEsc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  function mmOpenLink(path) {
+    if (!path) return '';
+    return '<a class="mm-open" href="#' + encodeURI(path) + '" onclick="navigateTo(\'' + mmEsc(path) + '\'); event.stopPropagation(); return false;"'
+      + ' title="Abrir o artefato">'
+      + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
+      + '<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>'
+      + '<span>abrir</span></a>';
+  }
+
+  // `camadas` (opcional, só nos N3): as camadas 2 e 3 da descrição — o que É o
+  // objeto entregue e COMO SE USA a funcionalidade. Cada uma é um bloco rotulado
+  // sob a entrega, para o card se explicar sem abrir o documento.
+  function mmCard(cls, dataText, badge, nome, desc, foot, kidsHTML, leaf, camadas) {
+    const extras = (camadas || [])
+      .filter(function (c) { return c && c.txt; })
+      .map(function (c) {
+        return '<div class="mm-camada mm-' + c.cls + '">'
+          + '<span class="mm-rot">' + mmEsc(c.rot) + '</span>' + mmEsc(c.txt) + '</div>';
+      }).join('');
+    return '<div class="mm-node ' + cls + (leaf ? ' mm-leaf' : '') + '" data-text="' + mmEsc(dataText).toLowerCase() + '">'
+      + '<div class="mm-card" onclick="mmToggle(this)">'
+      + '<div class="mm-badge">' + badge + '</div>'
+      + '<div class="mm-name">' + mmEsc(nome) + '</div>'
+      + (desc ? '<div class="mm-desc">' + mmEsc(desc) + '</div>' : '')
+      + extras
+      + (foot || '')
+      + '</div>'
+      + (kidsHTML ? '<div class="mm-kids"><div class="mm-bus"></div>' + kidsHTML + '</div>' : '')
+      + '</div>';
+  }
+
+  let mmZoom = null;
+
+  function renderMapaView() {
+    currentFilePath = '__mapa__';
+    updateBreadcrumbs('__mapa__', 'Mapa de Features');
+    const container = document.getElementById('documentContainer');
+    const M = globalThis.MAPA_FEATURES || globalThis.AVAL_MAPA;
+
+    if (!M) {
+      container.innerHTML = `
+        <div class="doc-section">
+          <h2 class="doc-title" style="font-size:18px;">Mapa de features indisponível</h2>
+          <p style="color:var(--text-muted); margin-top:8px;">O arquivo <code>assets/mapa-data.js</code> não foi carregado.</p>
+        </div>
+      `;
+      return;
+    }
+
+    const prodOpen = M.produto && M.produto.path
+      ? '<p class="mm-product-open">' + mmOpenLink(M.produto.path).replace('<span>abrir</span>', '<span>abrir a visão do produto</span>') + '</p>'
+      : '';
+
+    const prodNome = (M.produto && M.produto.nome) || APP_NAME;
+
+    container.innerHTML = `
+      <div class="mapa-screen">
+        <div class="doc-section" style="margin-bottom: 20px; padding: 24px 28px;">
+          <div class="mm-top">
+            <div class="mm-top-row">
+              <div class="mm-product">
+                <div class="mm-product-name">${mmEsc(prodNome)} <small>· Mapa de features</small></div>
+                ${prodOpen}
+              </div>
+              <div class="mm-right">
+                <div class="mm-controls">
+                  <span class="mm-kpi" id="mm-kpi-dom">— domínios</span>
+                  <span class="mm-kpi" id="mm-kpi-fs">— feature sets</span>
+                  <span class="mm-kpi" id="mm-kpi-feat">— features</span>
+                  <span class="mm-kpi" id="mm-kpi-gap">— cobertura</span>
+                  <span class="mm-search">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    <input type="search" id="mm-busca" placeholder="Filtrar por nome ou ID" oninput="mmSearch(this.value)" aria-label="Filtrar o mapa">
+                  </span>
+                </div>
+                <div class="mm-actions">
+                  <button class="mm-btn" id="mm-btn-synthetic" onclick="mmToggleSynthetic(this)">Visualizar Árvore Sintética</button>
+                  <button class="mm-btn" onclick="mmAll(false)">Expandir tudo</button>
+                  <button class="mm-btn" onclick="mmAll(true)">Recolher tudo</button>
+                  <span class="mm-seg" role="group" aria-label="Descrição nos cards">
+                    <span class="mm-seg-rot">Descrição</span>
+                    <button class="mm-btn" data-desc="tudo" onclick="mmSetDesc('tudo')" title="As três camadas: entrega, o objeto e como se usa">Completa</button>
+                    <button class="mm-btn" data-desc="entrega" onclick="mmSetDesc('entrega')" title="Só o que a feature entrega">Só a entrega</button>
+                    <button class="mm-btn" data-desc="nada" onclick="mmSetDesc('nada')" title="Mapa enxuto: só nome e ID">Nenhuma</button>
+                  </span>
+                  <button class="mm-btn" id="mm-btn-gaps" onclick="mmOnlyGaps(this.classList.toggle('is-on'))">Só lacunas</button>
+                  <span class="mm-zoom" role="group" aria-label="Zoom dos nós">
+                    <button class="mm-btn mm-zoom-btn" onclick="mmZoomBy(-0.1)" aria-label="Reduzir zoom" title="Reduzir">&minus;</button>
+                    <button class="mm-btn mm-zoom-fit" onclick="mmZoomFit()" title="Ajustar à largura" aria-label="Ajustar à largura"><span id="mm-zoom-val">100%</span></button>
+                    <button class="mm-btn mm-zoom-btn" onclick="mmZoomBy(0.1)" aria-label="Aumentar zoom" title="Aumentar">+</button>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <p class="mm-product-desc"><strong>Domínios</strong> (N1) → <strong>feature sets</strong> (N2) → <strong>features</strong> (N3). Clique num nó para abrir ou fechar; <strong>abrir</strong> leva ao artefato.</p>
+            <div class="mm-legend">
+              <span class="lg"><span class="sw" style="border-left-color:#005CA9"></span> N1 · Domínio</span>
+              <span class="lg"><span class="sw" style="border-left-color:#0078E0"></span> N2 · Feature set</span>
+              <span class="lg"><span class="sw" style="border-left-color:#526981"></span> N3 · Feature</span>
+              <span class="lg"><span class="mm-status st-em-desenvolvimento"></span> requisitos aprovados / implementado</span>
+              <span class="lg"><span class="mm-status st-rascunho"></span> rascunho</span>
+            </div>
+          </div>
+        </div>
+        <div class="doc-section" style="padding: 24px; background: var(--bg-card);">
+          <div class="mm-wrap" style="background: radial-gradient(circle at 1.5px 1.5px, var(--border-color) 1.5px, transparent 0) 0 0 / 22px 22px, var(--bg-app); min-height: 680px; border-radius: var(--radius-md);">
+            <div id="mm-canvas"></div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    const dominios = M.dominios || [];
+    const doms = dominios.map(function (d) {
+      if (!d.fss || !d.fss.length) {
+        const gfoot = '<div class="mm-foot"><span class="mm-gap-badge">sem feature sets — a especificar</span>' + mmOpenLink(d.path) + '</div>';
+        return mmCard('lvl-n1 mm-gap', 'lacuna a especificar ' + d.sigla + ' ' + d.nome + ' ' + (d.desc || ''), 'N1 · ' + mmEsc(d.sigla), d.nome, d.desc, gfoot, '', true);
+      }
+      const fss = d.fss.map(function (fs) {
+        if (!fs.feats || !fs.feats.length) {
+          const gfoot = '<div class="mm-foot"><span class="mm-gap-badge">sem N3 — a especificar</span>' + mmOpenLink(fs.path) + '</div>';
+          return mmCard('lvl-n2 mm-gap', 'lacuna a especificar ' + fs.sigla + ' ' + fs.nome + ' ' + (fs.desc || ''), 'N2 · ' + mmEsc(fs.sigla), fs.nome, fs.desc, gfoot, '', true);
+        }
+        const feats = fs.feats.map(function (f) {
+          const foot = '<div class="mm-foot"><span class="mm-status st-' + mmEsc(f.estado) + '"></span>'
+            + (f.mvp ? '<span class="mm-mvp">MVP</span>' : '')
+            + mmOpenLink(f.path) + '</div>';
+          const camadas = [
+            { cls: 'obj', rot: 'o objeto', txt: f.objeto || '' },
+            { cls: 'uso', rot: 'como se usa', txt: f.uso || '' },
+          ];
+          const busca = f.id + ' ' + f.nome + ' ' + (f.desc || '') + ' ' + (f.objeto || '') + ' ' + (f.uso || '');
+          return mmCard('lvl-n3', busca, 'N3 · ' + mmEsc(f.id), f.nome, f.desc, foot, '', true, camadas);
+        }).join('');
+        const foot = '<div class="mm-foot"><span class="mm-count">' + fs.feats.length + ' feature' + (fs.feats.length === 1 ? '' : 's') + '</span>' + mmOpenLink(fs.path) + '<span class="mm-caret">▸</span></div>';
+        return mmCard('lvl-n2', fs.sigla + ' ' + fs.nome + ' ' + (fs.desc || ''), 'N2 · ' + mmEsc(fs.sigla), fs.nome, fs.desc, foot, feats, false);
+      }).join('');
+      const foot = '<div class="mm-foot"><span class="mm-count">' + d.fss.length + ' feature set' + (d.fss.length === 1 ? '' : 's') + '</span>' + mmOpenLink(d.path) + '<span class="mm-caret">▸</span></div>';
+      return mmCard('lvl-n1', d.sigla + ' ' + d.nome + ' ' + (d.desc || ''), 'N1 · ' + mmEsc(d.sigla), d.nome, d.desc, foot, fss, false);
+    }).join('');
+
+    const canvasEl = document.getElementById('mm-canvas');
+    if (canvasEl) {
+      canvasEl.innerHTML = doms || '<div style="padding:20px; color:var(--text-muted);">Nenhum domínio cadastrado no mapa.</div>';
+    }
+
+    if (M.kpi) {
+      const kpiDom = document.getElementById('mm-kpi-dom');
+      const kpiFs = document.getElementById('mm-kpi-fs');
+      const kpiFeat = document.getElementById('mm-kpi-feat');
+      if (kpiDom) kpiDom.textContent = (M.kpi.dominios || 0) + ' domínios';
+      if (kpiFs) kpiFs.textContent = (M.kpi.fss || 0) + ' feature sets';
+      if (kpiFeat) kpiFeat.textContent = (M.kpi.feats || 0) + ' features';
+      const _gaps = (M.kpi.fssVazios || 0) + (M.kpi.domsVazios || 0);
+      const _kg = document.getElementById('mm-kpi-gap');
+      if (_kg) {
+        const totN2 = M.kpi.fss || 0;
+        const cob = totN2 ? Math.round(100 * (totN2 - (M.kpi.fssVazios || 0)) / totN2) : 100;
+        _kg.textContent = _gaps ? (_gaps + ' lacuna' + (_gaps === 1 ? '' : 's') + ' · cobertura ' + cob + '%') : ('cobertura ' + cob + '% · sem lacunas');
+        _kg.classList.toggle('is-gap', _gaps > 0);
+      }
+      const _bg = document.getElementById('mm-btn-gaps');
+      if (_bg) _bg.style.display = _gaps ? '' : 'none';
+    }
+
+    mmZoom = null;
+    mmResetCollapse();
+    let _descModo = 'tudo';
+    try { _descModo = localStorage.getItem('mapa-desc-modo') || 'tudo'; } catch (e) {}
+    mmSetDesc(_descModo);
+  }
+
+  function mmResetCollapse() {
+    document.querySelectorAll('#mm-canvas .mm-node').forEach(n => n.classList.remove('mm-collapsed'));
+    document.querySelectorAll('#mm-canvas .mm-node.lvl-n2').forEach(n => n.classList.add('mm-collapsed'));
+  }
+  function mmToggle(card) {
+    const n = card.closest('.mm-node');
+    if (n.classList.contains('mm-leaf')) return;
+    n.classList.toggle('mm-collapsed');
+    mmLayout();
+  }
+  function mmAll(collapse) {
+    document.querySelectorAll('#mm-canvas .mm-node:not(.mm-leaf)').forEach(n => n.classList.toggle('mm-collapsed', collapse));
+    mmLayout();
+  }
+  function mmFit() {
+    const canvas = document.getElementById('mm-canvas');
+    if (!canvas) return;
+    const wrap = canvas.parentElement;
+    if (!wrap) return;
+    canvas.style.zoom = '1';
+    if (mmZoom != null) {
+      canvas.style.zoom = String(mmZoom);
+    } else {
+      const content = canvas.scrollWidth;
+      if (content > 0) canvas.style.zoom = String(Math.max(1, Math.min((wrap.clientWidth - 30) / content, 2)));
+    }
+    mmZoomLabel();
+  }
+  const MM_ZOOM_MIN = 0.3, MM_ZOOM_MAX = 2;
+  function mmZoomEfetivo() {
+    if (mmZoom != null) return mmZoom;
+    const canvas = document.getElementById('mm-canvas');
+    return canvas ? (parseFloat(canvas.style.zoom) || 1) : 1;
+  }
+  function mmZoomLabel() {
+    const el = document.getElementById('mm-zoom-val');
+    if (el) el.textContent = Math.round(mmZoomEfetivo() * 100) + '%';
+    const fit = document.querySelector('.mm-zoom-fit');
+    if (fit) fit.classList.toggle('is-on', mmZoom != null);
+  }
+  function mmZoomBy(step) {
+    mmZoom = Math.max(MM_ZOOM_MIN, Math.min(mmZoomEfetivo() + step, MM_ZOOM_MAX));
+    const canvas = document.getElementById('mm-canvas');
+    if (canvas) canvas.style.zoom = String(mmZoom);
+    mmZoomLabel();
+  }
+  function mmZoomFit() {
+    mmZoom = null;
+    mmLayout();
+  }
+  function mmToggleSynthetic(btn) {
+    const wrap = document.querySelector('.mm-wrap');
+    if (!wrap) return;
+    const isSynthetic = wrap.classList.toggle('mm-synthetic');
+    if (btn) {
+      btn.classList.toggle('is-on', isSynthetic);
+      btn.setAttribute('aria-pressed', isSynthetic ? 'true' : 'false');
+    }
+    setTimeout(mmLayout, 30);
+  }
+  function mmLayout() {
+    const canvas = document.getElementById('mm-canvas');
+    if (!canvas) return;
+    canvas.style.zoom = '1';
+    document.querySelectorAll('#mm-canvas .mm-kids').forEach(function (k) {
+      const bus = k.querySelector(':scope > .mm-bus');
+      if (!bus) return;
+      if (!k.offsetParent) return;
+      const nodes = [].slice.call(k.children).filter(c => c.classList && c.classList.contains('mm-node') && !c.classList.contains('mm-hidden'));
+      if (nodes.length < 1) { bus.style.display = 'none'; return; }
+      bus.style.display = 'block';
+      // O barramento liga o CENTRO DO CARD do primeiro filho ao do último — é onde
+      // saem os tocos horizontais (.mm-card::before, em top:50% do card). Medir pelo
+      // .mm-node daria o centro da SUBÁRVORE inteira: com filhos abaixo, o traço
+      // começava longe do primeiro card (sem tocar a linha do pai) e sobrava para
+      // baixo do último. Medido por rect, para não depender de offsetParent.
+      const kr = k.getBoundingClientRect();
+      const centro = function (n) {
+        const card = n.querySelector(':scope > .mm-card') || n;
+        const cr = card.getBoundingClientRect();
+        return cr.top - kr.top + cr.height / 2;
+      };
+      const top = centro(nodes[0]);
+      const bot = centro(nodes[nodes.length - 1]);
+      bus.style.top = top + 'px';
+      bus.style.height = Math.max(0, bot - top) + 'px';
+    });
+    mmFit();
+  }
+  function mmFilterNode(n, term) {
+    const kids = n.querySelector(':scope > .mm-kids');
+    let childMatch = false;
+    if (kids) {
+      [].slice.call(kids.children).forEach(function (c) {
+        if (c.classList && c.classList.contains('mm-node')) { if (mmFilterNode(c, term)) childMatch = true; }
+      });
+    }
+    const selfMatch = term && (n.getAttribute('data-text') || '').indexOf(term) >= 0;
+    n.classList.toggle('mm-hit', !!selfMatch);
+    const keep = selfMatch || childMatch;
+    n.classList.toggle('mm-hidden', !keep);
+    if (childMatch) n.classList.remove('mm-collapsed');
+    return keep;
+  }
+  function mmSearch(v) {
+    const term = (v || '').trim().toLowerCase();
+    if (!term) {
+      document.querySelectorAll('#mm-canvas .mm-node').forEach(n => n.classList.remove('mm-hidden', 'mm-hit'));
+      mmResetCollapse();
+      mmLayout();
+      return;
+    }
+    document.querySelectorAll('#mm-canvas > .mm-node').forEach(r => mmFilterNode(r, term));
+    mmLayout();
+  }
+  function mmGapKeep(n) {
+    const kids = n.querySelector(':scope > .mm-kids');
+    let childKeep = false;
+    if (kids) [].slice.call(kids.children).forEach(function (c) {
+      if (c.classList && c.classList.contains('mm-node')) { if (mmGapKeep(c)) childKeep = true; }
+    });
+    const keep = n.classList.contains('mm-gap') || childKeep;
+    n.classList.toggle('mm-hidden', !keep);
+    if (childKeep) n.classList.remove('mm-collapsed');
+    return keep;
+  }
+  function mmOnlyGaps(on) {
+    if (!document.getElementById('mm-canvas')) return;
+    if (on) {
+      document.querySelectorAll('#mm-canvas > .mm-node').forEach(r => mmGapKeep(r));
+    } else {
+      document.querySelectorAll('#mm-canvas .mm-node').forEach(n => n.classList.remove('mm-hidden'));
+      mmResetCollapse();
+    }
+    mmLayout();
+  }
+  // Descrição do card em três níveis: 'tudo' (as três camadas), 'entrega' (só o
+  // que a feature entrega) e 'nada' (mapa enxuto, só nome e ID).
+  const MM_DESC_MODOS = ['tudo', 'entrega', 'nada'];
+  function mmSetDesc(modo) {
+    if (MM_DESC_MODOS.indexOf(modo) < 0) modo = 'tudo';
+    const canvas = document.getElementById('mm-canvas');
+    if (canvas) {
+      canvas.classList.toggle('mm-desc-entrega', modo === 'entrega');
+      canvas.classList.toggle('mm-desc-nada', modo === 'nada');
+    }
+    // Controle segmentado: o estado é qual segmento está aceso, não o rótulo de um
+    // botão que troca de texto — antes o botão dizia o modo vigente e ciclava ao
+    // clique, e não dava para saber se o rótulo era o estado atual ou o próximo.
+    document.querySelectorAll('.mm-seg [data-desc]').forEach(function (b) {
+      const ativo = b.getAttribute('data-desc') === modo;
+      b.classList.toggle('is-on', ativo);
+      b.setAttribute('aria-pressed', ativo ? 'true' : 'false');
+    });
+    try { localStorage.setItem('mapa-desc-modo', modo); } catch (e) {}
+    mmLayout();
+  }
+  function mmDescModo() {
+    const canvas = document.getElementById('mm-canvas');
+    if (!canvas) return 'tudo';
+    if (canvas.classList.contains('mm-desc-nada')) return 'nada';
+    if (canvas.classList.contains('mm-desc-entrega')) return 'entrega';
+    return 'tudo';
+  }
+  // Busca instantânea
+  function handleSearch(query) {
+    const modal = document.getElementById('searchResultsModal');
+    if (!query || query.trim().length < 2) {
+      modal.classList.remove('show');
+      modal.innerHTML = '';
+      return;
+    }
+
+    const q = query.toLowerCase().trim();
+    const results = [];
+
+    if (typeof repoFiles !== 'undefined') {
+      repoFiles.forEach(file => {
+        const content = (typeof repoFilesContent !== 'undefined' && repoFilesContent[file]) || "";
+        const title = extractTitle(content) || file;
+        
+        if (title.toLowerCase().includes(q) || file.toLowerCase().includes(q) || content.toLowerCase().includes(q)) {
+          results.push({ path: file, title });
+        }
+      });
+    }
+
+    if (results.length === 0) {
+      modal.innerHTML = `<div style="padding:14px; font-size:12.5px; color:var(--text-muted);">Nenhum resultado encontrado para "${query}".</div>`;
+    } else {
+      let html = '';
+      results.slice(0, 10).forEach(res => {
+        html += `
+          <a class="search-result-item" href="#${res.path}" onclick="navigateTo('${res.path}'); document.getElementById('searchResultsModal').classList.remove('show'); return false;">
+            <span class="search-result-title">${res.title}</span>
+            <span class="search-result-path">${res.path}</span>
+          </a>
+        `;
+      });
+      modal.innerHTML = html;
+    }
+
+    modal.classList.add('show');
+  }
+
+  // Fechar busca ao clicar fora
+  document.addEventListener('click', (e) => {
+    const searchBox = document.querySelector('.search-box');
+    const modal = document.getElementById('searchResultsModal');
+    if (searchBox && modal && !searchBox.contains(e.target)) {
+      modal.classList.remove('show');
+    }
+  });
+
+  // Atalho de teclado ⌘K / Ctrl+K
+  document.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      e.preventDefault();
+      const input = document.getElementById('searchInput');
+      if (input) input.focus();
+    } else if (e.key === 'Escape') {
+      const modal = document.getElementById('searchResultsModal');
+      if (modal) modal.classList.remove('show');
+    }
+  });
+
+  // Copiar ID
+  function copyId(id) {
+    navigator.clipboard.writeText(id);
+    showToast(`Identificador "${id}" copiado!`);
+  }
+
+  function showToast(text) {
+    const toast = document.getElementById('toastMessage');
+    if (!toast) return;
+    toast.innerText = text;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2400);
+  }
+
+  // Inicialização Robusta da SPA
+  function handleHashRoute() {
+    const rawHash = decodeURIComponent(window.location.hash.substring(1));
+    // `#caminho/do/arquivo.md#ancora`: o caminho é tudo até o ÚLTIMO `#`. Só vale como
+    // âncora se o que vem antes for um arquivo conhecido — assim um `#` no meio de um
+    // nome de arquivo não vira separador por engano.
+    const ult = rawHash.lastIndexOf('#');
+    let alvo = rawHash, ancora = '';
+    if (ult > 0) {
+      const candidato = rawHash.slice(0, ult);
+      if (typeof repoFiles !== 'undefined' && repoFiles.includes(candidato)) {
+        alvo = candidato;
+        ancora = rawHash.slice(ult + 1);
+      }
+    }
+    loadFile(alvo || "README.md");
+    if (!ancora) return;
+    // O documento é montado de forma síncrona a partir do conteúdo embutido, mas o
+    // realce de código e os diagramas ainda mexem na altura — daí o quadro seguinte.
+    requestAnimationFrame(() => {
+      const el = document.getElementById('documentContainer')?.querySelector(`[id="${CSS.escape(ancora)}"]`);
+      if (el) el.scrollIntoView({ block: 'start' });
+    });
+  }
+
+  function initApp() {
+    buildFDDTree();
+    handleHashRoute();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initApp);
+  } else {
+    initApp();
+  }
+
+  window.addEventListener('hashchange', handleHashRoute);
+</script>
+
+</body>
+</html>

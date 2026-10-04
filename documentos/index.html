@@ -1,0 +1,35 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Docs — Portal de Gestão de Participantes em Eventos</title><style>
+:root{--teal:#00B4C8;--ink:#1a2b3c;--muted:#5b6b7a;--line:#d6e3f0;--bg:#f4f8fc}
+*{box-sizing:border-box}body{font-family:'Segoe UI',Arial,sans-serif;color:var(--ink);margin:0;background:var(--bg)}
+header{background:#fff;border-bottom:3px solid var(--teal);padding:22px 32px;display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+header h1{font-size:20px;margin:0;color:var(--ink)}header .sys{color:var(--teal);font-weight:700}
+header a.voltar{margin-left:auto;color:var(--teal);text-decoration:none;font-size:13px;font-weight:600}
+main{max-width:1100px;margin:0 auto;padding:26px 32px 60px}
+h2{font-size:16px;margin:30px 0 12px;color:var(--ink);border-bottom:1px solid var(--line);padding-bottom:6px}
+h2 .cnt{color:var(--muted);font-weight:400;font-size:13px}
+table{border-collapse:collapse;width:100%;background:#fff;font-size:13px;margin:8px 0 4px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+thead th{background:var(--teal);color:#083039;font-weight:700}
+td.c,th.c{text-align:center;white-space:nowrap}
+.sig{color:var(--muted);font-size:11px;font-weight:600;background:#eef3f9;border-radius:4px;padding:1px 6px;margin-left:4px}
+a.dl{display:inline-block;background:var(--teal);color:#fff;text-decoration:none;padding:5px 12px;border-radius:5px;font-weight:600;font-size:12px}
+a.dl:hover{filter:brightness(.93)}
+.pend th{background:#eef3f9;color:var(--ink)}
+.nota{color:var(--muted);font-size:12px;margin:4px 0 0}
+.vazio{color:var(--muted)}
+</style></head><body>
+<header><h1>Central de Documentos</h1><span class="sys">Portal de Gestão de Participantes em Eventos</span>
+<a class="voltar" href="../index.html">&larr; Documentação</a></header>
+<main>
+<p class="nota">Especificações Funcionais (.docx) geradas por <code>scripts/gera-docx.py</code> — uma por Feature Set. Regerar após aprovar/alterar N2/N3.</p>
+<h2>Especificações Funcionais <span class="cnt">(6 documento(s))</span></h2>
+<table><thead><tr><th>Domínio</th><th>Feature Set</th><th class="c">Features</th><th class="c">Download</th></tr></thead>
+<tbody><tr><td>Acesso e Usuários</td><td><strong>Autenticação</strong> <span class='sig'>ACE-AUT</span></td><td class='c'>6</td><td class='c'><a class='dl' href='Autenticacao.docx' download>&#8595;&nbsp;.docx</a></td></tr><tr><td>Acesso e Usuários</td><td><strong>Usuários</strong> <span class='sig'>ACE-USU</span></td><td class='c'>4</td><td class='c'><a class='dl' href='Usuarios.docx' download>&#8595;&nbsp;.docx</a></td></tr><tr><td>Eventos</td><td><strong>Cadastro de Eventos</strong> <span class='sig'>EVT-CAD</span></td><td class='c'>9</td><td class='c'><a class='dl' href='CadastroDeEventos.docx' download>&#8595;&nbsp;.docx</a></td></tr><tr><td>Eventos</td><td><strong>Legendas</strong> <span class='sig'>EVT-LEG</span></td><td class='c'>14</td><td class='c'><a class='dl' href='Legendas.docx' download>&#8595;&nbsp;.docx</a></td></tr><tr><td>Eventos</td><td><strong>Participantes</strong> <span class='sig'>EVT-PAR</span></td><td class='c'>15</td><td class='c'><a class='dl' href='Participantes.docx' download>&#8595;&nbsp;.docx</a></td></tr><tr><td>Pessoas</td><td><strong>Cadastro de Pessoas</strong> <span class='sig'>PES-CAD</span></td><td class='c'>7</td><td class='c'><a class='dl' href='CadastroDePessoas.docx' download>&#8595;&nbsp;.docx</a></td></tr></tbody></table>
+<h2>Pendências de especificação <span class="cnt">— o que ainda falta (de <code>modules/INDEX.md</code>)</span></h2>
+<h3 style="font-size:14px;color:#5b6b7a">Existência — falta N3</h3>
+<table class='pend'><thead><tr><th>Item</th><th>Nível</th><th>Origem</th><th>Rota</th></tr></thead><tbody><tr><td>Resetar Regras de Legenda</td><td>N3</td><td>GPE006 – Gerenciar Regras de Legendas (documento legado) · N2 Legendas</td><td>⚠️ Decisão do PO: a funcionalidade está no documento e não existe mais no sistema (modelo reformulado). Ou sai do documento, ou volta a ser pedida — rota 3A</td></tr><tr><td>Inativar Usuário</td><td>N3</td><td>Código (rotina existente e sem acionamento na tela) · N2 Usuários</td><td>❓ Decisão do PO: a situação Ativo ou Inativo é exibida, mas não há ação de tela — rota 3A, se for desejada</td></tr></tbody></table>
+<h3 style="font-size:14px;color:#5b6b7a">Conteúdo — ⚠️/❓ em aberto</h3>
+<table class='pend'><thead><tr><th>Feature</th><th>Lacuna</th><th>Arquivo</th></tr></thead><tbody><tr><td>Todas as 55 features</td><td>Divergências documento × código, lacunas e suspeitas de defeito levantadas na engenharia reversa</td><td>REVISAO-CONVERSAO.md</td></tr></tbody></table>
+</main></body></html>

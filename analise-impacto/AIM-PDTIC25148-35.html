@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIM PDTIC25148-35</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root {
+/* Identidade AVAL */
+      --brand-blue: #005CA9;
+      --brand-blue-dark: #0A2440;
+      --brand-blue-light: #E5F2FC;
+      --brand-blue-hover: #004B8A;
+      --brand-accent: #0078E0;
+      
+      /* Aviso é Dourado no AVAL (regra: nunca laranja) */
+      --brand-gold: #B45309;
+      --brand-gold-light: #FFFBEB;
+      --brand-gold-border: #FDE68A;
+      
+      /* Superfícies & Bordas */
+      --bg-app: #F6FAFD;
+      --bg-sidebar: #FFFFFF;
+      --bg-card: #FFFFFF;
+      --bg-hover: #EDF3F9;
+      --bg-active: #E3EEF8;
+      --border-color: #D6E3F0;
+      --border-subtle: #E8F0F8;
+      
+      /* Compatibilidade mapa.css */
+      --primary-color: #005CA9;
+      --surface-ground: #F6FAFD;
+      --surface-card: #FFFFFF;
+      --surface-border: #D6E3F0;
+      --surface-hover: #EDF3F9;
+      --text-color: #0A2440;
+      --shadow-1: 0 1px 3px rgba(10, 36, 64, 0.06);
+      --focus-ring: 0 0 0 3px rgba(0, 92, 169, 0.18);
+      --dsc-font-family-1: 'IBM Plex Sans', 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+      --dsc-font-title: 'Archivo', 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+      --dsc-font-mono: 'IBM Plex Mono', ui-monospace, "SFMono-Regular", "Courier New", monospace;
+      --dsc-border-radius-pill: 999px;
+      --dsc-border-radius-medium: 6px;
+      --transition-duration: 0.15s;
+      
+      /* Tipografia & Cores */
+      --text-main: #0A2440;
+      --text-secondary: #2B3A4A;
+      --text-muted: #526981;
+      --text-blue: #005CA9;
+      
+      /* Status & Badges */
+      --badge-success-bg: #ECFDF5;
+      --badge-success-text: #047857;
+      --badge-success-border: #A7F3D0;
+      
+      --badge-warning-bg: #FFFBEB;
+      --badge-warning-text: #B45309;
+      --badge-warning-border: #FDE68A;
+      
+      --badge-info-bg: #EFF6FF;
+      --badge-info-text: #1D4ED8;
+      --badge-info-border: #BFDBFE;
+      
+      --badge-purple-bg: #F5F3FF;
+      --badge-purple-text: #6D28D9;
+      --badge-purple-border: #DDD6FE;
+
+      /* Sombras & Raios */
+      --shadow-sm: 0 1px 2px 0 rgba(10, 36, 64, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(10, 36, 64, 0.08), 0 2px 4px -2px rgba(10, 36, 64, 0.05);
+      --radius-sm: 4px;
+      --radius-md: 6px;
+      --radius-lg: 10px;
+      --radius-full: 999px;
+
+      /* Dimensões */
+      --header-height: 60px;
+      --sidebar-width: 320px;
+}
+:root {
+  --_bg: var(--bg-app, #F6FAFD);
+  --_card: var(--bg-card, #FFFFFF);
+  --_borda: var(--border-color, #D6E3F0);
+  --_borda-sutil: var(--border-subtle, #E8F0F8);
+  --_hover: var(--bg-hover, #EDF3F9);
+  --_texto: var(--text-main, var(--text-color, #0A2440));
+  --_texto2: var(--text-secondary, #526981);
+  --_marca: var(--brand-blue, var(--primary-color, #005CA9));
+  --_marca-clara: var(--brand-blue-light, #E5F2FC);
+  --_titulo: var(--dsc-font-title, 'Archivo', 'Segoe UI', system-ui, sans-serif);
+  --_corpo: var(--dsc-font-family-1, 'IBM Plex Sans', 'Segoe UI', system-ui, sans-serif);
+  --_mono: 'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace;
+}
+* { box-sizing: border-box; }
+body { margin:0; background: var(--_bg); color: var(--_texto); font-family: var(--_corpo); font-size:14px; line-height:1.6; -webkit-font-smoothing:antialiased; }
+.wrap { width: 100%; margin: 0; padding: 32px 40px 80px; }
+/* O conteúdo destes documentos é majoritariamente tabela larga — a tela inteira é
+   trabalho útil, não desperdício. A prosa corrida fica com medida de leitura própria
+   para não virar linha de 200 caracteres em monitor grande. */
+@media (max-width: 720px) { .wrap { padding: 24px 16px 60px; } }
+.doc-head { margin-bottom: 26px; }
+.eyebrow { font-size:11px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color: var(--_marca); margin-bottom:10px; }
+h1 { font-family: var(--_titulo); font-size: clamp(24px,3.4vw,32px); font-weight:700; line-height:1.2; margin:0 0 14px; color: var(--_texto); text-wrap: balance; }
+.doc-section { background: var(--_card); border:1px solid var(--_borda); border-radius:10px; padding: 0; margin-bottom:20px; box-shadow: 0 1px 3px rgba(10,36,64,.06); }
+.section-header { display:flex; align-items:center; justify-content:space-between; gap:12px; padding: 20px 28px; cursor:pointer; list-style:none; }
+.section-header::-webkit-details-marker { display:none; }
+.section-title { font-family: var(--_titulo); font-size:18px; font-weight:700; color: var(--_texto); display:flex; align-items:center; gap:10px; }
+.section-title svg { color: var(--_marca); flex:none; }
+.chevron { color: var(--_texto2); transition: transform .18s; flex:none; }
+details[open] > .section-header .chevron { transform: rotate(180deg); }
+.section-body { padding: 18px 28px 24px; border-top:1px solid var(--_borda-sutil); }
+.markdown-body > :first-child { margin-top:0; }
+.markdown-body > :last-child { margin-bottom:0; }
+.markdown-body h3 { font-family: var(--_titulo); font-size:15.5px; font-weight:700; margin:26px 0 10px; color: var(--_texto); }
+.markdown-body h4 { font-size:14px; font-weight:700; margin:20px 0 8px; }
+.markdown-body p { margin: 0 0 12px; }
+.markdown-body ul, .markdown-body ol { margin:0 0 12px; padding-left:22px; }
+.markdown-body li { margin-bottom:6px; }
+.markdown-body code { font-family: var(--_mono); font-size:.86em; background: var(--_hover); border:1px solid var(--_borda-sutil); border-radius:4px; padding:1px 5px; overflow-wrap:anywhere; }
+/* caminho de arquivo e chave longa não têm espaço para quebrar: sem isto, um code
+   comprido empurra o corpo inteiro e a página ganha rolagem horizontal no celular */
+.markdown-body { overflow-wrap: break-word; }
+.custom-table .col-id  { white-space: nowrap; width: 1%; }
+.custom-table .col-num { white-space: nowrap; min-width: 5.5rem; }
+.custom-table .col-prosa { min-width: 38rem; }
+.custom-table .col-nome  { min-width: 15rem; max-width: 22rem; }
+.ficha { margin: 2px 0 22px; font-size: 13px; color: var(--_texto2); }
+.ficha blockquote { margin:0; border:0; padding:0; }
+.ficha p { margin: 0; line-height: 1.9; }
+.markdown-body pre { background: var(--_hover); border:1px solid var(--_borda); border-radius:8px; padding:14px 16px; overflow-x:auto; }
+.markdown-body pre code { background:none; border:0; padding:0; }
+.markdown-body blockquote { margin:0 0 14px; padding:12px 18px; border-left:3px solid var(--_marca); background: var(--_bg); border-radius:0 6px 6px 0; color: var(--_texto2); }
+.markdown-body blockquote > :first-child { margin-top:0; } .markdown-body blockquote > :last-child { margin-bottom:0; }
+.markdown-body a { color: var(--_marca); }
+.item-titulo { display:flex; align-items:center; flex-wrap:wrap; gap:10px; margin:30px 0 12px; font-family: var(--_titulo); font-size:17px; font-weight:700; color: var(--_texto); }
+.item-nome { flex:0 1 auto; min-width:0; }
+.chave { font-family: var(--_mono); font-size:12px; font-weight:600; letter-spacing:.01em; color: var(--_texto2); background: var(--_hover); border:1px solid var(--_borda); border-radius:999px; padding:4px 12px; white-space:nowrap; }
+.badge { font-size:11px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; border-radius:999px; padding:3px 11px; white-space:nowrap; }
+.badge--alterada { background:#DBEAFE; color:#1D4ED8; }
+.badge--nova     { background:#EDE9FE; color:#6D28D9; }
+.badge--mista    { background:#FEF3C7; color:#B45309; }
+.kpi-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap:14px; margin:16px 0 20px; }
+.stat { background: var(--_card); border:1px solid var(--_borda); border-left:4px solid var(--acento, var(--_marca)); border-radius:8px; padding:16px 20px; box-shadow:0 1px 3px rgba(10,36,64,.06); }
+.stat-n { font-family: var(--_titulo); font-size:30px; font-weight:700; line-height:1.05; color: var(--_texto); font-variant-numeric: tabular-nums; }
+.stat-k { margin-top:8px; font-size:13px; color: var(--_texto2); line-height:1.45; }
+.stat-k span { display:block; margin-top:3px; color: var(--_texto2); opacity:.85; }
+.table-container { width:100%; overflow-x:auto; margin: 12px 0; border:1px solid var(--_borda); border-radius:8px; }
+.custom-table { width:100%; border-collapse:collapse; text-align:left; font-size:13px; }
+.custom-table th { background: var(--_hover); color: var(--_texto); font-weight:600; font-family: var(--_titulo); padding:12px 16px; border-bottom:1px solid var(--_borda); white-space:nowrap; }
+.custom-table td { padding:12px 16px; border-bottom:1px solid var(--_borda-sutil); color: var(--_texto); vertical-align:top; line-height:1.5; }
+// A primeira coluna costuma ser um ID curto, que não deve partir. Mas quando ela é
+// um NOME ou a própria narrativa, o nowrap faz o texto transbordar por cima da
+// coluna vizinha — 665px de conteúdo numa célula de 304px. Essas ficam de fora.
+.custom-table th:first-child, .custom-table td:first-child:not(.col-nome):not(.col-prosa) { white-space:nowrap; }
+.custom-table tbody tr:last-child td { border-bottom:none; }
+.custom-table tbody tr:hover { background: var(--_hover); }
+.changelog-table td { font-size:12.5px; }
+.changelog-table th:first-child, .changelog-table td:first-child { width:120px; min-width:110px; }
+.req-tag { font-weight:600; color:#E11D48; font-size:11px; background:#FFE4E6; padding:2px 6px; border-radius:4px; display:inline-block; }
+.opt-tag { font-weight:500; color: var(--_texto2); font-size:11px; background: var(--_hover); padding:2px 6px; border-radius:4px; display:inline-block; }
+.rodape { margin-top:34px; padding-top:18px; border-top:1px solid var(--_borda); font-size:12.5px; color: var(--_texto2); }
+@media print { .doc-section { break-inside: avoid; border:1px solid #ccc; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="doc-head">
+    <div class="eyebrow">Análise de impacto</div>
+    <h1>AIM PDTIC25148-35</h1>
+  </header>
+  <div class="ficha markdown-body"><p><strong>Ticket</strong>: Jira <code>PDTIC25148-35</code> — Melhorias na Listagem de Pessoas Confirmadas<br><strong>Link</strong>: <a href="https://sistemaindustria.atlassian.net/browse/PDTIC25148-35">https://sistemaindustria.atlassian.net/browse/PDTIC25148-35</a><br><strong>Sprint</strong>: SP005<br><strong>Estado</strong>: Em análise  </p>
+</div>
+
+  <details class="doc-section" id="detalhe-do-item" open>
+    <summary class="section-header">
+      <span class="section-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="3" y1="9" x2="21" y2="9"></line>
+          <line x1="9" y1="21" x2="9" y2="9"></line>
+        </svg>
+        Detalhe do item
+      </span>
+      <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </summary>
+    <div class="section-body markdown-body">
+<blockquote>
+<p>Transcrição da descrição do ticket <code>PDTIC25148-35</code> no Jira, a partir da exportação de 2026-10-04 guardada em <code>arquivos/</code>.</p>
+</blockquote>
+<h3>História do Usuário</h3>
+<p><strong>Eu como</strong> usuário responsável pela gestão do evento</p>
+<p><strong>Quero</strong> visualizar e filtrar as pessoas confirmadas com informações e ações adicionais</p>
+<p><strong>Para</strong> facilitar a consulta e a manutenção dos dados dos participantes do evento.</p>
+<h3>Descrição</h3>
+<p>Realizar melhorias na listagem de <strong>Pessoas Confirmadas</strong> do evento, ajustando as opções disponíveis na definição de critérios, permitindo o acesso ao perfil da pessoa diretamente pela listagem e incluindo um novo filtro para identificação de pessoas sem foto cadastrada.</p>
+<h3>Regras de Negócio</h3>
+<h4>Definição de Critérios</h4>
+<p>Ao definir um critério para as pessoas confirmadas, o sistema não deverá mais disponibilizar a opção <strong>Assento Livre</strong>.</p>
+<p>As demais opções existentes deverão permanecer inalteradas.</p>
+<h4>Acesso ao Perfil da Pessoa</h4>
+<p>O nome da pessoa deverá ser apresentado como um link na listagem de Pessoas Confirmadas.</p>
+<p>Ao acionar o nome, o sistema deverá:</p>
+<ul>
+<li>direcionar o usuário para o perfil da respectiva pessoa;</li>
+<li>abrir o perfil em uma nova aba do navegador.</li>
+</ul>
+<h4>Filtro de Pessoas sem Foto</h4>
+<p>A listagem deverá disponibilizar um filtro que permita consultar somente as pessoas que <strong>não possuem foto cadastrada</strong>.</p>
+<p>Ao aplicar o filtro, deverão ser exibidas apenas as pessoas confirmadas no evento que estejam sem foto.</p>
+
+    </div>
+  </details>
+  <details class="doc-section" id="criterios-de-aceite" open>
+    <summary class="section-header">
+      <span class="section-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="3" y1="9" x2="21" y2="9"></line>
+          <line x1="9" y1="21" x2="9" y2="9"></line>
+        </svg>
+        Critérios de aceite
+      </span>
+      <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </summary>
+    <div class="section-body markdown-body">
+<blockquote>
+<p><strong>Numeração</strong>: a fonte numera os critérios, de <code>CA01</code> a <code>CA03</code>; aqui eles são <code>CA-01</code> a <code>CA-03</code> — o mesmo número da ferramenta.</p>
+</blockquote>
+<pre><code class="language-gherkin"># ── CA-01 ───────────────────────────────────────────────────
+Scenario: Remover opção Assento Livre
+  Given que estou na listagem de Pessoas Confirmadas
+  When acessar a definição de um critério
+  Then a opção Assento Livre não deverá ser apresentada
+
+# ── CA-02 ───────────────────────────────────────────────────
+Scenario: Acessar perfil da pessoa
+  Given que estou visualizando uma pessoa na listagem de Pessoas Confirmadas
+  When acionar o nome da pessoa
+  Then o sistema deverá abrir o perfil correspondente em uma nova aba do navegador
+
+# ── CA-03 ───────────────────────────────────────────────────
+Scenario: Filtrar pessoas sem foto
+  Given que estou na listagem de Pessoas Confirmadas
+  When aplicar o filtro para pessoas sem foto cadastrada
+  Then o sistema deverá apresentar somente as pessoas confirmadas no evento que não possuem foto
+</code></pre>
+
+    </div>
+  </details>
+  <details class="doc-section" id="features" open>
+    <summary class="section-header">
+      <span class="section-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="3" y1="9" x2="21" y2="9"></line>
+          <line x1="9" y1="21" x2="9" y2="9"></line>
+        </svg>
+        Features
+      </span>
+      <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </summary>
+    <div class="section-body markdown-body">
+<div class="table-container"><table class="custom-table">
+<thead>
+<tr>
+<th>Feature (N3)</th>
+<th>Domínio · Feature Set</th>
+<th class="col-id">Operação</th>
+<th>Critérios cobertos</th>
+<th class="col-id">Status</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="../modules/eventos/participantes/f-pesquisar-participantes.md"><code>EVT-PAR-01</code>: Pesquisar Participantes</a></td>
+<td>Eventos · Participantes</td>
+<td class="col-id">Alteração</td>
+<td><code>CA-02, CA-03</code></td>
+<td class="col-id">✏️ Rascunho</td>
+</tr>
+<tr>
+<td><a href="../modules/eventos/participantes/f-consultar-legenda-participante.md"><code>EVT-PAR-04</code>: Consultar Legenda do Participante</a></td>
+<td>Eventos · Participantes</td>
+<td class="col-id">Alteração</td>
+<td><code>CA-01</code></td>
+<td class="col-id">✏️ Rascunho</td>
+</tr>
+</tbody></table></div>
+<!-- trace-verified: EVT-PAR-01 @ 8ef556812d7a -->
+<!-- trace-verified: EVT-PAR-04 @ f05eedd48922 -->
+
+    </div>
+  </details>
+  <details class="doc-section" id="artefatos-impactados" open>
+    <summary class="section-header">
+      <span class="section-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="3" y1="9" x2="21" y2="9"></line>
+          <line x1="9" y1="21" x2="9" y2="9"></line>
+        </svg>
+        Artefatos impactados
+      </span>
+      <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </summary>
+    <div class="section-body markdown-body">
+<div class="table-container"><table class="custom-table">
+<thead>
+<tr>
+<th>Artefato</th>
+<th>Tipo</th>
+<th class="col-id">Operação</th>
+<th>Seção</th>
+<th class="col-id">Natureza</th>
+<th>O quê</th>
+<th>Proveniência</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>modules/eventos/participantes/f-pesquisar-participantes.md</code></td>
+<td>N3</td>
+<td class="col-id">alterar</td>
+<td>Campos/Regras/Cenários</td>
+<td class="col-id">funcional</td>
+<td>nome como atalho para o cadastro da pessoa, em nova aba, e critério &quot;Somente pessoas sem foto&quot;</td>
+<td>derivado: âncora</td>
+<td>feito em 2026-09-30</td>
+</tr>
+<tr>
+<td><code>modules/eventos/participantes/f-consultar-legenda-participante.md</code></td>
+<td>N3</td>
+<td class="col-id">alterar</td>
+<td>Campos/Regras/Cenários</td>
+<td class="col-id">funcional</td>
+<td>&quot;Assento livre&quot; sai da lista de legendas oferecida na janela</td>
+<td>derivado: âncora</td>
+<td>feito em 2026-09-30</td>
+</tr>
+<tr>
+<td><code>modules/eventos/participantes/f-alterar-legenda-participante.md</code></td>
+<td>N3</td>
+<td class="col-id">alterar</td>
+<td>Regras</td>
+<td class="col-id">funcional</td>
+<td>regra 9, consequência da lista: &quot;Assento livre&quot; não é atribuída — a feature fica fora da <code>## Features</code></td>
+<td>elicitado</td>
+<td>feito em 2026-09-30</td>
+</tr>
+<tr>
+<td><code>modules/pessoas/cadastro-pessoas/f-editar-pessoa.md</code></td>
+<td>N3</td>
+<td class="col-id">alterar</td>
+<td>Cenários/Comportamento de tela</td>
+<td class="col-id">funcional</td>
+<td>segundo caminho de acesso à tela, pelo nome do participante — a feature fica fora da <code>## Features</code></td>
+<td>elicitado</td>
+<td>feito em 2026-09-30</td>
+</tr>
+<tr>
+<td><code>global/CONTAGEM-PF.md</code></td>
+<td>MÉTRICA</td>
+<td class="col-id">alterar</td>
+<td>—</td>
+<td class="col-id">derivado</td>
+<td>contagem detalhada das 2 features, pelo <code>PROMPT_CONTAGEM</code></td>
+<td>elicitado</td>
+<td>feito em 2026-10-04</td>
+</tr>
+</tbody></table></div>
+
+    </div>
+  </details>
+  <details class="doc-section" id="contagem-estimada" open>
+    <summary class="section-header">
+      <span class="section-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="3" y1="9" x2="21" y2="9"></line>
+          <line x1="9" y1="21" x2="9" y2="9"></line>
+        </svg>
+        Contagem estimada
+      </span>
+      <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </summary>
+    <div class="section-body markdown-body">
+<p>Não houve — AIM aberta na entrega.</p>
+
+    </div>
+  </details>
+  <details class="doc-section" id="premissas" open>
+    <summary class="section-header">
+      <span class="section-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="3" y1="9" x2="21" y2="9"></line>
+          <line x1="9" y1="21" x2="9" y2="9"></line>
+        </svg>
+        Premissas
+      </span>
+      <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </summary>
+    <div class="section-body markdown-body">
+<ul>
+<li><strong>Linha do tempo.</strong> O ticket foi criado em 2026-09-04, estava <em>em teste</em> em 2026-09-30 e em <em>homologação</em> em 2026-10-04, na sprint que o Jira chama de <code>SP_SMC_5</code> e esta instância, de <code>SP005</code>; a data da entrega não consta em nenhuma fonte ❓. A especificação foi escrita em 2026-09-30, por engenharia reversa dos documentos legados e de um código que já continha a entrega. Não havia baseline de Pontos de Função: a primeira contagem é a de 2026-10-04, feita já com a entrega dentro — ela dá o tamanho de cada função depois do ticket, que é a base do cálculo da função alterada.</li>
+<li><strong>O &quot;antes&quot; é o documento legado.</strong> Os N3 já nasceram descrevendo o comportamento depois do ticket. O contraste <em>Antes</em> e <em>Agora</em> usa GPE005 – Gerenciar Participante v1.1 (16/12/2025) como retrato do que existia.</li>
+<li><strong>Natureza.</strong> As duas features têm funcionalidade correspondente em GPE005, então são alteradas — proposta a confirmar com a equipe de métricas.</li>
+<li><strong>PFB e PFL.</strong> O PFB de cada feature é a soma dos processos elementares que o ticket alterou, como estão na <code>## Métricas de tamanho</code> do N3; o PFL é a metade, porque as duas features são alteradas.</li>
+<li><strong>Regras e Cenários.</strong> O número é o do que existe no N3 por causa deste ticket. Em <code>EVT-PAR-04</code> <em>Consultar Legenda do Participante</em> a restrição entrou numa regra que já existia, a regra 3, e por isso a coluna de regras sai zero.</li>
+</ul>
+
+    </div>
+  </details>
+  <details class="doc-section" id="alteracoes-na-spec-por-feature-set" open>
+    <summary class="section-header">
+      <span class="section-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="3" y1="9" x2="21" y2="9"></line>
+          <line x1="9" y1="21" x2="9" y2="9"></line>
+        </svg>
+        Alterações na spec, por Feature Set
+      </span>
+      <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </summary>
+    <div class="section-body markdown-body">
+<h3>Participantes</h3>
+<div class="table-container"><table class="custom-table">
+<thead>
+<tr>
+<th class="col-nome">Feature</th>
+<th class="col-id">CA-n</th>
+<th class="col-id">Natureza</th>
+<th class="col-prosa">Mudança</th>
+<th class="col-id">Regras</th>
+<th class="col-id">Cenários</th>
+<th class="col-num">PFB</th>
+<th class="col-num">PFL</th>
+</tr>
+</thead>
+<tbody><tr>
+<td class="col-nome"><code>EVT-PAR-01</code><br><strong>Pesquisar Participantes</strong></td>
+<td class="col-id">CA-02, CA-03</td>
+<td class="col-id">alterada</td>
+<td class="col-prosa"><strong>Inclusão</strong> do atalho para o cadastro da pessoa e do critério de foto. <em>Antes</em> o nome do participante era só texto na lista, e a pesquisa não tinha critério de foto. <em>Agora</em> o nome abre o cadastro da pessoa em nova aba, com a dica &quot;Abrir o perfil da pessoa em nova aba&quot;, e a caixa &quot;Somente pessoas sem foto&quot; restringe o resultado aos participantes cuja pessoa não tem foto.</td>
+<td class="col-id">+1</td>
+<td class="col-id">+2</td>
+<td class="col-num">4</td>
+<td class="col-num">2</td>
+</tr>
+<tr>
+<td class="col-nome"><code>EVT-PAR-04</code><br><strong>Consultar Legenda do Participante</strong></td>
+<td class="col-id">CA-01</td>
+<td class="col-id">alterada</td>
+<td class="col-prosa"><strong>Remoção</strong> da opção &quot;Assento livre&quot; da lista de legendas. <em>Antes</em> a relação de legendas oferecida para o participante terminava em &quot;16 – Assento livre&quot;. <em>Agora</em> a lista traz as legendas do catálogo, menos &quot;Assento livre&quot;; as demais opções ficam como estavam.</td>
+<td class="col-id">0</td>
+<td class="col-id">+1</td>
+<td class="col-num">3</td>
+<td class="col-num">1,5</td>
+</tr>
+</tbody></table></div>
+<div class="table-container"><table class="custom-table">
+<thead>
+<tr>
+<th class="col-nome">Processo elementar</th>
+<th>Da feature</th>
+<th>Papel</th>
+<th>Tipo</th>
+<th class="col-num">PFB</th>
+<th class="col-id">Natureza</th>
+<th class="col-num">PFL</th>
+<th>Critérios</th>
+</tr>
+</thead>
+<tbody><tr>
+<td class="col-nome">Pesquisar Participantes</td>
+<td><code>EVT-PAR-01</code></td>
+<td>principal</td>
+<td>CE</td>
+<td class="col-num">4</td>
+<td class="col-id">alterada</td>
+<td class="col-num">2</td>
+<td><code>CA-02, CA-03</code></td>
+</tr>
+<tr>
+<td class="col-nome">Consultar Selecione uma Legenda (combo)</td>
+<td><code>EVT-PAR-04</code></td>
+<td>acessório</td>
+<td>CE</td>
+<td class="col-num">3</td>
+<td class="col-id">alterada</td>
+<td class="col-num">1,5</td>
+<td><code>CA-01</code></td>
+</tr>
+</tbody></table></div>
+<p>Em <code>EVT-PAR-01</code> <em>Pesquisar Participantes</em> o ticket alcançou só a pesquisa; as quatro listas de critérios — Legendas, Temas, Grupos de Trabalho e Cargo —, de 3 PF cada, não mudaram. Em <code>EVT-PAR-04</code> <em>Consultar Legenda do Participante</em> alcançou só a lista de legendas; o processo principal, de 4 PF, não entra. A mesma lista foi alterada também pelo ticket <code>PDTIC25148-34</code>: na sprint, ela conta uma vez.</p>
+
+    </div>
+  </details>
+  <details class="doc-section" id="funcoes-de-dados-alteradas" open>
+    <summary class="section-header">
+      <span class="section-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="3" y1="9" x2="21" y2="9"></line>
+          <line x1="9" y1="21" x2="9" y2="9"></line>
+        </svg>
+        Funções de dados alteradas
+      </span>
+      <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </summary>
+    <div class="section-body markdown-body">
+<p>Nenhuma. O critério de foto lê a foto que a pessoa já tinha, e as outras duas mudanças são de tela.</p>
+
+    </div>
+  </details>
+  <details class="doc-section" id="impacto-em-dicionarios" open>
+    <summary class="section-header">
+      <span class="section-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="3" y1="9" x2="21" y2="9"></line>
+          <line x1="9" y1="21" x2="9" y2="9"></line>
+        </svg>
+        Impacto em dicionários
+      </span>
+      <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </summary>
+    <div class="section-body markdown-body">
+<ul>
+<li>Nenhum. Os textos novos da tela — a caixa &quot;Somente pessoas sem foto&quot; e a dica &quot;Abrir o perfil da pessoa em nova aba&quot; — são rótulo e dica, e estão literais no N3 de <code>EVT-PAR-01</code> <em>Pesquisar Participantes</em>.</li>
+</ul>
+
+    </div>
+  </details>
+  <details class="doc-section" id="decisoes-de-produto-pendentes" open>
+    <summary class="section-header">
+      <span class="section-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="3" y1="9" x2="21" y2="9"></line>
+          <line x1="9" y1="21" x2="9" y2="9"></line>
+        </svg>
+        Decisões de produto pendentes
+      </span>
+      <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </summary>
+    <div class="section-body markdown-body">
+<ul>
+<li><strong>Sem foto, mas só entre os confirmados.</strong> O critério <code>CA-03</code> pede &quot;somente as pessoas confirmadas no evento que não possuem foto&quot;; a entrega traz todo participante cuja pessoa não tem foto, confirmado ou não — o recorte do ticket só sai combinando com Confirmado igual a Sim. O ticket também chama de &quot;Pessoas Confirmadas&quot; a lista que a tela chama de Lista de Participantes, e que não se limita aos confirmados. Decidir se o critério de foto deve embutir a confirmação. <strong>Trava</strong> o aceite do critério na homologação e a regra 10 de <code>EVT-PAR-01</code> <em>Pesquisar Participantes</em>.</li>
+<li><strong>&quot;Assento livre&quot; barrada só na tela.</strong> O critério <code>CA-01</code> foi atendido tirando a opção da lista, e a opção é reconhecida pelo nome do bloco: o servidor continuaria aceitando a atribuição e, renomeado o bloco no catálogo, ele voltaria à lista 🔍. Com o catálogo editável de <code>PDTIC25148-34</code>, o nome deixou de ser fixo. Decidir se a restrição deve ser regra do sistema, e não só da tela. <strong>Trava</strong> a aprovação de <code>EVT-PAR-04</code> <em>Consultar Legenda do Participante</em> e de <code>EVT-PAR-05</code> <em>Alterar Legenda do Participante</em>.</li>
+<li><strong>Quem pode abrir o cadastro da pessoa pelo nome.</strong> O critério <code>CA-02</code> fala em abrir o &quot;perfil&quot; da pessoa; a entrega abre a tela de edição, <code>PES-CAD-03</code> <em>Editar Pessoa</em>, para qualquer perfil que veja a lista, inclusive a Secretaria Check-In, e o endereço da tela não confere o perfil. Decidir quem pode chegar à edição por esse caminho, e se ele deveria abrir só para consulta. <strong>Trava</strong> a matriz de permissões do Feature Set Cadastro de Pessoas e a aprovação de <code>PES-CAD-03</code>.</li>
+<li><strong>Duas features tocadas sem critério próprio.</strong> <code>EVT-PAR-05</code> <em>Alterar Legenda do Participante</em> e <code>PES-CAD-03</code> <em>Editar Pessoa</em> trazem no N3 uma consequência do ticket — a regra de que &quot;Assento livre&quot; não é atribuída e o segundo caminho de acesso à tela —, mas ficaram fora da <code>## Features</code>: o que cada uma grava e como grava não mudou, e os critérios pertencem à lista de legendas e à lista de participantes. Confirmar essa fronteira. <strong>Trava</strong> a contagem: dentro da AIM, cada uma entraria como alterada, a 50% do PFB — <code>EVT-PAR-05</code> vale 3 PF e entraria com 1,5; <code>PES-CAD-03</code> ainda não foi contada.</li>
+</ul>
+
+    </div>
+  </details>
+  <details class="doc-section" id="reconciliacao" open>
+    <summary class="section-header">
+      <span class="section-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="3" y1="9" x2="21" y2="9"></line>
+          <line x1="9" y1="21" x2="9" y2="9"></line>
+        </svg>
+        Reconciliação
+      </span>
+      <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </summary>
+    <div class="section-body markdown-body">
+<blockquote>
+<p>Preenchida no fechamento (estado <code>concluído</code>): declarado × tocado. Escreva o resultado abaixo desta citação.</p>
+</blockquote>
+<p>AIM aberta na entrega: o ticket foi entregue antes de haver escopo avalizado, então não há declarado × tocado a reconciliar. O changeset registra o que a especificação já tinha absorvido do ticket na engenharia reversa de 2026-09-30 e a contagem detalhada, feita e confirmada em 2026-10-04. Ficaram fora dele, de propósito, quatro tipos de artefato: o plano de testes, porque a instância roda no perfil <code>requisitos</code>, cuja esteira para no modelo de dados; o protótipo, porque a instância não tem nenhum e a referência dos N3 é a tela implementada; os repositórios de código, que estão fora do aval; e o <code>global/NFR.md</code>, porque o ticket não traz requisito não-funcional.</p>
+
+    </div>
+  </details>
+  <details class="doc-section" id="changelog" open>
+    <summary class="section-header">
+      <span class="section-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="3" y1="9" x2="21" y2="9"></line>
+          <line x1="9" y1="21" x2="9" y2="9"></line>
+        </svg>
+        Changelog
+      </span>
+      <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </summary>
+    <div class="section-body markdown-body">
+<div class="table-container"><table class="custom-table changelog-table">
+<thead>
+<tr>
+<th>Data</th>
+<th>Autor</th>
+<th>Tipo</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>04/10/2026</td>
+<td>Claude (apf-cpm)</td>
+<td>Contagem detalhada</td>
+<td>PFB e PFL das 2 features, espelhados dos N3: 7 PFB e 3,5 PFL, sem função de dados. Changeset sem linha <code>previsto</code>. A sprint passa a <code>SP005</code>. Continua em <code>em-análise</code>: falta só o aval do PO</td>
+</tr>
+<tr>
+<td>04/10/2026</td>
+<td>Claude (analise-impacto)</td>
+<td>AIM aberta na entrega</td>
+<td>ticket <code>PDTIC25148-35</code> registrado a partir da exportação do Jira de 2026-10-04, em homologação; 2 features de Participantes mapeadas, com os 3 critérios distribuídos sem repetição; elo fechado na <code>## Origem</code> dos N3 e no <code>modules/INDEX.md</code>. Fica em <code>em-análise</code>: faltam o aval do PO e a contagem detalhada</td>
+</tr>
+</tbody></table></div>
+
+    </div>
+  </details>
+
+  <footer class="rodape">
+    Gerado de <code>analise-impacto/AIM-PDTIC25148-35.md</code> por <code>scripts/gera-html-impacto.mjs</code>.
+    O <strong>.md é a fonte</strong> — edite lá e regenere; alterações feitas neste HTML se perdem.
+  </footer>
+</div>
+</body>
+</html>
