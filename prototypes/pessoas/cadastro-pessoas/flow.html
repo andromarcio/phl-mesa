@@ -1,0 +1,595 @@
+<!-- docqui: 4.1.0 | prompt: PROMPT_PROTOTYPE_FLOW_FULL | atualizado: 2026-10-04 -->
+<!DOCTYPE html>
+<!--
+  ⚠️ PROTÓTIPO NAVEGÁVEL — treino, não jogo.
+  Fonte de verdade de LAYOUT, COMPORTAMENTO e ESTADOS — NUNCA de implementação.
+  Não copie este HTML/CSS/JS para o código de produção: aqui tudo é autocontido
+  e procedural DE PROPÓSITO (simulação). A implementação real segue outra
+  estratégia: componentes do design system do projeto (mapa de equivalência no
+  README do tema), catálogo global/PATTERNS.md e convenções do global/MASTER.md.
+  Classes .dsc-* são EXCLUSIVAS de protótipo — proibidas em código de produção.
+-->
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Protótipo: Cadastro de Pessoas — Pessoas</title>
+  <!-- Biblioteca de componentes + camada de tema do GPE (visual recuperado do código-fonte) -->
+  <link rel="stylesheet" href="../../_biblioteca-ds/ds.css">
+  <link rel="stylesheet" href="../../_biblioteca-ds/tema-gpe.css">
+</head>
+<body>
+
+  <div class="dsc-proto-badge">🎨 PROTÓTIPO — não é o sistema real</div>
+
+  <div class="dsc-app">
+    <div class="dsc-shell-main">
+
+      <!-- Topbar: título do sistema à esquerda, usuário à direita (topbar.component) -->
+      <header class="dsc-header">
+        <div class="dsc-header-start">
+          <span class="dsc-header-logo">Gestão de Participantes em Eventos</span>
+        </div>
+        <div class="dsc-header-actions">
+          <div class="gpe-user-menu" id="user-menu">
+            <button class="dsc-header-item" onclick="toggleUserMenu(event)" aria-haspopup="true">
+              <span class="dsc-hi-body"><span class="dsc-hi-title">Ana Costa</span><span class="dsc-hi-sub dsc-text-primary">Administrador</span></span>
+              <span class="dsc-avatar">AC</span>
+            </button>
+            <ul class="gpe-user-dropdown">
+              <li class="gpe-ud-info">Nome: <strong>Ana Costa</strong></li>
+              <li class="gpe-ud-info">Login: <strong>ana.costa</strong></li>
+              <li class="gpe-ud-info">Perfil: <strong>Administrador</strong></li>
+              <li class="gpe-ud-info">Email: <strong>ana.costa@cni.com.br</strong></li>
+              <li class="gpe-ud-sep"></li>
+              <li><a href="../../acesso-usuarios/autenticacao/flow.html#foto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="12" cy="12" r="3"/></svg>Alterar Foto do Perfil</a></li>
+              <li><a href="../../acesso-usuarios/autenticacao/flow.html#alterar-senha"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Alterar Senha</a></li>
+              <li><a href="../../acesso-usuarios/autenticacao/flow.html#login"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>Logout</a></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+
+      <!-- Menu horizontal (p-menubar montado com o menu que o login devolve) -->
+      <nav class="gpe-menubar" aria-label="Menu principal">
+        <div class="gpe-menu-item"><a class="gpe-menu-link" href="../../acesso-usuarios/autenticacao/flow.html#inicio"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" opacity=".35"/><path d="M12 12l5-5" stroke="#fff" stroke-width="2"/></svg>Dashboard</a></div>
+        <div class="gpe-menu-item">
+          <button class="gpe-menu-link is-active" onclick="toggleSubmenu(this, event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Administração<svg class="gpe-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+          <ul class="gpe-submenu">
+            <li><a href="../../acesso-usuarios/usuarios/flow.html">Usuários</a></li>
+            <li><a href="#" class="is-active" onclick="showScreen('screen-pessoas'); return false;">Pessoas</a></li>
+            <li><a href="../../eventos/legendas/flow.html#catalogo">Catálogo de legendas</a></li>
+          </ul>
+        </div>
+        <div class="gpe-menu-item">
+          <button class="gpe-menu-link" onclick="toggleSubmenu(this, event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Eventos<svg class="gpe-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+          <ul class="gpe-submenu">
+            <li><a href="../../eventos/cadastro-eventos/flow.html">Cadastro</a></li>
+          </ul>
+        </div>
+      </nav>
+
+      <main class="dsc-main">
+
+        <!-- ═══════════════ Tela 1: Pessoas (PES-CAD-01 · PES-CAD-04 · atalhos das cargas) ═══════════════ -->
+        <div id="screen-pessoas" class="dsc-screen is-active">
+          <nav class="dsc-breadcrumb"><span>Início</span><span class="dsc-sep">›</span><span>Administração</span><span class="dsc-sep">›</span><span class="is-current">Pessoas</span></nav>
+
+          <div class="dsc-card">
+            <h1 class="dsc-page-title">Pessoas</h1>
+            <form class="dsc-row" onsubmit="pesquisar(); return false;" id="form-filtro">
+              <div class="dsc-col-6 dsc-field"><label class="dsc-field-label" for="f-nome">Nome</label><input class="dsc-input" id="f-nome" type="text"></div>
+              <div class="dsc-col-6 dsc-field"><label class="dsc-field-label" for="f-crm">CRM</label><input class="dsc-input" id="f-crm" type="text"></div>
+              <div class="dsc-col-6 dsc-field"><label class="dsc-field-label" for="f-razao">Razão Social</label><input class="dsc-input" id="f-razao" type="text"></div>
+              <div class="dsc-col-6 dsc-field"><label class="dsc-field-label" for="f-email">E-mail</label><input class="dsc-input" id="f-email" type="text"></div>
+              <div class="dsc-col-12 gpe-form-actions" style="margin-top:4px">
+                <button type="submit" class="dsc-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>Pesquisar</button>
+                <button type="button" class="dsc-btn" onclick="limpar()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>Limpar</button>
+                <button type="button" class="dsc-btn" onclick="abrirInclusao()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>Adicionar</button>
+                <button type="button" class="dsc-btn" onclick="abrirCarga('gt')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 21h16"/></svg>Carga de GT</button>
+                <button type="button" class="dsc-btn" onclick="abrirCarga('tema')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 21h16"/></svg>Carga de Temas</button>
+                <button type="button" class="dsc-btn" onclick="abrirCarga('historico')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 21h16"/></svg>Carga de Histórico</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="dsc-card">
+            <div class="dsc-table-wrap">
+              <div class="gpe-table-caption"><span>Lista de Pessoas</span></div>
+              <div id="lista-loading" style="display:none;padding:16px">
+                <div class="dsc-skeleton" style="height:40px;margin-bottom:10px"></div>
+                <div class="dsc-skeleton" style="height:40px;margin-bottom:10px"></div>
+                <div class="dsc-skeleton" style="height:40px"></div>
+              </div>
+              <table class="dsc-table" id="tabela-pessoas">
+                <thead>
+                  <tr>
+                    <th style="width:110px"><span class="dsc-visually-hidden" style="display:none">Ações</span></th>
+                    <th class="dsc-sortable" onclick="ordenar()">Nome</th>
+                    <th class="dsc-sortable" onclick="ordenar()">Email</th>
+                    <th class="dsc-sortable" onclick="ordenar()">Codinome</th>
+                    <th class="dsc-sortable" onclick="ordenar()">CRM</th>
+                    <th class="dsc-sortable" onclick="ordenar()">Razão Social</th>
+                    <th class="dsc-sortable" onclick="ordenar()">Cargo</th>
+                    <th>Data de Criação</th>
+                  </tr>
+                </thead>
+                <tbody id="corpo-pessoas"></tbody>
+              </table>
+              <div id="lista-vazia" class="dsc-table-empty" style="display:none">Nenhuma pessoa encontrada.</div>
+            </div>
+            <div class="gpe-paginator" id="paginador">
+              <span class="gpe-page-report" id="page-report">[1 a 10 de 47]</span>
+              <button disabled aria-label="Primeira página">«</button>
+              <button disabled aria-label="Página anterior">‹</button>
+              <button class="is-active">1</button><button>2</button><button>3</button><button>4</button><button>5</button>
+              <button aria-label="Próxima página">›</button>
+              <button aria-label="Última página">»</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══════════════ Tela 2: Pessoa — inclusão (PES-CAD-02) e edição (PES-CAD-03) ═══════════════ -->
+        <div id="screen-pessoa" class="dsc-screen">
+          <nav class="dsc-breadcrumb"><span>Início</span><span class="dsc-sep">›</span><a href="#" onclick="showScreen('screen-pessoas'); return false;">Pessoas</a><span class="dsc-sep">›</span><span class="is-current" id="bc-pessoa">Cadastrar Pessoa</span></nav>
+
+          <div class="dsc-card">
+            <!-- Inclusão: título. Edição: cabeçalho com foto ou iniciais + nome -->
+            <h1 class="dsc-page-title" id="titulo-inclusao">Cadastrar Pessoa</h1>
+            <div class="gpe-person-head" id="cabecalho-edicao" style="display:none">
+              <span class="gpe-initials" id="cab-iniciais">MS</span><span id="cab-nome">Maria Souza</span>
+            </div>
+
+            <div class="gpe-tabs" role="tablist">
+              <button class="gpe-tab is-active" onclick="abrirAba(this,'aba-cadastro')">Cadastro</button>
+              <button class="gpe-tab" onclick="abrirAba(this,'aba-contatos')">Contatos</button>
+              <button class="gpe-tab" onclick="abrirAba(this,'aba-perfil')">Perfil Corporativo</button>
+              <button class="gpe-tab" onclick="abrirAba(this,'aba-relacionamento')">Relacionamento</button>
+              <button class="gpe-tab" onclick="abrirAba(this,'aba-historico')">Histórico</button>
+            </div>
+
+            <!-- Aba Cadastro -->
+            <div class="gpe-tab-panel is-active" id="aba-cadastro">
+              <div class="dsc-row">
+                <div class="dsc-col-12 dsc-field" id="fld-nome">
+                  <label class="dsc-field-label" for="p-nome">Nome <span class="dsc-req">*</span></label>
+                  <input class="dsc-input" id="p-nome" maxlength="255" placeholder="Digite o nome da pessoa" data-limite="255" data-obrig="nome">
+                  <span class="gpe-counter" data-for="p-nome">0/255</span>
+                </div>
+                <div class="dsc-col-6 dsc-field">
+                  <label class="dsc-field-label" for="p-codinome">Codinome</label>
+                  <input class="dsc-input" id="p-codinome" maxlength="100" placeholder="Digite o codinome da pessoa" data-limite="100">
+                  <span class="gpe-counter" data-for="p-codinome">0/100</span>
+                </div>
+                <div class="dsc-col-6 dsc-field">
+                  <label class="dsc-field-label" for="p-crm">CRM</label>
+                  <input class="dsc-input" id="p-crm" maxlength="50" placeholder="Digite o CRM da pessoa" data-limite="50">
+                  <span class="gpe-counter" data-for="p-crm">0/50</span>
+                </div>
+                <div class="dsc-col-6 dsc-field">
+                  <label class="dsc-field-label" for="p-sexo">Sexo</label>
+                  <select class="dsc-select" id="p-sexo"><option value="">Selecione o sexo</option><option>Masculino</option><option>Feminino</option><option>Não informado</option></select>
+                </div>
+                <div class="dsc-col-6 dsc-field">
+                  <label class="dsc-field-label" for="p-estado">Estado</label>
+                  <select class="dsc-select uf-select" id="p-estado"><option value="">Selecione o estado</option></select>
+                </div>
+                <div class="dsc-col-3 dsc-field">
+                  <label class="dsc-field-label" for="p-cpf">CPF</label>
+                  <input class="dsc-input" id="p-cpf" placeholder="Digite o CPF" inputmode="numeric">
+                </div>
+                <div class="dsc-col-3"></div>
+                <div class="dsc-col-6 dsc-field">
+                  <span class="dsc-field-label">Foto</span>
+                  <div class="gpe-upload" id="up-foto">
+                    <div class="gpe-upload-bar"><button type="button" class="dsc-btn dsc-btn--sm" onclick="escolherFoto()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>Adicionar</button></div>
+                    <div class="gpe-upload-drop" id="foto-vazia">Clique em adicionar ou arraste e solte a foto aqui...</div>
+                    <div class="gpe-upload-file" id="foto-arquivo" style="display:none">
+                      <button type="button" class="dsc-btn dsc-btn--sm dsc-btn--outline" title="Download" id="foto-nome">maria-souza.jpg</button>
+                      <button type="button" class="dsc-icon-action" aria-label="Excluir foto" title="Excluir" onclick="removerFoto()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/></svg></button>
+                    </div>
+                  </div>
+                </div>
+                <div class="dsc-col-12" id="datas-edicao" style="display:none">
+                  <p class="gpe-readonly-line">Data de Criação: <span id="p-criacao">17/09/2025 12:41</span></p>
+                  <p class="gpe-readonly-line" id="linha-alteracao">Data de Alteração: <span id="p-alteracao">24/09/2025 16:16</span></p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Aba Contatos -->
+            <div class="gpe-tab-panel" id="aba-contatos">
+              <div class="dsc-row">
+                <div class="dsc-col-12 dsc-field">
+                  <label class="dsc-field-label" for="p-email">E-mail</label>
+                  <input class="dsc-input" id="p-email" maxlength="255" placeholder="Digite o e-mail" data-limite="255">
+                  <span class="gpe-counter" data-for="p-email">0/255</span>
+                </div>
+                <div class="dsc-col-6 dsc-field">
+                  <label class="dsc-field-label" for="p-telefone">Telefone Principal</label>
+                  <input class="dsc-input" id="p-telefone" placeholder="Digite o telefone" inputmode="tel">
+                </div>
+                <div class="dsc-col-6 dsc-field">
+                  <label class="dsc-field-label" for="p-celular">Celular</label>
+                  <input class="dsc-input" id="p-celular" placeholder="Digite o celular" inputmode="tel">
+                </div>
+              </div>
+            </div>
+
+            <!-- Aba Perfil Corporativo -->
+            <div class="gpe-tab-panel" id="aba-perfil">
+              <div class="dsc-row">
+                <div class="dsc-col-12 dsc-field" id="fld-razao">
+                  <label class="dsc-field-label" for="p-razao">Razão Social <span class="dsc-req">*</span></label>
+                  <input class="dsc-input" id="p-razao" maxlength="255" placeholder="Digite a razão social" data-limite="255" data-obrig="razao">
+                  <span class="gpe-counter" data-for="p-razao">0/255</span>
+                </div>
+                <div class="dsc-col-12 dsc-field">
+                  <label class="dsc-field-label" for="p-fantasia">Nome Fantasia</label>
+                  <input class="dsc-input" id="p-fantasia" maxlength="255" placeholder="Digite o nome fantasia" data-limite="255">
+                  <span class="gpe-counter" data-for="p-fantasia">0/255</span>
+                </div>
+                <div class="dsc-col-6 dsc-field" id="fld-cargo">
+                  <label class="dsc-field-label" for="p-cargo">Cargo <span class="dsc-req">*</span></label>
+                  <input class="dsc-input" id="p-cargo" maxlength="100" placeholder="Digite o cargo" data-limite="100" data-obrig="cargo">
+                  <span class="gpe-counter" data-for="p-cargo">0/100</span>
+                </div>
+                <div class="dsc-col-6 dsc-field">
+                  <label class="dsc-field-label" for="p-cargo-cartao">Cargo do Cartão</label>
+                  <input class="dsc-input" id="p-cargo-cartao" maxlength="100" placeholder="Digite o cargo" data-limite="100">
+                  <span class="gpe-counter" data-for="p-cargo-cartao">0/100</span>
+                </div>
+                <div class="dsc-col-6 dsc-field">
+                  <label class="dsc-field-label" for="p-cnpj">CNPJ</label>
+                  <input class="dsc-input" id="p-cnpj" placeholder="Digite o CNPJ" inputmode="numeric">
+                </div>
+                <div class="dsc-col-6 dsc-field">
+                  <label class="dsc-field-label" for="p-estado-empresa">Estado</label>
+                  <select class="dsc-select uf-select" id="p-estado-empresa"><option value="">Selecione o estado</option></select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Aba Relacionamento (somente leitura) -->
+            <div class="gpe-tab-panel" id="aba-relacionamento">
+              <div class="gpe-box"><div class="gpe-box-head">Temas</div><div id="rel-temas"></div></div>
+              <div class="gpe-box"><div class="gpe-box-head">Grupos de Trabalho</div><div id="rel-gts"></div></div>
+            </div>
+
+            <!-- Aba Histórico (somente leitura) -->
+            <div class="gpe-tab-panel" id="aba-historico">
+              <div class="gpe-box"><div class="gpe-box-head">Histórico de Participações</div><div id="rel-historico"></div></div>
+            </div>
+
+            <div class="gpe-form-footer">
+              <span class="dsc-text-muted">Campos com <span class="dsc-req">*</span> são obrigatórios</span>
+              <div class="dsc-flex dsc-gap-1">
+                <button type="button" class="dsc-btn dsc-btn--outline" style="color:#495057;border-color:#ced4da" onclick="showScreen('screen-pessoas')">Cancelar</button>
+                <button type="button" class="dsc-btn gpe-btn--indigo" id="btn-salvar" onclick="salvarPessoa()" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" id="ico-salvar"><path d="M12 5v14M5 12h14"/></svg><span id="rot-salvar">Criar</span></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ═══════════════ Confirmação nativa do navegador (PES-CAD-04) ═══════════════ -->
+  <div id="modal-remover" class="dsc-modal-mask" style="display:none" onclick="if(event.target===this)toggleModal('modal-remover',false)">
+    <div class="dsc-modal gpe-modal--sm" role="dialog" aria-labelledby="t-remover">
+      <div class="dsc-modal-header" id="t-remover" style="font-size:16px">Esta página diz</div>
+      <div class="dsc-modal-body"><p>Tem certeza que deseja remover a pessoa? Essa operação não poderá ser desfeita.</p></div>
+      <div class="dsc-modal-footer">
+        <button class="dsc-btn dsc-btn--sm" onclick="confirmarRemocao()">OK</button>
+        <button class="dsc-btn dsc-btn--sm dsc-btn--outline" onclick="toggleModal('modal-remover',false)">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ Janelas de carga (PES-CAD-05 · 06 · 07) ═══════════════ -->
+  <div id="modal-carga" class="dsc-modal-mask" style="display:none">
+    <div class="dsc-modal" role="dialog" aria-labelledby="t-carga">
+      <div class="dsc-modal-header"><span id="t-carga">Carga de Grupos Temáticos</span>
+        <button class="dsc-modal-close" aria-label="Fechar" onclick="toggleModal('modal-carga',false)">✕</button></div>
+      <div class="dsc-modal-body">
+        <p class="dsc-body-sm" id="instrucao-carga" style="margin-top:0">A planilha deve conter as colunas Código ou Cód. Contato, Grupos Temáticos e Papel Desempenhado.</p>
+        <div class="gpe-upload">
+          <div class="gpe-upload-bar"><button type="button" class="dsc-btn" onclick="escolherPlanilha()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>Adicionar</button></div>
+          <div class="gpe-upload-drop" id="planilha-vazia">Clique em adicionar ou arraste e solte os arquivos aqui...</div>
+          <div class="gpe-upload-file" id="planilha-arquivo" style="display:none">
+            <button type="button" class="dsc-btn dsc-btn--sm dsc-btn--outline" title="Download" id="planilha-nome">grupos-de-trabalho.xlsx</button>
+            <button type="button" class="dsc-icon-action" aria-label="Excluir planilha" title="Excluir" onclick="removerPlanilha()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/></svg></button>
+          </div>
+        </div>
+      </div>
+      <div class="dsc-modal-footer">
+        <button class="dsc-btn" id="btn-enviar" onclick="enviarCarga()" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Enviar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ Toasts (p-toast, canto superior direito) ═══════════════ -->
+  <div class="gpe-toast-stack" id="toasts"></div>
+
+  <div class="dsc-proto-notes">
+    <strong>📋 Notas do protótipo — Cadastro de Pessoas (PES-CAD)</strong>
+    <ul>
+      <li><strong>Visual recuperado do código-fonte</strong>: telas, rótulos, placeholders e mensagens vêm do inventário extraído do <code>sistema_mesa_checkin_frontend</code> (<code>arquivos/engenharia-reversa/frontend-inventory.md</code>, 4.4 a 4.8) e das imagens de GPE003. Cores e medidas foram aferidas nas capturas; o design system do kit (CAIXA) foi substituído pela camada <code>tema-gpe.css</code>.</li>
+      <li>Simulação: a lista filtra de verdade os dados fictícios (trecho, sem diferenciar maiúsculas). Pesquise “mari” para ver “Maria Souza” e “Ana Marinho”; um texto que ninguém tem mostra “Nenhuma pessoa encontrada.”.</li>
+      <li>Excluir: “João Lima” e “Carlos Eduardo Lins” participam de evento — a exclusão termina no aviso “Não é possível remover”. As demais são excluídas com a mensagem “Pessoa removido com sucesso” (texto literal do sistema, com o erro de concordância ⚠️).</li>
+      <li>⚠️ A confirmação da exclusão é a caixa nativa do navegador (<code>confirm()</code>), aqui imitada; a caixa própria “Remover Pessoa” existe no código e não é usada.</li>
+      <li>⚠️ Os ícones de ordenação de seis colunas não mudam a ordem: a lista volta sempre por Nome, crescente (suspeita de defeito, PES-CAD-01).</li>
+      <li>⚠️ Depois de “Criar”, a tela não volta à lista nem passa a edição; acionar “Criar” de novo inclui outra pessoa igual (PES-CAD-02). Em “Atualizar”, a mensagem é a mesma da inclusão: “Pessoa criada com sucesso”. As duas ficam na tela até serem fechadas.</li>
+      <li>⚠️ O botão principal fica desabilitado enquanto faltar Nome (mín. 3), Razão Social ou Cargo, e a tela não indica em que aba está o que falta.</li>
+      <li>Cargas: a janela fecha ao “Enviar”, aparece “Carga em processamento.” e, logo depois, o resumo da carga. A lista de pessoas não é recarregada. ⚠️ A instrução da Carga de GT admite “Código”, que o servidor não aceita.</li>
+      <li>Não representado: máscaras de CPF, telefone e CNPJ (aparecem só como placeholder); erros de tipo e de tamanho do arquivo; falhas de servidor (descritas nos N3).</li>
+      <li>Fora do menu: perfis Secretaria Mesa e Secretaria Check-In não veem Administração › Pessoas (matriz do N2).</li>
+    </ul>
+  </div>
+
+  <script>
+    /* ---------- Dados fictícios (ordem alfabética de Nome, como o sistema devolve) ---------- */
+    var PESSOAS = [
+      { nome: 'Ana Beatriz Moreira', email: 'ana.moreira@metalurgicaaurora.com.br', codinome: 'ANA MOREIRA', crm: '1508456', razao: 'METALÚRGICA AURORA S.A.', fantasia: 'Aurora Metais', cargo: 'Diretor(a)', criacao: '17/09/2025', sexo: 'Feminino', uf: 'MG' },
+      { nome: 'Ana Marinho', email: 'ana.marinho@vidrosatlantico.com.br', codinome: 'ANA MARINHO', crm: '1702215', razao: 'VIDROS ATLÂNTICO LTDA', fantasia: 'Atlântico Vidros', cargo: 'Gerente', criacao: '17/09/2025', sexo: 'Feminino', uf: 'PE' },
+      { nome: 'Carlos Eduardo Lins', email: 'carlos.lins@textilnordeste.com.br', codinome: 'CARLOS LINS', crm: '1757676', razao: 'TÊXTIL NORDESTE LTDA', fantasia: 'Têxtil NE', cargo: 'Presidente(a)', criacao: '17/09/2025', sexo: 'Masculino', uf: 'CE', vinculo: true },
+      { nome: 'Fernanda Rocha Prado', email: 'fernanda.prado@agrocerrado.com.br', codinome: '', crm: '1766052', razao: 'AGROINDUSTRIAL CERRADO LTDA', fantasia: 'Agro Cerrado', cargo: 'Vice-Presidente(a)', criacao: '24/09/2025', sexo: 'Feminino', uf: 'GO' },
+      { nome: 'Gustavo Henrique Tavares', email: 'gustavo.tavares@quimicavale.com.br', codinome: 'GUSTAVO TAVARES', crm: '1798968', razao: 'QUÍMICA DO VALE S.A.', fantasia: 'Química Vale', cargo: 'CEO/CFO', criacao: '17/09/2025', sexo: 'Masculino', uf: 'SP' },
+      { nome: 'João Lima', email: 'joao.lima@ceramicasaojose.com.br', codinome: 'JOÃO LIMA', crm: '100200', razao: 'CERÂMICA SÃO JOSÉ LTDA', fantasia: 'Cerâmica São José', cargo: 'Gerente', criacao: '18/09/2025', sexo: 'Masculino', uf: 'SC', vinculo: true },
+      { nome: 'Juliana Castro Mendes', email: 'juliana.mendes@inovatech.ind.br', codinome: 'JULIANA MENDES', crm: '1816968', razao: 'INOVATECH INDÚSTRIA ELETRÔNICA LTDA', fantasia: 'Inovatech', cargo: 'Diretor(a)', criacao: '17/09/2025', sexo: 'Feminino', uf: 'AM' },
+      { nome: 'Marcos Vinícius Andrade', email: 'marcos.andrade@papelsul.com.br', codinome: '', crm: '1703043', razao: 'PAPEL E CELULOSE SUL S.A.', fantasia: 'Papel Sul', cargo: 'Presidente(a)', criacao: '17/09/2025', sexo: 'Masculino', uf: 'RS' },
+      { nome: 'Maria Souza', email: 'maria.souza@industriaexemplo.com.br', codinome: 'MARIA SOUZA', crm: '13377', razao: 'INDÚSTRIA EXEMPLO S.A.', fantasia: 'Exemplo', cargo: 'Diretora', criacao: '17/09/2025', sexo: 'Feminino', uf: 'DF', foto: 'maria-souza.jpg',
+        temas: [['Inovação', '17/09/2025']], gts: [['GT Indústria 4.0', 'Coordenadora', '17/09/2025'], ['GT Comércio Exterior', '', '17/09/2025']], historico: [['2024', 2], ['2023', 1]] },
+      { nome: 'Paulo Roberto Nunes', email: 'paulo.nunes@alimentosserra.com.br', codinome: 'PAULO NUNES', crm: '1817002', razao: 'ALIMENTOS DA SERRA LTDA', fantasia: 'Serra Alimentos', cargo: 'Vice-Presidente(a)', criacao: '17/09/2025', sexo: 'Masculino', uf: 'PR',
+        temas: [['Parceiro', '17/09/2025']] },
+      { nome: 'Renata Oliveira Campos', email: 'renata.campos@moveisplanalto.com.br', codinome: 'RENATA CAMPOS', crm: '705280', razao: 'MÓVEIS PLANALTO LTDA', fantasia: 'Planalto Móveis', cargo: 'Gerente', criacao: '17/09/2025', sexo: 'Feminino', uf: 'BA' }
+    ];
+    var TOTAL_BASE = 47; // a base fictícia tem 47 pessoas; a página 1 mostra as 10 primeiras
+    var UFS = 'AC AL AM AP BA CE DF ES GO MA MG MS MT PA PB PE PI PR RJ RN RO RR RS SC SE SP TO'.split(' ');
+    var removerIdx = null, cargaAtual = 'gt', pessoaAtual = null;
+
+    var ICO = {
+      lapis: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.8 9.95l-3.75-3.75L3 17.25zm17.7-10.2a1 1 0 0 0 0-1.4l-2.35-2.35a1 1 0 0 0-1.4 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>',
+      lixeira: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>',
+      ok: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>',
+      info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>',
+      aviso: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>',
+      erro: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>',
+      mais: '<path d="M12 5v14M5 12h14"/>',
+      check: '<path d="M20 6 9 17l-5-5"/>'
+    };
+
+    /* ---------- Shell ---------- */
+    function showScreen(id) {
+      document.querySelectorAll('.dsc-screen').forEach(function (s) { s.classList.remove('is-active'); });
+      document.getElementById(id).classList.add('is-active');
+      fecharMenus();
+      window.scrollTo(0, 0);
+    }
+    function toggleModal(id, show) { document.getElementById(id).style.display = show ? 'flex' : 'none'; }
+    function toggleSubmenu(btn, ev) {
+      ev.stopPropagation();
+      var item = btn.parentElement, aberto = item.classList.contains('is-open');
+      fecharMenus(); if (!aberto) item.classList.add('is-open');
+    }
+    function toggleUserMenu(ev) {
+      ev.stopPropagation();
+      var m = document.getElementById('user-menu'), aberto = m.classList.contains('is-open');
+      fecharMenus(); if (!aberto) m.classList.add('is-open');
+    }
+    function fecharMenus() { document.querySelectorAll('.is-open').forEach(function (e) { e.classList.remove('is-open'); }); }
+    document.addEventListener('click', fecharMenus);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { document.querySelectorAll('.dsc-modal-mask').forEach(function (m) { m.style.display = 'none'; }); fecharMenus(); } });
+
+    /* p-toast: resumo + detalhe; some em ~4 s, a menos que seja fixo (sticky) */
+    function toast(tipo, resumo, detalhe, fixo) {
+      var cls = { sucesso: 'dsc-toast--positive', aviso: 'dsc-toast--warning', erro: 'dsc-toast--danger', info: '' }[tipo];
+      var ico = { sucesso: ICO.ok, aviso: ICO.aviso, erro: ICO.erro, info: ICO.info }[tipo];
+      var t = document.createElement('div');
+      t.className = 'dsc-toast ' + cls; t.setAttribute('role', 'status');
+      t.innerHTML = ico + '<div style="flex:1"><strong>' + resumo + '</strong>' + (detalhe ? '<span>' + detalhe + '</span>' : '') + '</div>' +
+        '<button class="dsc-icon-action" aria-label="Fechar mensagem" title="Fechar" style="width:24px;height:24px">✕</button>';
+      t.querySelector('button').onclick = function () { t.remove(); };
+      document.getElementById('toasts').appendChild(t);
+      if (!fixo) setTimeout(function () { t.remove(); }, 4000);
+    }
+
+    /* ---------- Pesquisar Pessoas (PES-CAD-01) ---------- */
+    var listaAtual = PESSOAS.slice();
+    function contem(valor, trecho) { return !trecho || String(valor || '').toLowerCase().indexOf(trecho.toLowerCase()) >= 0; }
+    function renderLista(filtrada) {
+      var corpo = document.getElementById('corpo-pessoas');
+      var pagina = listaAtual.slice(0, 10);
+      corpo.innerHTML = pagina.map(function (p) {
+        var i = PESSOAS.indexOf(p);
+        return '<tr>' +
+          '<td class="dsc-col-actions"><span class="gpe-row-actions">' +
+            '<button class="dsc-icon-action gpe-icon-solid gpe-icon-solid--primary" aria-label="Editar Pessoa ' + p.nome + '" title="Editar Pessoa" onclick="abrirEdicao(' + i + ')">' + ICO.lapis + '</button>' +
+            '<button class="dsc-icon-action gpe-icon-solid gpe-icon-solid--danger" aria-label="Remover Pessoa ' + p.nome + '" title="Remover Pessoa" onclick="pedirRemocao(' + i + ')">' + ICO.lixeira + '</button>' +
+          '</span></td>' +
+          '<td class="gpe-left">' + p.nome + '</td><td>' + p.email + '</td><td>' + p.codinome + '</td><td>' + p.crm + '</td>' +
+          '<td>' + p.razao + '</td><td>' + p.cargo + '</td><td>' + p.criacao + '</td></tr>';
+      }).join('');
+      var vazia = listaAtual.length === 0;
+      document.getElementById('tabela-pessoas').style.display = vazia ? 'none' : '';
+      document.getElementById('lista-vazia').style.display = vazia ? 'block' : 'none';
+      var total = filtrada ? listaAtual.length : TOTAL_BASE;
+      document.getElementById('page-report').textContent = vazia ? '[0 a 0 de 0]' : '[1 a ' + Math.min(10, listaAtual.length) + ' de ' + total + ']';
+      document.querySelectorAll('#paginador button').forEach(function (b) {
+        var n = parseInt(b.textContent, 10);
+        if (!isNaN(n)) b.style.display = (filtrada && n > Math.ceil(listaAtual.length / 10)) ? 'none' : '';
+      });
+    }
+    function comCarregamento(fn) {
+      document.getElementById('lista-loading').style.display = 'block';
+      document.getElementById('tabela-pessoas').style.opacity = '0.35';
+      setTimeout(function () {
+        document.getElementById('lista-loading').style.display = 'none';
+        document.getElementById('tabela-pessoas').style.opacity = '';
+        fn();
+      }, 450);
+    }
+    function pesquisar() {
+      var f = { nome: val('f-nome'), crm: val('f-crm'), razao: val('f-razao'), email: val('f-email') };
+      var algum = f.nome || f.crm || f.razao || f.email;
+      comCarregamento(function () {
+        listaAtual = PESSOAS.filter(function (p) { return contem(p.nome, f.nome) && contem(p.crm, f.crm) && contem(p.razao, f.razao) && contem(p.email, f.email); });
+        renderLista(!!algum);
+      });
+    }
+    function limpar() { document.getElementById('form-filtro').reset(); comCarregamento(function () { listaAtual = PESSOAS.slice(); renderLista(false); }); }
+    function ordenar() { comCarregamento(function () { renderLista(listaAtual.length !== PESSOAS.length); }); } // ⚠️ a ordem não muda
+    function val(id) { return document.getElementById(id).value.trim(); }
+
+    /* ---------- Excluir Pessoa (PES-CAD-04) ---------- */
+    function pedirRemocao(i) { removerIdx = i; toggleModal('modal-remover', true); }
+    function confirmarRemocao() {
+      toggleModal('modal-remover', false);
+      var p = PESSOAS[removerIdx];
+      if (p.vinculo) { toast('aviso', 'Não é possível remover', 'Não é possível remover a pessoa, pois ela já possui vínculo com evento.'); return; }
+      PESSOAS.splice(removerIdx, 1); TOTAL_BASE--;
+      listaAtual = PESSOAS.slice();
+      toast('sucesso', 'Sucesso', 'Pessoa removido com sucesso');
+      comCarregamento(function () { renderLista(false); });
+    }
+
+    /* ---------- Cadastrar Pessoa (PES-CAD-02) e Editar Pessoa (PES-CAD-03) ---------- */
+    var CAMPOS = ['p-nome','p-codinome','p-crm','p-sexo','p-estado','p-cpf','p-email','p-telefone','p-celular','p-razao','p-fantasia','p-cargo','p-cargo-cartao','p-cnpj','p-estado-empresa'];
+    function abrirAba(btn, id) {
+      document.querySelectorAll('.gpe-tab').forEach(function (t) { t.classList.remove('is-active'); });
+      document.querySelectorAll('.gpe-tab-panel').forEach(function (t) { t.classList.remove('is-active'); });
+      btn.classList.add('is-active'); document.getElementById(id).classList.add('is-active');
+    }
+    function prepararForm(p) {
+      CAMPOS.forEach(function (c) { document.getElementById(c).value = ''; });
+      document.querySelectorAll('.dsc-field.is-invalid').forEach(function (f) { f.classList.remove('is-invalid'); });
+      document.querySelectorAll('.dsc-field-error').forEach(function (e) { e.remove(); });
+      abrirAba(document.querySelector('.gpe-tab'), 'aba-cadastro');
+      var edicao = !!p; pessoaAtual = p;
+      document.getElementById('titulo-inclusao').style.display = edicao ? 'none' : '';
+      document.getElementById('cabecalho-edicao').style.display = edicao ? 'flex' : 'none';
+      document.getElementById('datas-edicao').style.display = edicao ? 'block' : 'none';
+      document.getElementById('rot-salvar').textContent = edicao ? 'Atualizar' : 'Criar';
+      document.getElementById('ico-salvar').innerHTML = edicao ? ICO.check : ICO.mais;
+      document.getElementById('bc-pessoa').textContent = edicao ? p.nome : 'Cadastrar Pessoa';
+      if (edicao) {
+        setv('p-nome', p.nome); setv('p-codinome', p.codinome); setv('p-crm', p.crm); setv('p-sexo', p.sexo); setv('p-estado', p.uf);
+        setv('p-cpf', '123.456.789-09'); setv('p-email', p.email); setv('p-telefone', '(61) 3317-9000'); setv('p-celular', '(61) 99876-5432');
+        setv('p-razao', p.razao); setv('p-fantasia', p.fantasia); setv('p-cargo', p.cargo); setv('p-cargo-cartao', p.cargo); setv('p-cnpj', '12.345.678/0001-90'); setv('p-estado-empresa', p.uf);
+        document.getElementById('p-criacao').textContent = p.criacao + ' 12:41';
+        document.getElementById('linha-alteracao').style.display = p.foto ? '' : 'none';
+      }
+      mostrarFoto(edicao && p.foto ? p.foto : null);
+      renderRelacionamento(edicao ? p : {});
+      atualizarCabecalho(); atualizarContadores(); validar(false);
+    }
+    function setv(id, v) { document.getElementById(id).value = v || ''; }
+    function abrirInclusao() { prepararForm(null); showScreen('screen-pessoa'); }
+    function abrirEdicao(i) { prepararForm(PESSOAS[i]); showScreen('screen-pessoa'); }
+    function renderRelacionamento(p) {
+      var temas = p.temas || [], gts = p.gts || [], hist = p.historico || [];
+      document.getElementById('rel-temas').innerHTML = temas.length ? temas.map(function (t) { return '<div class="gpe-box-item">' + t[0] + '<small>Data de Vínculo: ' + t[1] + '</small></div>'; }).join('') : '<div class="gpe-box-item">Nenhum tema vinculado</div>';
+      document.getElementById('rel-gts').innerHTML = gts.length ? gts.map(function (g) { return '<div class="gpe-box-item">' + g[0] + '<small>Papel Desempenhado: ' + (g[1] || 'Não especificado') + '</small><small>Data de Vínculo: ' + g[2] + '</small></div>'; }).join('') : '<div class="gpe-box-item">Nenhum grupo de trabalho vinculado</div>';
+      document.getElementById('rel-historico').innerHTML = hist.length ? hist.map(function (h) { return '<div class="gpe-box-item">Ano: ' + h[0] + '<small>Participações: ' + h[1] + '</small></div>'; }).join('') : '<div class="gpe-box-item">Nenhum histórico de participação importado</div>';
+    }
+    function iniciais(nome) { return nome.trim().split(/\s+/).slice(0, 2).map(function (w) { return w.charAt(0).toUpperCase(); }).join(''); }
+    function atualizarCabecalho() {
+      var n = val('p-nome');
+      document.getElementById('cab-nome').textContent = n;
+      document.getElementById('cab-iniciais').textContent = iniciais(n || ' ');
+    }
+    function atualizarContadores() {
+      document.querySelectorAll('.gpe-counter').forEach(function (c) {
+        var inp = document.getElementById(c.dataset.for), lim = parseInt(inp.dataset.limite, 10), n = inp.value.length;
+        c.textContent = n + '/' + lim;
+        c.classList.toggle('is-warn', n > lim * 0.8 && n <= lim * 0.95);
+        c.classList.toggle('is-limit', n > lim * 0.95);
+      });
+    }
+    function erroCampo(inputId, msg) {
+      var fld = document.getElementById(inputId).closest('.dsc-field');
+      var e = fld.querySelector('.dsc-field-error'); if (e) e.remove();
+      fld.classList.toggle('is-invalid', !!msg);
+      if (msg) { e = document.createElement('span'); e.className = 'dsc-field-error'; e.textContent = msg; fld.insertBefore(e, fld.querySelector('.gpe-counter')); }
+    }
+    function validar(mostrar, apenas) {
+      var regras = { 'p-nome': function (v) { return !v ? 'Este campo é obrigatório' : (v.length < 3 ? 'Mínimo de 3 caracteres' : ''); },
+                     'p-razao': function (v) { return v ? '' : 'Este campo é obrigatório'; },
+                     'p-cargo': function (v) { return v ? '' : 'Este campo é obrigatório'; } };
+      var ok = true;
+      Object.keys(regras).forEach(function (id) {
+        var msg = regras[id](val(id)); if (msg) ok = false;
+        if (mostrar && (!apenas || apenas === id)) erroCampo(id, msg);
+      });
+      document.getElementById('btn-salvar').disabled = !ok;
+      return ok;
+    }
+    CAMPOS.forEach(function (id) {
+      var el = document.getElementById(id);
+      el.addEventListener('input', function () { atualizarContadores(); validar(el.classList.contains('was-touched'), id); if (id === 'p-nome') atualizarCabecalho(); });
+      el.addEventListener('blur', function () { el.classList.add('was-touched'); validar(true, id); });
+    });
+    function salvarPessoa() {
+      if (!validar(true)) { toast('erro', 'Formulário inválido', 'Preencha todos os campos obrigatórios corretamente'); return; }
+      var b = document.getElementById('btn-salvar'); b.classList.add('is-loading');
+      setTimeout(function () {
+        b.classList.remove('is-loading');
+        toast('sucesso', 'Sucesso', 'Pessoa criada com sucesso', true); // fixo; a tela permanece aberta
+      }, 700);
+    }
+    function mostrarFoto(nome) {
+      document.getElementById('foto-vazia').style.display = nome ? 'none' : '';
+      document.getElementById('foto-arquivo').style.display = nome ? 'flex' : 'none';
+      if (nome) document.getElementById('foto-nome').textContent = nome;
+    }
+    function escolherFoto() { mostrarFoto('foto-' + (val('p-nome') ? iniciais(val('p-nome')).toLowerCase() : 'pessoa') + '.png'); }
+    function removerFoto() { mostrarFoto(null); }
+
+    /* ---------- Cargas (PES-CAD-05 · 06 · 07) ---------- */
+    var CARGAS = {
+      gt: { titulo: 'Carga de Grupos Temáticos', instrucao: 'A planilha deve conter as colunas Código ou Cód. Contato, Grupos Temáticos e Papel Desempenhado.', arquivo: 'grupos-de-trabalho.xlsx', nome: 'Grupos de Trabalho', processando: 'Carga de Grupos Temáticos em processamento.', resumo: ['Grupos de trabalho foram atualizados', '4 grupos de trabalho vinculados e 1 pessoas não foram encontradas.'], extra: true },
+      tema: { titulo: 'Carga de Temas', instrucao: 'A planilha deve conter as colunas Cód. Contato e Tema.', arquivo: 'temas.xlsx', nome: 'Temas', processando: 'Carga de Temas em processamento.', resumo: ['Carga concluída', '5 temas vinculados.'] },
+      historico: { titulo: 'Carga de Histórico', instrucao: 'A planilha deve conter as colunas Cód. Contato e os anos das participações.', arquivo: 'historico-participacao.xlsx', nome: 'Histórico', processando: 'Carga de Históricos em processamento.', resumo: ['Carga concluída', '5 históricos de participação atualizados.'] }
+    };
+    function abrirCarga(tipo) {
+      cargaAtual = tipo; var c = CARGAS[tipo];
+      document.getElementById('t-carga').textContent = c.titulo;
+      document.getElementById('instrucao-carga').textContent = c.instrucao;
+      removerPlanilha(true);
+      toggleModal('modal-carga', true);
+    }
+    function escolherPlanilha() {
+      var c = CARGAS[cargaAtual];
+      document.getElementById('planilha-nome').textContent = c.arquivo;
+      document.getElementById('planilha-vazia').style.display = 'none';
+      document.getElementById('planilha-arquivo').style.display = 'flex';
+      document.getElementById('btn-enviar').disabled = false;
+      toast('info', 'Planilha adicionada', 'Planilha de ' + c.nome + ' adicionada');
+    }
+    function removerPlanilha(silencioso) {
+      document.getElementById('planilha-vazia').style.display = '';
+      document.getElementById('planilha-arquivo').style.display = 'none';
+      document.getElementById('btn-enviar').disabled = true;
+      if (silencioso !== true) toast('info', 'Planilha removida', 'Planilha de ' + CARGAS[cargaAtual].nome + ' removida');
+    }
+    function enviarCarga() {
+      var c = CARGAS[cargaAtual];
+      toggleModal('modal-carga', false);
+      toast('info', 'Carga em processamento.', c.processando);
+      setTimeout(function () {
+        toast('info', c.resumo[0], c.resumo[1]);
+        if (c.extra) toast('info', 'Carga realizada com sucesso.', '');
+      }, 1800);
+    }
+
+    /* ---------- Inicialização ---------- */
+    document.querySelectorAll('.uf-select').forEach(function (s) { UFS.forEach(function (u) { var o = document.createElement('option'); o.textContent = u; s.appendChild(o); }); });
+    renderLista(false);
+    /* Entrada por endereço: flow.html#pessoa-nova abre a inclusão; #pessoa abre a edição de Maria Souza
+       (usado pelo atalho do nome na lista de participantes de um evento) */
+    if (location.hash === '#pessoa-nova') abrirInclusao();
+    if (location.hash === '#pessoa') abrirEdicao(8);
+  </script>
+</body>
+</html>
