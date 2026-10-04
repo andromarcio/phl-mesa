@@ -1,0 +1,849 @@
+<!-- docqui: 4.1.0 | prompt: PROMPT_PROTOTYPE_FLOW_FULL | atualizado: 2026-10-04 -->
+<!DOCTYPE html>
+<!--
+  ⚠️ PROTÓTIPO NAVEGÁVEL — treino, não jogo.
+  Fonte de verdade de LAYOUT, COMPORTAMENTO e ESTADOS — NUNCA de implementação.
+  Não copie este HTML/CSS/JS para o código de produção: aqui tudo é autocontido
+  e procedural DE PROPÓSITO (simulação). A implementação real segue outra
+  estratégia: componentes do design system do projeto (mapa de equivalência no
+  README do tema), catálogo global/PATTERNS.md e convenções do global/MASTER.md.
+  Classes .dsc-* são EXCLUSIVAS de protótipo — proibidas em código de produção.
+-->
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Protótipo: Cadastro de Eventos — Eventos</title>
+  <!-- Biblioteca de componentes + camada de tema do GPE (visual recuperado do código-fonte) -->
+  <link rel="stylesheet" href="../../_biblioteca-ds/ds.css">
+  <link rel="stylesheet" href="../../_biblioteca-ds/tema-gpe.css">
+  <style>
+    /* candidato a tema-gpe.css — campo de data com o botão de calendário à direita (p-datePicker com ícone) */
+    .gpe-date { position: relative; display: flex; }
+    .gpe-date > .dsc-input { flex: 1; min-width: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; }
+    .gpe-date-btn { flex: none; width: 46px; display: grid; place-items: center; border: 1px solid #ced4da; border-left: 0; border-radius: 0 6px 6px 0; background: #f4f5f7; color: #495057; cursor: pointer; }
+    .gpe-date-btn:hover { background: #e9ecef; }
+    .gpe-date-btn svg { width: 18px; height: 18px; }
+    .gpe-date--curta { max-width: 272px; }
+
+    /* candidato a tema-gpe.css — painel do calendário (mês/ano navegáveis, dias, hora em 24h, Hoje e Limpar) */
+    .gpe-cal { position: absolute; top: calc(100% + 4px); left: 0; z-index: 160; width: 304px; padding: 12px; background: #fff; border: 1px solid var(--dsc-border-neutral-3); border-radius: 6px; box-shadow: var(--dsc-elevation-2); }
+    .gpe-cal-head { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+    .gpe-cal-head select { flex: 1; height: 32px; border: 1px solid var(--dsc-border-neutral-3); border-radius: 4px; font-family: inherit; padding: 0 6px; }
+    .gpe-cal-head button { width: 32px; height: 32px; border: 0; border-radius: 50%; background: transparent; cursor: pointer; font-size: 18px; color: var(--dsc-content-neutral-4); }
+    .gpe-cal-head button:hover { background: var(--dsc-bg-neutral-3); }
+    .gpe-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; text-align: center; font-size: 13px; }
+    .gpe-cal-grid span { padding: 4px 0; font-weight: 600; color: var(--dsc-grayscale-90); }
+    .gpe-cal-grid button { height: 34px; border: 0; border-radius: 50%; background: transparent; font-family: inherit; font-size: 14px; cursor: pointer; color: var(--dsc-content-neutral-5); }
+    .gpe-cal-grid button:hover { background: var(--dsc-bg-neutral-3); }
+    .gpe-cal-grid button.is-today { color: var(--dsc-primary-90); font-weight: 700; }
+    .gpe-cal-grid button.is-selected { background: var(--dsc-primary-10); color: var(--dsc-primary-110); font-weight: 700; }
+    .gpe-cal-time { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--dsc-border-neutral-3); font-size: 18px; }
+    .gpe-cal-time input { width: 52px; height: 34px; text-align: center; border: 1px solid #ced4da; border-radius: 4px; font-family: inherit; font-size: 15px; }
+    .gpe-cal-foot { display: flex; justify-content: space-between; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--dsc-border-neutral-3); }
+
+    /* candidato a tema-gpe.css — p-select com showClear (✕ antes da seta) */
+    .gpe-select-clear { position: relative; }
+    .gpe-select-clear > .dsc-select { width: 100%; padding-right: 64px; }
+    .gpe-select-clear > button { display: none; position: absolute; right: 34px; top: 50%; transform: translateY(-50%); width: 24px; height: 24px; padding: 0; border: 0; background: transparent; color: var(--dsc-grayscale-90); cursor: pointer; place-items: center; }
+    .gpe-select-clear > button svg { width: 16px; height: 16px; }
+    .gpe-select-clear.has-value > button { display: grid; }
+
+    /* candidato a tema-gpe.css — linha de evento finalizado (opacidade reduzida) e célula do nome com o selo */
+    .gpe-row-finalizado { opacity: 0.55; }
+    .gpe-name-cell { display: inline-flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .gpe-qtd { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; font-size: 16px; }
+    .gpe-qtd svg { width: 15px; height: 15px; color: #9aa3ad; }
+    .dsc-tag.gpe-tag-tipo svg { width: 13px; height: 13px; }
+
+    /* candidato a tema-gpe.css — título de formulário com ícone ("Novo Evento" / "Editar Evento") */
+    .gpe-form-title { display: flex; align-items: center; gap: 14px; font-size: 32px; font-weight: 600; line-height: 1.2; color: var(--dsc-content-neutral-5); margin: 0 0 26px; }
+    .gpe-form-title svg { width: 22px; height: 22px; }
+
+    /* candidato a tema-gpe.css — título de seção dentro de janela ("Carga de Convidados", "Inscritos do CRM") */
+    .gpe-section-title { font-size: 24px; font-weight: 600; color: var(--dsc-content-neutral-4); margin: 4px 0 14px; }
+    .gpe-section-title ~ .gpe-section-title { margin-top: 28px; }
+  </style>
+</head>
+<body>
+
+  <div class="dsc-proto-badge">🎨 PROTÓTIPO — não é o sistema real</div>
+
+  <div class="dsc-app">
+    <div class="dsc-shell-main">
+
+      <!-- Topbar: título do sistema à esquerda, usuário à direita (topbar.component) -->
+      <header class="dsc-header">
+        <div class="dsc-header-start">
+          <span class="dsc-header-logo">Gestão de Participantes em Eventos</span>
+        </div>
+        <div class="dsc-header-actions">
+          <div class="gpe-user-menu" id="user-menu">
+            <button class="dsc-header-item" onclick="toggleUserMenu(event)" aria-haspopup="true">
+              <span class="dsc-hi-body"><span class="dsc-hi-title">Ana Costa</span><span class="dsc-hi-sub dsc-text-primary" id="hdr-perfil">Administrador</span></span>
+              <span class="dsc-avatar">AC</span>
+            </button>
+            <ul class="gpe-user-dropdown">
+              <li class="gpe-ud-info">Nome: <strong>Ana Costa</strong></li>
+              <li class="gpe-ud-info">Login: <strong>ana.costa</strong></li>
+              <li class="gpe-ud-info">Perfil: <strong id="ud-perfil">Administrador</strong></li>
+              <li class="gpe-ud-info">Email: <strong>ana.costa@cni.com.br</strong></li>
+              <li class="gpe-ud-sep"></li>
+              <li><a href="../../acesso-usuarios/autenticacao/flow.html#foto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="12" cy="12" r="3"/></svg>Alterar Foto do Perfil</a></li>
+              <li><a href="../../acesso-usuarios/autenticacao/flow.html#alterar-senha"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Alterar Senha</a></li>
+              <li><a href="../../acesso-usuarios/autenticacao/flow.html#login"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>Logout</a></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+
+      <!-- Menu horizontal (p-menubar montado com o menu que o login devolve) -->
+      <nav class="gpe-menubar" aria-label="Menu principal">
+        <div class="gpe-menu-item"><a class="gpe-menu-link" href="../../acesso-usuarios/autenticacao/flow.html#inicio"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" opacity=".35"/><path d="M12 12l5-5" stroke="#fff" stroke-width="2"/></svg>Dashboard</a></div>
+        <div class="gpe-menu-item">
+          <button class="gpe-menu-link" onclick="toggleSubmenu(this, event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Administração<svg class="gpe-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+          <ul class="gpe-submenu">
+            <li><a href="../../acesso-usuarios/usuarios/flow.html">Usuários</a></li>
+            <li><a href="../../pessoas/cadastro-pessoas/flow.html">Pessoas</a></li>
+            <li><a href="../../eventos/legendas/flow.html#catalogo">Catálogo de legendas</a></li>
+          </ul>
+        </div>
+        <div class="gpe-menu-item">
+          <button class="gpe-menu-link is-active" onclick="toggleSubmenu(this, event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Eventos<svg class="gpe-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+          <ul class="gpe-submenu">
+            <li><a href="#eventos" class="is-active" onclick="abrirLista(); return false;">Cadastro</a></li>
+          </ul>
+        </div>
+      </nav>
+
+      <main class="dsc-main">
+
+        <!-- ═══════════════ Tela 1: Eventos (EVT-CAD-01 · EVT-CAD-05 · EVT-CAD-06 · atalhos das cargas, participantes e legendas) ═══════════════ -->
+        <div id="screen-eventos" class="dsc-screen is-active">
+          <nav class="dsc-breadcrumb"><span>Início</span><span class="dsc-sep">›</span><span>Eventos</span><span class="dsc-sep">›</span><span class="is-current">Cadastro</span></nav>
+
+          <div class="dsc-card">
+            <h1 class="dsc-page-title">Eventos</h1>
+            <form class="dsc-row" id="form-filtro" onsubmit="pesquisar(); return false;" onreset="setTimeout(atualizarClears, 0)">
+              <div class="dsc-col-6 dsc-field"><label class="dsc-field-label" for="f-nome">Nome:</label><input class="dsc-input" id="f-nome" type="text"></div>
+              <div class="dsc-col-6 dsc-field"><label class="dsc-field-label" for="f-local">Local:</label><input class="dsc-input" id="f-local" type="text"></div>
+              <div class="dsc-col-3 dsc-field"><label class="dsc-field-label" for="f-tipo">Tipo de Evento:</label>
+                <div class="gpe-select-clear"><select class="dsc-select" id="f-tipo" onchange="atualizarClears()"><option value=""></option></select><button type="button" aria-label="Limpar Tipo de Evento" title="Limpar" onclick="limparSelect('f-tipo')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+              </div>
+              <div class="dsc-col-3 dsc-field"><label class="dsc-field-label" for="f-mesa">Tipo de Mesa:</label>
+                <div class="gpe-select-clear"><select class="dsc-select" id="f-mesa" onchange="atualizarClears()"><option value=""></option></select><button type="button" aria-label="Limpar Tipo de Mesa" title="Limpar" onclick="limparSelect('f-mesa')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+              </div>
+              <div class="dsc-col-3 dsc-field"><label class="dsc-field-label" for="f-ini">Data Inicial:</label>
+                <div class="gpe-date"><input class="dsc-input" id="f-ini" type="text" inputmode="numeric" autocomplete="off"><button type="button" class="gpe-date-btn" aria-label="Abrir calendário da Data Inicial" title="Abrir calendário" onclick="abrirCalendario('f-ini', false, event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg></button></div>
+              </div>
+              <div class="dsc-col-3 dsc-field"><label class="dsc-field-label" for="f-fim">Data Final:</label>
+                <div class="gpe-date"><input class="dsc-input" id="f-fim" type="text" inputmode="numeric" autocomplete="off"><button type="button" class="gpe-date-btn" aria-label="Abrir calendário da Data Final" title="Abrir calendário" onclick="abrirCalendario('f-fim', false, event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg></button></div>
+              </div>
+              <div class="dsc-col-12 gpe-form-actions" style="margin-top:8px">
+                <button type="submit" class="dsc-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>Pesquisar</button>
+                <button type="button" class="dsc-btn" onclick="limpar()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>Limpar</button>
+                <button type="button" class="dsc-btn gpe-btn--help" id="btn-adicionar" onclick="abrirInclusao()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>Adicionar</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="dsc-card">
+            <div class="dsc-table-wrap">
+              <div id="lista-loading" style="display:none;padding:16px">
+                <div class="dsc-skeleton" style="height:48px;margin-bottom:10px"></div>
+                <div class="dsc-skeleton" style="height:48px;margin-bottom:10px"></div>
+                <div class="dsc-skeleton" style="height:48px"></div>
+              </div>
+              <table class="dsc-table" id="tabela-eventos">
+                <thead>
+                  <tr>
+                    <th class="dsc-sortable" onclick="ordenar('nome')">Nome</th>
+                    <th class="dsc-sortable" onclick="ordenar('data')">Data e Horário</th>
+                    <th class="dsc-sortable" onclick="ordenar('local')">Local</th>
+                    <th class="dsc-sortable" onclick="ordenar('tipo')">Tipo</th>
+                    <th class="dsc-sortable" onclick="ordenar('mesa')">Formato da Mesa</th>
+                    <th class="dsc-sortable" onclick="ordenar('participantes')">Nº de Participantes</th>
+                    <th class="dsc-sortable" onclick="ordenar('principal')">Principal</th>
+                    <th style="width:340px">Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="corpo-eventos"></tbody>
+              </table>
+            </div>
+            <div class="gpe-paginator" id="paginador"></div>
+          </div>
+        </div>
+
+        <!-- ═══════════════ Tela 2: Evento — inclusão (EVT-CAD-02), edição (EVT-CAD-03) e visualização (EVT-CAD-04) ═══════════════ -->
+        <div id="screen-evento" class="dsc-screen">
+          <nav class="dsc-breadcrumb"><span>Início</span><span class="dsc-sep">›</span><span>Eventos</span><span class="dsc-sep">›</span><a href="#eventos" onclick="abrirLista(); return false;">Cadastro</a><span class="dsc-sep">›</span><span class="is-current" id="bc-evento">Novo Evento</span></nav>
+
+          <div class="dsc-card">
+            <h1 class="gpe-form-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg><span id="titulo-evento">Novo Evento</span></h1>
+
+            <!-- Modo inclusão / edição: campos de entrada -->
+            <div class="dsc-row" id="ev-edicao">
+              <div class="dsc-col-12 dsc-field">
+                <label class="dsc-field-label" for="ev-nome">Nome do Evento <span class="dsc-req">*</span></label>
+                <input class="dsc-input" id="ev-nome" maxlength="100" placeholder="Digite o nome do evento" data-limite="100">
+                <span class="gpe-counter" data-for="ev-nome">0/100</span>
+              </div>
+              <div class="dsc-col-6 dsc-field">
+                <label class="dsc-field-label" for="ev-data">Data e Hora <span class="dsc-req">*</span></label>
+                <div class="gpe-date gpe-date--curta"><input class="dsc-input" id="ev-data" placeholder="Selecione a data e hora" autocomplete="off"><button type="button" class="gpe-date-btn" aria-label="Abrir calendário da Data e Hora" title="Abrir calendário" onclick="abrirCalendario('ev-data', true, event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg></button></div>
+              </div>
+              <div class="dsc-col-6 dsc-field">
+                <label class="dsc-field-label" for="ev-local">Local <span class="dsc-req">*</span></label>
+                <input class="dsc-input" id="ev-local" maxlength="200" placeholder="Local do evento" data-limite="200">
+                <span class="gpe-counter" data-for="ev-local">0/200</span>
+              </div>
+              <div class="dsc-col-6 dsc-field">
+                <label class="dsc-field-label" for="ev-tipo">Tipo de Evento <span class="dsc-req">*</span></label>
+                <select class="dsc-select" id="ev-tipo"><option value="">Selecione o tipo</option></select>
+              </div>
+              <div class="dsc-col-6 dsc-field">
+                <label class="dsc-field-label" for="ev-mesa">Tipo de Mesa <span class="dsc-req">*</span></label>
+                <select class="dsc-select" id="ev-mesa"><option value="">Selecione o tipo</option></select>
+              </div>
+              <div class="dsc-col-6 dsc-field">
+                <label class="dsc-field-label" for="ev-part">Participantes <span class="dsc-req">*</span></label>
+                <input class="dsc-input" id="ev-part" inputmode="numeric" placeholder="Número de participantes">
+              </div>
+              <div class="dsc-col-6 dsc-field">
+                <label class="dsc-field-label" for="ev-codigo">Código da Campanha</label>
+                <input class="dsc-input" id="ev-codigo" maxlength="50" placeholder="Ex.: CMP-03460-L2K8">
+                <span class="dsc-field-hint">Código da campanha no CRM usado para importar os inscritos.</span>
+              </div>
+              <div class="dsc-col-6 dsc-field">
+                <span class="dsc-field-label">Arquivo</span>
+                <div class="gpe-upload">
+                  <div class="gpe-upload-bar"><button type="button" class="dsc-btn" onclick="escolherImagem()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>Adicionar</button></div>
+                  <div class="gpe-upload-drop" id="img-vazia">Clique em adicionar ou arraste e solte os arquivos aqui...</div>
+                  <div class="gpe-upload-file" id="img-arquivo" style="display:none">
+                    <button type="button" class="dsc-btn dsc-btn--sm dsc-btn--outline" title="Download" id="img-nome">imagem.png</button>
+                    <button type="button" class="dsc-icon-action" aria-label="Excluir imagem" title="Excluir" onclick="removerImagem()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/></svg></button>
+                  </div>
+                </div>
+                <span class="dsc-field-hint">Imagem relacionada</span>
+              </div>
+            </div>
+
+            <!-- Modo visualização: cada campo vira texto (mesma tela, mesma ordem) -->
+            <div class="dsc-row" id="ev-leitura" style="display:none">
+              <div class="dsc-col-12"><div class="dsc-lv"><span class="dsc-lv-label dsc-field-label">Nome do Evento <span class="dsc-req">*</span></span><span class="dsc-lv-value" id="v-nome"></span></div></div>
+              <div class="dsc-col-6"><div class="dsc-lv"><span class="dsc-lv-label dsc-field-label">Data e Hora <span class="dsc-req">*</span></span><span class="dsc-lv-value" id="v-data"></span></div></div>
+              <div class="dsc-col-6"><div class="dsc-lv"><span class="dsc-lv-label dsc-field-label">Local <span class="dsc-req">*</span></span><span class="dsc-lv-value" id="v-local"></span></div></div>
+              <div class="dsc-col-6"><div class="dsc-lv"><span class="dsc-lv-label dsc-field-label">Tipo de Evento <span class="dsc-req">*</span></span><span class="dsc-lv-value" id="v-tipo"></span></div></div>
+              <div class="dsc-col-6"><div class="dsc-lv"><span class="dsc-lv-label dsc-field-label">Tipo de Mesa <span class="dsc-req">*</span></span><span class="dsc-lv-value" id="v-mesa"></span></div></div>
+              <div class="dsc-col-6"><div class="dsc-lv"><span class="dsc-lv-label dsc-field-label">Participantes <span class="dsc-req">*</span></span><span class="dsc-lv-value" id="v-part"></span></div></div>
+              <div class="dsc-col-6"><div class="dsc-lv"><span class="dsc-lv-label dsc-field-label">Código da Campanha</span><span class="dsc-lv-value" id="v-codigo"></span></div></div>
+              <div class="dsc-col-6"><div class="dsc-lv"><span class="dsc-lv-label dsc-field-label">Arquivo</span><span class="dsc-lv-value" id="v-arquivo"></span></div></div>
+            </div>
+
+            <div class="gpe-form-footer">
+              <span class="dsc-text-muted">Campos com <span class="dsc-req">*</span> são obrigatórios</span>
+              <div class="dsc-flex dsc-gap-1">
+                <button type="button" class="dsc-btn dsc-btn--outline" style="color:#495057;border-color:#ced4da" id="btn-cancelar" onclick="abrirLista()">Cancelar</button>
+                <button type="button" class="dsc-btn gpe-btn--indigo" id="btn-salvar" onclick="salvarEvento()" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" id="ico-salvar"><path d="M12 5v14M5 12h14"/></svg>Salvar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Painel de calendário compartilhado (posicionado dentro do campo de data que o abriu) -->
+  <div class="gpe-cal" id="calendario" style="display:none" onclick="event.stopPropagation()">
+    <div class="gpe-cal-head">
+      <button type="button" aria-label="Mês anterior" title="Mês anterior" onclick="navegarMes(-1)">‹</button>
+      <select id="cal-mes" aria-label="Mês" onchange="CAL.mes = +this.value; desenharCalendario()"></select>
+      <select id="cal-ano" aria-label="Ano" onchange="CAL.ano = +this.value; desenharCalendario()"></select>
+      <button type="button" aria-label="Próximo mês" title="Próximo mês" onclick="navegarMes(1)">›</button>
+    </div>
+    <div class="gpe-cal-grid" id="cal-grid"></div>
+    <div class="gpe-cal-time" id="cal-tempo"><input id="cal-h" aria-label="Hora" maxlength="2" inputmode="numeric" onchange="ajustarHora()">:<input id="cal-m" aria-label="Minuto" maxlength="2" inputmode="numeric" onchange="ajustarHora()"></div>
+    <div class="gpe-cal-foot">
+      <button type="button" class="dsc-btn dsc-btn--sm dsc-btn--chromeless" onclick="calHoje()">Hoje</button>
+      <button type="button" class="dsc-btn dsc-btn--sm dsc-btn--chromeless" onclick="calLimpar()">Limpar</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════ Confirmação nativa do navegador (EVT-CAD-05) ═══════════════ -->
+  <div id="modal-remover" class="dsc-modal-mask" style="display:none" onclick="if(event.target===this)toggleModal('modal-remover',false)">
+    <div class="dsc-modal gpe-modal--sm" role="dialog" aria-labelledby="t-remover">
+      <div class="dsc-modal-header" id="t-remover" style="font-size:16px">Esta página diz</div>
+      <div class="dsc-modal-body"><p>Tem certeza que deseja remover o evento? Essa operação não poderá ser desfeita.</p></div>
+      <div class="dsc-modal-footer">
+        <button class="dsc-btn dsc-btn--sm" onclick="confirmarRemocao()">OK</button>
+        <button class="dsc-btn dsc-btn--sm dsc-btn--outline" onclick="toggleModal('modal-remover',false)">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ Janela Cargas de Convidados e Confirmados (EVT-CAD-07 · 08 · 09) ═══════════════ -->
+  <div id="modal-cargas" class="dsc-modal-mask" style="display:none">
+    <div class="dsc-modal" role="dialog" aria-labelledby="t-cargas">
+      <div class="dsc-modal-header">
+        <div><span id="t-cargas">Reunião do Conselho de Política Industrial</span><small id="cargas-sub">Edifício Roberto Simonsen — Brasília - 20 de outubro de 2026 às 09:00</small></div>
+        <button class="dsc-modal-close" id="cargas-fechar" aria-label="Fechar" onclick="toggleModal('modal-cargas',false)">✕</button>
+      </div>
+      <div class="dsc-modal-body">
+        <h2 class="gpe-section-title">Carga de Convidados</h2>
+        <div class="gpe-upload">
+          <div class="gpe-upload-bar"><button type="button" class="dsc-btn" onclick="escolherPlanilha('conv')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>Adicionar</button></div>
+          <div class="gpe-upload-drop" id="conv-vazia">Clique em adicionar ou arraste e solte os arquivos aqui...</div>
+          <div class="gpe-upload-file" id="conv-arquivo" style="display:none">
+            <button type="button" class="dsc-btn dsc-btn--sm dsc-btn--outline" title="Download" id="conv-nome">convidados.xlsx</button>
+            <button type="button" class="dsc-icon-action" aria-label="Excluir planilha de convidados" title="Excluir" onclick="removerPlanilha('conv')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/></svg></button>
+          </div>
+        </div>
+
+        <h2 class="gpe-section-title">Carga de Confirmados</h2>
+        <div class="gpe-upload">
+          <div class="gpe-upload-bar"><button type="button" class="dsc-btn" onclick="escolherPlanilha('conf')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>Adicionar</button></div>
+          <div class="gpe-upload-drop" id="conf-vazia">Clique em adicionar ou arraste e solte os arquivos aqui...</div>
+          <div class="gpe-upload-file" id="conf-arquivo" style="display:none">
+            <button type="button" class="dsc-btn dsc-btn--sm dsc-btn--outline" title="Download" id="conf-nome">confirmados.xlsx</button>
+            <button type="button" class="dsc-icon-action" aria-label="Excluir planilha de confirmados" title="Excluir" onclick="removerPlanilha('conf')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/></svg></button>
+          </div>
+        </div>
+
+        <h2 class="gpe-section-title">Inscritos do CRM</h2>
+        <p id="crm-com-codigo" style="margin:0 0 14px;font-size:16px">Código da Campanha: <strong id="crm-codigo">CMP-03460-L2K8</strong></p>
+        <div id="crm-sem-codigo" class="dsc-alert dsc-alert--warning" style="margin:0 0 14px;display:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><span>Informe o Código da Campanha no cadastro do evento para habilitar a importação.</span></div>
+        <button type="button" class="dsc-btn" id="btn-crm" onclick="importarCrm()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M8 17l4 4 4-4"/><path d="M12 12v9"/><path d="M20.9 18.1A5 5 0 0 0 18 9h-1.3A8 8 0 1 0 3 16.3"/></svg>Importar Inscritos do CRM</button>
+      </div>
+      <div class="dsc-modal-footer">
+        <button class="dsc-btn" id="btn-enviar" onclick="enviarCargas()" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Enviar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ Toasts (p-toast, canto superior direito) ═══════════════ -->
+  <div class="gpe-toast-stack" id="toasts"></div>
+
+  <div class="dsc-proto-notes">
+    <strong>📋 Notas do protótipo — Cadastro de Eventos (EVT-CAD)</strong>
+    <ul>
+      <li><strong>Visual recuperado do código-fonte</strong>: telas, rótulos, placeholders, dicas dos ícones e mensagens vêm do inventário extraído do <code>sistema_mesa_checkin_frontend</code> (<code>arquivos/engenharia-reversa/frontend-inventory.md</code>, 4.0, 4.9 a 4.11, 4.16 e 7.1) e das imagens de GPE004 — “Pesquisar Evento” (image2), “Incluir / Editar Evento” (image3), “Detalhar Evento” (image4) e “Carregar Convidados / Confirmados” (image5). O design system do kit (CAIXA) foi substituído pela camada <code>tema-gpe.css</code>.</li>
+      <li>Controles da simulação:
+        <label class="gpe-proto-perfil" style="flex-wrap:wrap;max-width:100%">Perfil simulado
+          <select id="sel-perfil" style="max-width:100%" onchange="trocarPerfil(this.value)">
+            <option>Administrador</option>
+            <option value="Gestor">Gestor (⚠️ inexistente)</option>
+            <option>Secretaria Mesa</option>
+            <option>Secretaria Check-In</option>
+          </select>
+        </label>
+        <label class="gpe-proto-perfil" style="margin-left:14px;flex-wrap:wrap;max-width:100%">Próximas ações
+          <select id="sel-sim" style="max-width:100%" onchange="SIM = this.value">
+            <option value="">sem falha</option>
+            <option value="servidor">falha do servidor</option>
+            <option value="tipo">arquivo de tipo não permitido</option>
+            <option value="crm">CRM indisponível</option>
+          </select>
+        </label>
+      </li>
+      <li>As datas dos eventos fictícios são calculadas a partir do dia em que o protótipo é aberto, para sempre haver eventos futuros, de hoje e finalizados. A lista filtra de verdade: “diretoria” em Nome; “sede” em Local com “Reunião” em Tipo de Evento; uma Data Inicial; um texto que nenhum evento tem mostra “Nenhum evento encontrado” e o botão “Criar Primeiro Evento”. Os cabeçalhos ordenam (um segundo clique inverte) e o seletor do paginador troca as linhas por página.</li>
+      <li>⚠️ Ao abrir a tela — inclusive ao voltar do formulário — e depois de tornar um evento principal, a lista vem com 5 linhas, embora o paginador conte 10 por página: a consulta pede só 5 eventos ao servidor (suspeita de defeito, EVT-CAD-01 e 06). Pesquisar, Limpar, ordenar ou paginar trazem as 10.</li>
+      <li>⚠️ Data Final não limita o resultado: no servidor ela repete a comparação da Data Inicial e, informada sozinha, é desconsiderada. Período invertido não é criticado (EVT-CAD-01, regra 7).</li>
+      <li>⚠️ O texto relativo é contado em blocos de 24 horas a partir do momento da consulta: a “Reunião Plenária da Indústria Têxtil”, marcada para hoje às 18:00, aparece como “Amanhã” enquanto não começa; “Hoje” só aparece para o evento que começou há menos de 24 horas. Finalizado é o evento de data anterior à meia-noite de hoje: o selo “Finalizado” e a linha esmaecida.</li>
+      <li>⚠️ A imagem de GPE004 mostra, no paginador, o relatório “[1 a 4 de 4]” e um seletor de linhas por página; a tela atual não tem nenhum dos dois (EVT-CAD-01), e o protótipo segue a tela atual.</li>
+      <li>Excluir: a confirmação é a caixa nativa do navegador (<code>confirm()</code>), aqui imitada; confirmada, aparece “Sucesso” / “Evento removido com sucesso” e a lista recarrega da primeira página. Qualquer evento é excluído, com ou sem participantes, sem verificação de vínculo. ⚠️ O evento principal também: o sistema fica sem evento principal até que outro seja definido. Não há como restaurar; ⚠️ o evento excluído continua acessível a quem tem o endereço dele (não representado). Com “falha do servidor”: “Erro ao remover evento” / “Contate o administrador do sistema.”.</li>
+      <li>Tornar evento principal (bandeira laranja): troca na hora, ⚠️ sem confirmação, inclusive para evento finalizado; mostra “Evento atualizado” / “O evento principal foi atualizado com sucesso.” e a bandeira verde “Este evento é o principal”, sem ação, passa para a linha escolhida — só um evento fica com “Sim”. ⚠️ Com “falha do servidor”, nada acontece e nenhum aviso aparece.</li>
+      <li>Formulário: “Novo Evento” na inclusão e “Editar Evento” na edição. Salvar fica desabilitado enquanto faltar campo obrigatório ou Nome/Local tiverem menos de 3 caracteres; as mensagens aparecem depois que o campo é deixado. Nome para em 100 caracteres e Local em 200 (⚠️ GPE004 informa 255). Participantes é ajustado à faixa de 1 a 10.000 ao sair do campo (🔍 ajuste não observado em execução). Não há verificação de nome repetido e a data pode ser passada. Sucesso: “Evento criado com sucesso” ou “Evento atualizado com sucesso”, fixa até ser fechada, e volta à lista; com “falha do servidor”: “Erro” / “Erro ao salvar evento. Verifique os dados e tente novamente.”, e a tela fica com os dados.</li>
+      <li>⚠️ Trocar o Tipo de Mesa na edição não refaz os assentos gerados na inclusão, e a tela não avisa (EVT-CAD-03, regra 5). ⚠️ Salvar regrava o evento como não excluído (evento excluído editado pelo endereço volta à lista — não representado).</li>
+      <li>⚠️ Visualizar abre a mesma tela com o título “Editar Evento” (a imagem de GPE004 mostra “Dados do Evento”); os asteriscos e o texto “Campos com * são obrigatórios” continuam aparecendo. Sem imagem, “Nenhuma imagem inserida.”. A posição de “Código da Campanha”, ao lado de Participantes, segue a ordem do código: as imagens de GPE004 são anteriores ao campo.</li>
+      <li>Cargas (ícone de pasta): as planilhas são simuladas — “Adicionar” anexa um arquivo fictício (“arquivo de tipo não permitido” mostra a recusa). Enviar fica desabilitado sem planilha; ao enviar, a janela fecha, aparece “Cargas em processamento.” e, depois, “Carga concluída”, ⚠️ sem resumo do que foi carregado. A lista de eventos não é recarregada. ⚠️ Com as duas planilhas anexadas, só a de convidados é processada e nenhuma mensagem sobre a de confirmados aparece (🔍 PDTIC25148-33, em aberto). ⚠️ A janela não diz quais colunas a planilha deve ter, nem em que ordem.</li>
+      <li>Inscritos do CRM: “Reunião do Conselho de Política Industrial” e “Comitê de Meio Ambiente e Sustentabilidade” têm Código da Campanha e importam (o resumo junta só as contagens maiores que zero; repita a importação para ver o resumo mudar). “Comitê de Inovação” tem código, mas a campanha não tem inscritos aprovados e confirmados — ⚠️ o caso aparece como erro. Os demais não têm código: aviso e botão desabilitado. Durante a importação a janela não fecha e Enviar fica desabilitado. A aparência da seção é inferida: a imagem de GPE004 é anterior a ela.</li>
+      <li>⚠️ Perfis: o menu só traz Eventos › Cadastro para o Administrador (matriz do N2). Na tela, só o botão “Adicionar” confere o perfil — e o libera também para “Gestor”; os ícones de cada linha e o botão “Criar Primeiro Evento” aparecem para qualquer perfil. Troque o perfil simulado para ver o que a tela mostra a quem digita o endereço dela.</li>
+      <li>Atalhos: “Participantes” abre o fluxo de Participantes em nova aba, como o sistema; “Configuração de Legendas” leva à configuração de legendas do evento (Feature Set Legendas).</li>
+      <li>Não representado: download da imagem e das planilhas; arrastar e soltar arquivos; janela de cargas arrastável; erros de tamanho (acima de 200 MB) e de leitura de arquivo; falha ao carregar os tipos de evento e de mesa; evento não encontrado pelo endereço; edição simultânea; a recusa do servidor a perfis sem acesso (depende do serviço corporativo).</li>
+    </ul>
+  </div>
+
+  <script>
+    /* ---------- Datas de referência (momento da consulta) ---------- */
+    var AGORA = new Date();
+    var HOJE0 = new Date(AGORA.getFullYear(), AGORA.getMonth(), AGORA.getDate());
+    function emDias(dias, h, m) { return new Date(HOJE0.getFullYear(), HOJE0.getMonth(), HOJE0.getDate() + dias, h, m); }
+    var MESES = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+    var MESES_CURTOS = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+
+    /* ---------- Listas fixas e dados fictícios (id = ordem de inclusão; a lista vem do id maior para o menor) ---------- */
+    var TIPOS_EVENTO = ['Reunião', 'Comitê', 'Seminário'];
+    var TIPOS_MESA = ['Retangular', 'Retangular Invertido'];
+    var EVENTOS = [
+      { id: 1, nome: 'Comitê de Comércio Exterior', data: emDias(-40, 14, 30), local: 'Sede da CNI — Brasília', tipo: 'Comitê', mesa: 'Retangular Invertido', participantes: 60, principal: false, codigo: '', arquivo: '' },
+      { id: 2, nome: 'Fórum Nacional da Indústria', data: emDias(45, 9, 0), local: 'Centro de Convenções — São Paulo', tipo: 'Seminário', mesa: 'Retangular', participantes: 250, principal: false, codigo: '', arquivo: 'forum-nacional-industria.jpg' },
+      { id: 3, nome: 'Comitê de Meio Ambiente e Sustentabilidade', data: emDias(3, 9, 30), local: 'Sede da CNI — Brasília', tipo: 'Comitê', mesa: 'Retangular', participantes: 45, principal: false, codigo: 'CMP-05230-K9T1', arquivo: '', crm: [[1, 2, 0], [0, 3, 0]] },
+      { id: 4, nome: 'Seminário Indústria 4.0 e Produtividade', data: emDias(-16, 9, 0), local: 'Centro de Convenções Ulysses Guimarães — Brasília', tipo: 'Seminário', mesa: 'Retangular', participantes: 300, principal: false, codigo: '', arquivo: 'seminario-industria-40.jpg' },
+      { id: 5, nome: 'Reunião Plenária da Indústria Têxtil', data: emDias(0, 18, 0), local: 'Sede da CNI — Brasília', tipo: 'Reunião', mesa: 'Retangular Invertido', participantes: 90, principal: false, codigo: '', arquivo: '' },
+      { id: 6, nome: 'Reunião de Diretoria', data: emDias(-1, 10, 0), local: 'Sede da CNI — Brasília', tipo: 'Reunião', mesa: 'Retangular', participantes: 120, principal: false, codigo: '', arquivo: '' },
+      { id: 7, nome: 'Comitê de Inovação', data: emDias(10, 14, 0), local: 'Auditório da CNI — Brasília', tipo: 'Comitê', mesa: 'Retangular Invertido', participantes: 80, principal: false, codigo: 'CMP-04112-B7N3', arquivo: '', crm: 'vazio' },
+      { id: 8, nome: 'Reunião do Conselho de Política Industrial', data: emDias(16, 9, 0), local: 'Edifício Roberto Simonsen — Brasília', tipo: 'Reunião', mesa: 'Retangular', participantes: 80, principal: true, codigo: 'CMP-03460-L2K8', arquivo: 'conselho-politica-industrial.png', crm: [[3, 0, 1], [0, 3, 1]] }
+    ];
+    var SIM = '';            // falha simulada nas próximas ações (painel de notas)
+    var PERFIL = 'Administrador';
+
+    var ICO = {
+      ok: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>',
+      info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>',
+      aviso: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>',
+      erro: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>',
+      legendas: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6l1.5 1.5L7 5"/><path d="M3 12l1.5 1.5L7 11"/><path d="M3 18l1.5 1.5L7 17"/><path d="M11 6h10M11 12h10M11 18h10"/></svg>',
+      bandeira: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M5 21V4"/><path d="M5 4h12l-2.5 4.5L17 13H5"/></svg>',
+      bandeiraCheia: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M5 21V4"/><path d="M5 4h12l-2.5 4.5L17 13H5z" fill="currentColor"/></svg>',
+      pasta: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>',
+      pessoas: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><circle cx="17" cy="9" r="2.5"/><path d="M16.5 14.2a5 5 0 0 1 5 5"/></svg>',
+      olho: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>',
+      lapis: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>',
+      lixeira: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>',
+      etiqueta: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.2"/></svg>',
+      mesa: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="3" width="6" height="5" rx="1"/><rect x="3" y="16" width="6" height="5" rx="1"/><rect x="15" y="16" width="6" height="5" rx="1"/><path d="M12 8v4M6 16v-4h12v4"/></svg>',
+      usuarios: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.5a6.5 6.5 0 0 1 3.5 5.5"/></svg>',
+      calendario: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/><path d="M8 14h2M14 14h2M8 17h2"/></svg>',
+      mais: '<path d="M12 5v14M5 12h14"/>',
+      check: '<path d="M20 6 9 17l-5-5"/>'
+    };
+
+    /* ---------- Shell ---------- */
+    function showScreen(id) {
+      document.querySelectorAll('.dsc-screen').forEach(function (s) { s.classList.remove('is-active'); });
+      document.getElementById(id).classList.add('is-active');
+      fecharMenus();
+      window.scrollTo(0, 0);
+    }
+    function toggleModal(id, show) {
+      if (!show && id === 'modal-cargas' && CARGA.importando) return; // durante a importação do CRM a janela não fecha
+      document.getElementById(id).style.display = show ? 'flex' : 'none';
+    }
+    function toggleSubmenu(btn, ev) {
+      ev.stopPropagation();
+      var item = btn.parentElement, aberto = item.classList.contains('is-open');
+      fecharMenus(); if (!aberto) item.classList.add('is-open');
+    }
+    function toggleUserMenu(ev) {
+      ev.stopPropagation();
+      var m = document.getElementById('user-menu'), aberto = m.classList.contains('is-open');
+      fecharMenus(); if (!aberto) m.classList.add('is-open');
+    }
+    function fecharMenus() { document.querySelectorAll('.is-open').forEach(function (e) { e.classList.remove('is-open'); }); fecharCalendario(); }
+    document.addEventListener('click', fecharMenus);
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape') return;
+      document.querySelectorAll('.dsc-modal-mask').forEach(function (m) { toggleModal(m.id, false); });
+      fecharMenus();
+    });
+
+    /* p-toast: resumo + detalhe; some em ~4 s, a menos que seja fixo (sticky) */
+    function toast(tipo, resumo, detalhe, fixo) {
+      var cls = { sucesso: 'dsc-toast--positive', aviso: 'dsc-toast--warning', erro: 'dsc-toast--danger', info: '' }[tipo];
+      var ico = { sucesso: ICO.ok, aviso: ICO.aviso, erro: ICO.erro, info: ICO.info }[tipo];
+      var t = document.createElement('div');
+      t.className = 'dsc-toast ' + cls; t.setAttribute('role', 'status');
+      t.innerHTML = ico + '<div style="flex:1"><strong>' + resumo + '</strong>' + (detalhe ? '<span>' + detalhe + '</span>' : '') + '</div>' +
+        '<button class="dsc-icon-action" aria-label="Fechar mensagem" title="Fechar" style="width:24px;height:24px">✕</button>';
+      t.querySelector('button').onclick = function () { t.remove(); };
+      document.getElementById('toasts').appendChild(t);
+      if (!fixo) setTimeout(function () { t.remove(); }, 4000);
+    }
+
+    /* ---------- Utilitários de data ---------- */
+    function pad(n) { return (n < 10 ? '0' : '') + n; }
+    function fmtData(d) { return pad(d.getDate()) + '/' + pad(d.getMonth() + 1) + '/' + d.getFullYear(); }
+    function fmtHora(d) { return pad(d.getHours()) + ':' + pad(d.getMinutes()); }
+    function fmtDataHora(d) { return fmtData(d) + ' ' + fmtHora(d); }
+    function porExtenso(d) { return d.getDate() + ' de ' + MESES[d.getMonth()] + ' de ' + d.getFullYear() + ' às ' + fmtHora(d); }
+    function lerData(s) {
+      var m = /^(\d{2})\/(\d{2})\/(\d{4})(?:\s+(\d{2}):(\d{2}))?$/.exec((s || '').trim());
+      if (!m) return null;
+      var d = new Date(+m[3], +m[2] - 1, +m[1], m[4] ? +m[4] : 0, m[5] ? +m[5] : 0);
+      return (d.getMonth() === +m[2] - 1 && d.getDate() === +m[1] && (!m[4] || (+m[4] < 24 && +m[5] < 60))) ? d : null;
+    }
+    /* Texto relativo: blocos de 24 h a partir do momento da consulta (⚠️ não é por dia do calendário) */
+    function relativo(d) {
+      var n = Math.ceil((d.getTime() - Date.now()) / 86400000);
+      if (n === 0) return 'Hoje';
+      if (n === 1) return 'Amanhã';
+      if (n === -1) return 'Ontem';
+      return n > 1 ? 'Em ' + n + ' dias' : 'Há ' + (-n) + ' dias';
+    }
+    function finalizado(d) { return d < HOJE0; }
+    function val(id) { return document.getElementById(id).value.trim(); }
+    function setv(id, v) { document.getElementById(id).value = (v === undefined || v === null) ? '' : v; }
+    function porId(id) { return EVENTOS.filter(function (e) { return e.id === id; })[0]; }
+    function slug(t) { return t.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }
+
+    /* ---------- Pesquisar Eventos (EVT-CAD-01) ---------- */
+    var LISTA = { filtros: {}, chave: null, dir: 1, pagina: 0, linhas: 10, limite: 5 };
+    function contem(valor, trecho) { return !trecho || String(valor || '').toLowerCase().indexOf(trecho.toLowerCase()) >= 0; }
+    function resultado() {
+      var f = LISTA.filtros, k = LISTA.chave, dir = LISTA.dir;
+      var r = EVENTOS.filter(function (e) {
+        return !e.excluido && contem(e.nome, f.nome) && contem(e.local, f.local) &&
+          (!f.tipo || e.tipo === f.tipo) && (!f.mesa || e.mesa === f.mesa) && (!f.ini || e.data >= f.ini);
+        // ⚠️ Data Final não entra: o servidor repete a comparação da Data Inicial
+      });
+      r.sort(function (a, b) {
+        if (!k) return b.id - a.id; // padrão: do incluído por último para o mais antigo
+        if (k === 'data') return (a.data - b.data) * dir;
+        if (k === 'participantes') return (a.participantes - b.participantes) * dir;
+        if (k === 'principal') return ((a.principal ? 1 : 0) - (b.principal ? 1 : 0)) * dir;
+        return String(a[k]).localeCompare(String(b[k]), 'pt-BR') * dir;
+      });
+      return r;
+    }
+    function acao(cor, dica, ico, fn, nome) {
+      return '<button class="dsc-icon-action gpe-icon-round ' + cor + '" aria-label="' + dica + ' — ' + nome + '" title="' + dica + '" onclick="' + fn + '">' + ico + '</button>';
+    }
+    function linha(e) {
+      var fin = finalizado(e.data), i = e.id;
+      return '<tr' + (fin ? ' class="gpe-row-finalizado"' : '') + '>' +
+        '<td class="gpe-left"><span class="gpe-name-cell"><span>' + e.nome + '</span>' + (fin ? '<span class="dsc-tag gpe-tag-finalizado">Finalizado</span>' : '') + '</span></td>' +
+        '<td><span style="white-space:nowrap">' + fmtDataHora(e.data) + '</span><span class="gpe-subtext">' + relativo(e.data) + '</span></td>' +
+        '<td>' + e.local + '</td>' +
+        '<td><span class="dsc-tag dsc-tag--highlight gpe-tag-tipo">' + ICO.etiqueta + e.tipo + '</span></td>' +
+        '<td><span class="dsc-tag dsc-tag--success gpe-tag-tipo">' + ICO.mesa + e.mesa + '</span></td>' +
+        '<td><span class="gpe-qtd">' + ICO.usuarios + e.participantes.toLocaleString('pt-BR') + '</span></td>' +
+        '<td><strong>' + (e.principal ? 'Sim' : 'Não') + '</strong></td>' +
+        '<td class="dsc-col-actions"><span class="gpe-row-actions">' +
+          acao('gpe-c-blue', 'Configuração de Legendas', ICO.legendas, 'irLegendas(' + i + ')', e.nome) +
+          (e.principal
+            ? '<span class="dsc-icon-action gpe-icon-round gpe-c-green" role="img" style="cursor:default" aria-label="Este evento é o principal — ' + e.nome + '" title="Este evento é o principal">' + ICO.bandeiraCheia + '</span>'
+            : acao('gpe-c-orange', 'Tornar evento principal', ICO.bandeira, 'tornarPrincipal(' + i + ')', e.nome)) +
+          acao('gpe-c-yellow', 'Cargas de Convidados e Confirmados', ICO.pasta, 'abrirCargas(' + i + ')', e.nome) +
+          acao('gpe-c-blue', 'Participantes', ICO.pessoas, 'abrirParticipantes(' + i + ')', e.nome) +
+          acao('gpe-c-dark', 'Visualizar evento', ICO.olho, 'abrirVisualizacao(' + i + ')', e.nome) +
+          acao('gpe-c-blue', 'Editar evento', ICO.lapis, 'abrirEdicao(' + i + ')', e.nome) +
+          acao('gpe-c-red', 'Excluir evento', ICO.lixeira, 'pedirRemocao(' + i + ')', e.nome) +
+        '</span></td></tr>';
+    }
+    var VAZIO = '<div class="dsc-state"><span class="dsc-state-icon">' + ICO.calendario + '</span>' +
+      '<span class="dsc-state-title">Nenhum evento encontrado</span>' +
+      '<button type="button" class="dsc-btn" onclick="abrirInclusao()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>Criar Primeiro Evento</button></div>';
+    function renderLista() {
+      var todos = resultado(), total = todos.length;
+      var paginas = Math.max(1, Math.ceil(total / LISTA.linhas));
+      if (LISTA.pagina > paginas - 1) LISTA.pagina = paginas - 1;
+      var ini = LISTA.pagina * LISTA.linhas;
+      var pagina = todos.slice(ini, ini + (LISTA.limite || LISTA.linhas)); // ⚠️ limite = 5 na carga inicial e após tornar principal
+      document.getElementById('corpo-eventos').innerHTML = pagina.length ? pagina.map(linha).join('') : '<tr><td colspan="8">' + VAZIO + '</td></tr>';
+      var p = LISTA.pagina, html = // sem relatório "[1 a N de T]": a tela atual não o tem (EVT-CAD-01)
+        '<button aria-label="Primeira página" ' + (p === 0 ? 'disabled' : 'onclick="irPagina(0)"') + '>«</button>' +
+        '<button aria-label="Página anterior" ' + (p === 0 ? 'disabled' : 'onclick="irPagina(' + (p - 1) + ')"') + '>‹</button>';
+      for (var n = 0; n < paginas; n++) html += '<button class="' + (n === p ? 'is-active' : '') + '" onclick="irPagina(' + n + ')">' + (n + 1) + '</button>';
+      html += '<button aria-label="Próxima página" ' + (p >= paginas - 1 ? 'disabled' : 'onclick="irPagina(' + (p + 1) + ')"') + '>›</button>' +
+        '<button aria-label="Última página" ' + (p >= paginas - 1 ? 'disabled' : 'onclick="irPagina(' + (paginas - 1) + ')"') + '>»</button>'; // sem seletor de linhas por página (EVT-CAD-01)
+      document.getElementById('paginador').innerHTML = html;
+    }
+    function comCarregamento(fn) {
+      document.getElementById('lista-loading').style.display = 'block';
+      document.getElementById('tabela-eventos').style.opacity = '0.35';
+      setTimeout(function () {
+        document.getElementById('lista-loading').style.display = 'none';
+        document.getElementById('tabela-eventos').style.opacity = '';
+        fn(); renderLista();
+      }, 450);
+    }
+    function lerFiltros() {
+      var ini = lerData(val('f-ini'));
+      return { nome: val('f-nome'), local: val('f-local'), tipo: val('f-tipo'), mesa: val('f-mesa'), ini: ini, fim: lerData(val('f-fim')) };
+    }
+    function pesquisar() { comCarregamento(function () { LISTA.filtros = lerFiltros(); LISTA.pagina = 0; LISTA.limite = null; }); }
+    function limpar() { document.getElementById('form-filtro').reset(); comCarregamento(function () { LISTA.filtros = {}; LISTA.pagina = 0; LISTA.limite = null; }); }
+    function ordenar(chave) { comCarregamento(function () { LISTA.dir = (LISTA.chave === chave) ? -LISTA.dir : 1; LISTA.chave = chave; LISTA.pagina = 0; LISTA.limite = null; }); }
+    function irPagina(n) { comCarregamento(function () { LISTA.pagina = n; LISTA.limite = null; }); }
+    function trocarLinhas(q) { comCarregamento(function () { LISTA.linhas = +q; LISTA.pagina = 0; LISTA.limite = null; }); }
+    /* Abrir a tela pelo menu (ou voltar do formulário): filtros vazios e a carga inicial, que pede só 5 eventos ⚠️ */
+    function abrirLista() {
+      document.getElementById('form-filtro').reset(); atualizarClears();
+      LISTA = { filtros: {}, chave: null, dir: 1, pagina: 0, linhas: LISTA.linhas, limite: 5 };
+      renderLista(); showScreen('screen-eventos');
+      if (location.hash && location.hash !== '#eventos') history.replaceState(null, '', '#eventos');
+    }
+    /* p-select com showClear */
+    function atualizarClears() { document.querySelectorAll('.gpe-select-clear').forEach(function (w) { w.classList.toggle('has-value', !!w.querySelector('select').value); }); }
+    function limparSelect(id) { setv(id, ''); atualizarClears(); }
+
+    /* ---------- Atalhos da linha ---------- */
+    function irLegendas(id) { location.href = '../../eventos/legendas/flow.html#configuracao'; }
+    function abrirParticipantes(id) { window.open('../../eventos/participantes/flow.html', '_blank'); } // nova aba, como o sistema
+
+    /* ---------- Definir Evento Principal (EVT-CAD-06) ---------- */
+    function tornarPrincipal(id) {
+      if (SIM === 'servidor') return; // ⚠️ falha não tratada: a lista fica como estava, sem aviso
+      EVENTOS.forEach(function (e) { e.principal = (e.id === id); });
+      toast('sucesso', 'Evento atualizado', 'O evento principal foi atualizado com sucesso.');
+      comCarregamento(function () { LISTA.chave = null; LISTA.dir = 1; LISTA.limite = 5; }); // recarga na página em que estava, ordem padrão, 5 eventos ⚠️
+    }
+
+    /* ---------- Excluir Evento (EVT-CAD-05) ---------- */
+    var removerId = null;
+    function pedirRemocao(id) { removerId = id; toggleModal('modal-remover', true); }
+    function confirmarRemocao() {
+      toggleModal('modal-remover', false);
+      if (SIM === 'servidor') { toast('erro', 'Erro ao remover evento', 'Contate o administrador do sistema.'); return; }
+      var e = porId(removerId); e.excluido = true; // exclusão lógica: o evento fica guardado (⚠️ mesmo o principal)
+      toast('sucesso', 'Sucesso', 'Evento removido com sucesso');
+      comCarregamento(function () { LISTA.chave = null; LISTA.dir = 1; LISTA.pagina = 0; LISTA.limite = null; });
+    }
+
+    /* ---------- Cadastrar (EVT-CAD-02), Editar (EVT-CAD-03) e Visualizar Evento (EVT-CAD-04) ---------- */
+    var CAMPOS = ['ev-nome', 'ev-data', 'ev-local', 'ev-tipo', 'ev-mesa', 'ev-part', 'ev-codigo'];
+    var OBRIG = 'Este campo é obrigatório';
+    var REGRAS = {
+      'ev-nome': function (v) { return !v ? OBRIG : (v.length < 3 ? 'Mínimo de 3 caracteres' : ''); },
+      'ev-data': function (v) { return lerData(v) ? '' : OBRIG; },
+      'ev-local': function (v) { return !v ? OBRIG : (v.length < 3 ? 'Mínimo de 3 caracteres' : ''); },
+      'ev-tipo': function (v) { return v ? '' : OBRIG; },
+      'ev-mesa': function (v) { return v ? '' : OBRIG; },
+      'ev-part': function (v) { return v ? '' : OBRIG; }
+    };
+    var EV_ATUAL = null, EV_IMAGEM = '';
+    function prepararForm(e, modo) {
+      EV_ATUAL = e; EV_IMAGEM = e ? e.arquivo : '';
+      CAMPOS.forEach(function (c) { setv(c, ''); document.getElementById(c).classList.remove('was-touched'); });
+      document.querySelectorAll('#ev-edicao .dsc-field.is-invalid').forEach(function (f) { f.classList.remove('is-invalid'); });
+      document.querySelectorAll('#ev-edicao .dsc-field-error').forEach(function (x) { x.remove(); });
+      var ver = modo === 'ver';
+      document.getElementById('titulo-evento').textContent = modo === 'novo' ? 'Novo Evento' : 'Editar Evento'; // ⚠️ também na visualização
+      document.getElementById('bc-evento').textContent = { novo: 'Novo Evento', editar: 'Editar Evento', ver: 'Visualizar evento' }[modo];
+      document.getElementById('ev-edicao').style.display = ver ? 'none' : '';
+      document.getElementById('ev-leitura').style.display = ver ? '' : 'none';
+      document.getElementById('btn-salvar').style.display = ver ? 'none' : '';
+      document.getElementById('btn-cancelar').textContent = ver ? 'Voltar' : 'Cancelar';
+      document.getElementById('ico-salvar').innerHTML = modo === 'editar' ? ICO.check : ICO.mais;
+      if (e) {
+        setv('ev-nome', e.nome); setv('ev-data', fmtDataHora(e.data)); setv('ev-local', e.local);
+        setv('ev-tipo', e.tipo); setv('ev-mesa', e.mesa); setv('ev-part', e.participantes); setv('ev-codigo', e.codigo);
+        document.getElementById('v-nome').textContent = e.nome;
+        document.getElementById('v-data').textContent = fmtDataHora(e.data);
+        document.getElementById('v-local').textContent = e.local;
+        document.getElementById('v-tipo').textContent = e.tipo;
+        document.getElementById('v-mesa').textContent = e.mesa;
+        document.getElementById('v-part').textContent = e.participantes;
+        document.getElementById('v-codigo').textContent = e.codigo;
+        document.getElementById('v-arquivo').innerHTML = e.arquivo
+          ? '<button type="button" class="dsc-btn dsc-btn--sm dsc-btn--outline" title="Download">' + e.arquivo + '</button>'
+          : 'Nenhuma imagem inserida.';
+      }
+      mostrarImagem(EV_IMAGEM);
+      atualizarContadores(); validarEvento(false);
+    }
+    function abrirInclusao() { prepararForm(null, 'novo'); showScreen('screen-evento'); }
+    function abrirEdicao(id) { prepararForm(porId(id), 'editar'); showScreen('screen-evento'); }
+    function abrirVisualizacao(id) { prepararForm(porId(id), 'ver'); showScreen('screen-evento'); }
+    function atualizarContadores() {
+      document.querySelectorAll('#ev-edicao .gpe-counter').forEach(function (c) {
+        var inp = document.getElementById(c.dataset.for), lim = parseInt(inp.dataset.limite, 10), n = inp.value.length;
+        c.textContent = n + '/' + lim;
+        c.classList.toggle('is-warn', n > lim * 0.8 && n <= lim * 0.95);
+        c.classList.toggle('is-limit', n > lim * 0.95);
+      });
+    }
+    function erroCampo(inputId, msg) {
+      var fld = document.getElementById(inputId).closest('.dsc-field');
+      var x = fld.querySelector('.dsc-field-error'); if (x) x.remove();
+      fld.classList.toggle('is-invalid', !!msg);
+      if (msg) { x = document.createElement('span'); x.className = 'dsc-field-error'; x.textContent = msg; fld.insertBefore(x, fld.querySelector('.gpe-counter')); }
+    }
+    function validarEvento(mostrar, apenas) {
+      var ok = true;
+      Object.keys(REGRAS).forEach(function (id) {
+        var msg = REGRAS[id](val(id)); if (msg) ok = false;
+        var tocado = document.getElementById(id).classList.contains('was-touched');
+        if ((mostrar || tocado) && (!apenas || apenas === id)) erroCampo(id, msg);
+      });
+      document.getElementById('btn-salvar').disabled = !ok;
+      return ok;
+    }
+    CAMPOS.forEach(function (id) {
+      var el = document.getElementById(id);
+      el.addEventListener('input', function () {
+        if (id === 'ev-part') el.value = el.value.replace(/\D/g, '');
+        atualizarContadores(); validarEvento(false, id);
+      });
+      el.addEventListener('change', function () { validarEvento(false, id); });
+      el.addEventListener('blur', function () {
+        if (id === 'ev-part' && el.value) { var n = parseInt(el.value, 10); el.value = Math.min(10000, Math.max(1, n)); } // 🔍 ajuste à faixa de 1 a 10.000
+        el.classList.add('was-touched'); validarEvento(false, id);
+      });
+    });
+    function salvarEvento() {
+      if (!validarEvento(true)) { toast('erro', 'Formulário inválido', 'Preencha todos os campos obrigatórios corretamente'); return; }
+      var b = document.getElementById('btn-salvar'); b.classList.add('is-loading');
+      setTimeout(function () {
+        b.classList.remove('is-loading');
+        if (SIM === 'servidor') { toast('erro', 'Erro', 'Erro ao salvar evento. Verifique os dados e tente novamente.'); return; } // fica na tela com os dados
+        var dados = { nome: val('ev-nome'), data: lerData(val('ev-data')), local: val('ev-local'), tipo: val('ev-tipo'), mesa: val('ev-mesa'),
+                      participantes: parseInt(val('ev-part'), 10), codigo: val('ev-codigo'), arquivo: EV_IMAGEM };
+        if (EV_ATUAL) {
+          Object.assign(EV_ATUAL, dados); EV_ATUAL.excluido = false; // ⚠️ todo salvamento regrava como não excluído; o tipo de mesa novo não refaz os assentos
+          toast('sucesso', 'Sucesso', 'Evento atualizado com sucesso', true);
+        } else {
+          dados.id = Math.max.apply(null, EVENTOS.map(function (e) { return e.id; })) + 1;
+          dados.principal = false; dados.excluido = false; // nasce sem ser o principal; os assentos são gerados conforme o tipo de mesa
+          EVENTOS.push(dados);
+          toast('sucesso', 'Sucesso', 'Evento criado com sucesso', true);
+        }
+        abrirLista();
+      }, 700);
+    }
+    function mostrarImagem(nome) {
+      document.getElementById('img-vazia').style.display = nome ? 'none' : '';
+      document.getElementById('img-arquivo').style.display = nome ? 'flex' : 'none';
+      if (nome) document.getElementById('img-nome').textContent = nome;
+    }
+    function escolherImagem() {
+      if (SIM === 'tipo') { toast('erro', 'programacao-do-evento.pdf: Tipo de arquivo não permitido', 'Tipos permitidos: image/*'); return; }
+      EV_IMAGEM = (val('ev-nome') ? slug(val('ev-nome')) : 'imagem-do-evento') + '.png'; // o evento guarda uma só imagem
+      mostrarImagem(EV_IMAGEM);
+      toast('info', 'Anexo adicionado', '');
+    }
+    function removerImagem() { EV_IMAGEM = ''; mostrarImagem(''); toast('info', 'Anexo removido', ''); }
+
+    /* ---------- Calendário (p-datePicker): filtro sem hora, formulário com hora em 24 h ---------- */
+    var CAL = { alvo: null, hora: false, ano: 0, mes: 0 };
+    function abrirCalendario(id, comHora, ev) {
+      ev.stopPropagation();
+      var pop = document.getElementById('calendario');
+      if (CAL.alvo === id && pop.style.display === 'block') { fecharCalendario(); return; }
+      fecharMenus();
+      CAL.alvo = id; CAL.hora = comHora;
+      var d = lerData(val(id)) || new Date();
+      CAL.ano = d.getFullYear(); CAL.mes = d.getMonth();
+      document.getElementById(id).parentElement.appendChild(pop);
+      pop.style.display = 'block';
+      document.getElementById('cal-tempo').style.display = comHora ? 'flex' : 'none';
+      setv('cal-h', pad(d.getHours())); setv('cal-m', pad(d.getMinutes()));
+      desenharCalendario();
+    }
+    function fecharCalendario() { var pop = document.getElementById('calendario'); if (pop) pop.style.display = 'none'; CAL.alvo = null; }
+    function navegarMes(d) { CAL.mes += d; if (CAL.mes < 0) { CAL.mes = 11; CAL.ano--; } if (CAL.mes > 11) { CAL.mes = 0; CAL.ano++; } CAL.ano = Math.min(2050, Math.max(1950, CAL.ano)); desenharCalendario(); }
+    function desenharCalendario() {
+      setv('cal-mes', CAL.mes); setv('cal-ano', CAL.ano);
+      var sel = lerData(val(CAL.alvo)), primeiro = new Date(CAL.ano, CAL.mes, 1).getDay(), dias = new Date(CAL.ano, CAL.mes + 1, 0).getDate();
+      var html = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'].map(function (s) { return '<span>' + s + '</span>'; }).join('');
+      for (var v = 0; v < primeiro; v++) html += '<i></i>';
+      for (var dia = 1; dia <= dias; dia++) {
+        var esteDia = new Date(CAL.ano, CAL.mes, dia), cls = [];
+        if (esteDia.getTime() === HOJE0.getTime()) cls.push('is-today');
+        if (sel && sel.getFullYear() === CAL.ano && sel.getMonth() === CAL.mes && sel.getDate() === dia) cls.push('is-selected');
+        html += '<button type="button" class="' + cls.join(' ') + '" onclick="escolherDia(' + dia + ')">' + dia + '</button>';
+      }
+      document.getElementById('cal-grid').innerHTML = html;
+    }
+    function horaMinuto() {
+      var h = Math.min(23, Math.max(0, parseInt(val('cal-h'), 10) || 0)), m = Math.min(59, Math.max(0, parseInt(val('cal-m'), 10) || 0));
+      return pad(h) + ':' + pad(m);
+    }
+    function aplicarData(txt, fechar) {
+      var el = document.getElementById(CAL.alvo);
+      el.value = txt; el.classList.add('was-touched');
+      el.dispatchEvent(new Event('input'));
+      if (fechar) fecharCalendario(); else desenharCalendario();
+    }
+    function escolherDia(dia) { aplicarData(fmtData(new Date(CAL.ano, CAL.mes, dia)) + (CAL.hora ? ' ' + horaMinuto() : ''), !CAL.hora); }
+    function ajustarHora() { var d = lerData(val(CAL.alvo)); if (d) aplicarData(fmtData(d) + ' ' + horaMinuto(), false); }
+    function calHoje() { var n = new Date(); aplicarData(CAL.hora ? fmtDataHora(n) : fmtData(n), true); }
+    function calLimpar() { aplicarData('', true); }
+
+    /* ---------- Cargas de Convidados e Confirmados (EVT-CAD-07 · 08) e Inscritos do CRM (EVT-CAD-09) ---------- */
+    var CARGA = { evento: null, conv: '', conf: '', importando: false, vezes: {} };
+    function abrirCargas(id) {
+      var e = porId(id);
+      CARGA.evento = e; CARGA.conv = ''; CARGA.conf = '';
+      document.getElementById('t-cargas').textContent = e.nome;
+      document.getElementById('cargas-sub').textContent = e.local + ' - ' + porExtenso(e.data);
+      document.getElementById('crm-com-codigo').style.display = e.codigo ? '' : 'none';
+      document.getElementById('crm-sem-codigo').style.display = e.codigo ? 'none' : 'flex';
+      document.getElementById('crm-codigo').textContent = e.codigo;
+      document.getElementById('btn-crm').disabled = !e.codigo;
+      mostrarPlanilha('conv'); mostrarPlanilha('conf'); atualizarEnviar();
+      toggleModal('modal-cargas', true);
+    }
+    var NOMES = { conv: 'convidados', conf: 'confirmados' };
+    function mostrarPlanilha(t) {
+      var nome = CARGA[t];
+      document.getElementById(t + '-vazia').style.display = nome ? 'none' : '';
+      document.getElementById(t + '-arquivo').style.display = nome ? 'flex' : 'none';
+      if (nome) document.getElementById(t + '-nome').textContent = nome;
+    }
+    function atualizarEnviar() { document.getElementById('btn-enviar').disabled = (!CARGA.conv && !CARGA.conf) || CARGA.importando; }
+    function escolherPlanilha(t) {
+      if (SIM === 'tipo') { toast('erro', 'lista-de-' + NOMES[t] + '.csv: Tipo de arquivo não permitido', 'Tipos permitidos: .xlsx,.xls'); return; }
+      CARGA[t] = NOMES[t] + '-' + slug(CARGA.evento.nome) + '.xlsx';
+      mostrarPlanilha(t); atualizarEnviar();
+      toast('info', 'Planilha adicionada', 'Planilha de ' + NOMES[t] + ' adicionada');
+    }
+    function removerPlanilha(t) {
+      CARGA[t] = ''; mostrarPlanilha(t); atualizarEnviar();
+      toast('info', 'Planilha removida', 'Planilha de ' + NOMES[t] + ' removida');
+    }
+    function enviarCargas() {
+      var conv = CARGA.conv, conf = CARGA.conf, falha = SIM === 'servidor';
+      CARGA.conv = ''; CARGA.conf = ''; // a janela fecha e esvazia os anexos
+      toggleModal('modal-cargas', false);
+      toast('info', 'Cargas em processamento.', 'Por favor aguarde, as cargas estão em processamento.');
+      setTimeout(function () {
+        // ⚠️ com as duas planilhas, só a de convidados é processada (PDTIC25148-33)
+        var qual = conv ? 'Convidados' : 'Confirmados';
+        if (falha) toast('erro', 'Erro ao processar carga.', 'Erro ao processar a carga de ' + qual + '. Verifique o arquivo e tente novamente.');
+        else toast('info', 'Carga concluída', 'Lista de ' + qual.toLowerCase() + ' foi atualizada.'); // ⚠️ sem resumo; a lista de eventos não é recarregada
+      }, 1800);
+    }
+    function montarResumo(r) {
+      var partes = [];
+      if (r[0] > 0) partes.push(r[0] + ' inscrito(s) importado(s)');
+      if (r[1] > 0) partes.push(r[1] + ' já vinculado(s) atualizado(s)');
+      if (r[2] > 0) partes.push(r[2] + ' sem Cód. Contato (ignorado(s))');
+      return partes.length ? partes.join(', ') + '.' : 'Nenhum registro foi alterado.';
+    }
+    function importarCrm() {
+      var e = CARGA.evento, b = document.getElementById('btn-crm'), fechar = document.getElementById('cargas-fechar');
+      CARGA.importando = true; b.classList.add('is-loading'); b.disabled = true; fechar.disabled = true; fechar.style.opacity = '0.4'; atualizarEnviar();
+      setTimeout(function () {
+        CARGA.importando = false; b.classList.remove('is-loading'); b.disabled = !e.codigo; fechar.disabled = false; fechar.style.opacity = ''; atualizarEnviar();
+        var titulo = 'Erro ao importar inscritos do CRM';
+        if (SIM === 'crm') { toast('erro', titulo, 'Não foi possível consultar o CRM. Tente novamente mais tarde.'); return; }
+        if (SIM === 'servidor') { toast('erro', titulo, 'Erro ao importar inscritos do CRM. Tente novamente mais tarde.'); return; }
+        if (e.crm === 'vazio') { toast('erro', titulo, 'Não foram encontrados inscritos aprovados e confirmados no CRM para a campanha ' + e.codigo + '.'); return; }
+        var seq = e.crm || [[2, 0, 0], [0, 2, 0]], n = CARGA.vezes[e.id] || 0;
+        CARGA.vezes[e.id] = n + 1;
+        toast('sucesso', 'Importação do CRM concluída', montarResumo(seq[Math.min(n, seq.length - 1)])); // a janela permanece aberta
+      }, 1500);
+    }
+
+    /* ---------- Perfil simulado (matriz do N2: só o Administrador acessa; a tela só confere o perfil no Adicionar) ---------- */
+    function trocarPerfil(p) {
+      PERFIL = p;
+      document.getElementById('hdr-perfil').textContent = p;
+      document.getElementById('ud-perfil').textContent = p;
+      document.getElementById('btn-adicionar').style.display = (p === 'Administrador' || p === 'Gestor') ? '' : 'none';
+    }
+
+    /* ---------- Inicialização ---------- */
+    TIPOS_EVENTO.forEach(function (t) { ['f-tipo', 'ev-tipo'].forEach(function (s) { var o = document.createElement('option'); o.textContent = t; document.getElementById(s).appendChild(o); }); });
+    TIPOS_MESA.forEach(function (t) { ['f-mesa', 'ev-mesa'].forEach(function (s) { var o = document.createElement('option'); o.textContent = t; document.getElementById(s).appendChild(o); }); });
+    MESES_CURTOS.forEach(function (m, i) { var o = document.createElement('option'); o.value = i; o.textContent = m; document.getElementById('cal-mes').appendChild(o); });
+    for (var a = 1950; a <= 2050; a++) { var o = document.createElement('option'); o.value = a; o.textContent = a; document.getElementById('cal-ano').appendChild(o); }
+    renderLista(); // a pesquisa é disparada sozinha ao abrir a tela (⚠️ pedindo só 5 eventos)
+
+    /* Entrada por endereço: #eventos (lista), #evento-novo (inclusão), #evento (edição do evento de referência),
+       #evento-visualizar (visualização) e #cargas (janela de cargas do evento de referência) */
+    function rotear() {
+      var h = location.hash;
+      if (h === '#evento-novo') abrirInclusao();
+      else if (h === '#evento') abrirEdicao(8);
+      else if (h === '#evento-visualizar') abrirVisualizacao(8);
+      else if (h === '#cargas') { showScreen('screen-eventos'); abrirCargas(8); }
+      else if (h === '#eventos') showScreen('screen-eventos');
+    }
+    window.addEventListener('hashchange', rotear);
+    rotear();
+  </script>
+</body>
+</html>

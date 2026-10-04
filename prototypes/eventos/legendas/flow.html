@@ -1,0 +1,1154 @@
+<!-- docqui: 4.1.0 | prompt: PROMPT_PROTOTYPE_FLOW_FULL | atualizado: 2026-10-04 -->
+<!DOCTYPE html>
+<!--
+  ⚠️ PROTÓTIPO NAVEGÁVEL — treino, não jogo.
+  Fonte de verdade de LAYOUT, COMPORTAMENTO e ESTADOS — NUNCA de implementação.
+  Não copie este HTML/CSS/JS para o código de produção: aqui tudo é autocontido
+  e procedural DE PROPÓSITO (simulação). A implementação real segue outra
+  estratégia: componentes do design system do projeto (mapa de equivalência no
+  README do tema), catálogo global/PATTERNS.md e convenções do global/MASTER.md.
+  Classes .dsc-* são EXCLUSIVAS de protótipo — proibidas em código de produção.
+-->
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Protótipo: Legendas — Eventos</title>
+  <!-- Biblioteca de componentes + camada de tema do GPE (visual recuperado do código-fonte) -->
+  <link rel="stylesheet" href="../../_biblioteca-ds/ds.css">
+  <link rel="stylesheet" href="../../_biblioteca-ds/tema-gpe.css">
+  <style>
+    /* candidato a tema-gpe.css — cabeçalho da Configuração de Legendas e indicador de gravação automática */
+    .gpe-cfg-evento { font-size: 18px; font-weight: 600; color: var(--gpe-navy); margin: 6px 0 2px; }
+    .gpe-save-state { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 400; color: var(--dsc-grayscale-90); }
+    .gpe-save-state.is-ok { color: var(--dsc-success-on); }
+    .gpe-save-state svg { width: 16px; height: 16px; }
+    .gpe-spinner-sm { width: 14px; height: 14px; border-width: 2px; }
+
+    /* candidato a tema-gpe.css — cartão do bloco: título, ferramentas, títulos das condições e estado sem condição */
+    .gpe-block-title { display: inline-flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 600; color: var(--dsc-content-neutral-5); min-width: 0; }
+    .gpe-block-tools { display: inline-flex; align-items: center; gap: 4px; }
+    .gpe-block-tools button:disabled { opacity: 0.35; cursor: not-allowed; background: transparent; }
+    .gpe-cond-head { margin-top: 14px; font-size: 13px; font-weight: 600; color: var(--dsc-grayscale-90); }
+    .gpe-block-empty { margin: 12px 0 0; font-size: 14px; font-style: italic; color: var(--dsc-grayscale-90); }
+
+    /* candidato a tema-gpe.css — formulário do bloco: seletor de cor, código e marca da cor escolhida na paleta */
+    .gpe-colorpicker { width: 42px; height: 42px; padding: 2px; border: 1px solid #ced4da; border-radius: 6px; background: #fff; cursor: pointer; }
+    .gpe-color-code { font-family: Consolas, "Courier New", monospace; font-size: 15px; color: var(--dsc-content-neutral-4); }
+    .gpe-palette button { display: grid; place-items: center; }
+    .gpe-palette button svg { width: 16px; height: 16px; }
+
+    /* candidato a tema-gpe.css — etiqueta pintada com a cor do bloco (cartão do preset) */
+    .gpe-color-tag { display: inline-flex; align-items: center; height: 24px; padding: 0 10px; border-radius: 4px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+
+    /* candidato a tema-gpe.css — simulação: cartões de totais e colunas da tabela expansível */
+    .gpe-stat-value { font-size: 30px; font-weight: 700; line-height: 1.1; color: var(--dsc-content-neutral-5); }
+    .gpe-stat-label { font-size: 14px; color: var(--dsc-grayscale-90); margin-top: 4px; }
+    .gpe-sim-cols { display: grid; grid-template-columns: 20px 44px 52px minmax(0, 1fr) 100px; gap: 10px; align-items: center; flex: 1; }
+    .gpe-sim-head { padding: 0 15px 8px; font-size: 14px; font-weight: 600; color: var(--dsc-content-neutral-4); }
+    .gpe-sim-group summary { list-style: none; }
+    .gpe-sim-group summary::-webkit-details-marker { display: none; }
+    .gpe-sim-caret { width: 16px; height: 16px; color: var(--dsc-grayscale-90); transition: transform 0.15s; }
+    .gpe-sim-group[open] .gpe-sim-caret { transform: rotate(90deg); }
+
+    /* candidato a tema-gpe.css — no celular as condições empilham: os títulos das colunas somem e cada condição ganha um separador */
+    @media (max-width: 900px) {
+      .gpe-cond-head { display: none; }
+      .gpe-cond-row + .gpe-cond-row { border-top: 1px dashed var(--dsc-border-neutral-3); padding-top: 10px; }
+      .gpe-cond-row > span:empty { display: none; }
+    }
+    @media (max-width: 600px) {
+      .gpe-sim-cols { grid-template-columns: 16px 22px 22px minmax(0, 1fr) 78px; gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="dsc-proto-badge">🎨 PROTÓTIPO — não é o sistema real</div>
+
+  <div class="dsc-app">
+    <div class="dsc-shell-main">
+
+      <!-- Topbar: título do sistema à esquerda, usuário à direita (topbar.component) -->
+      <header class="dsc-header">
+        <div class="dsc-header-start">
+          <span class="dsc-header-logo">Gestão de Participantes em Eventos</span>
+        </div>
+        <div class="dsc-header-actions">
+          <div class="gpe-user-menu" id="user-menu">
+            <button class="dsc-header-item" onclick="toggleUserMenu(event)" aria-haspopup="true">
+              <span class="dsc-hi-body"><span class="dsc-hi-title">Ana Costa</span><span class="dsc-hi-sub dsc-text-primary">Administrador</span></span>
+              <span class="dsc-avatar">AC</span>
+            </button>
+            <ul class="gpe-user-dropdown">
+              <li class="gpe-ud-info">Nome: <strong>Ana Costa</strong></li>
+              <li class="gpe-ud-info">Login: <strong>ana.costa</strong></li>
+              <li class="gpe-ud-info">Perfil: <strong>Administrador</strong></li>
+              <li class="gpe-ud-info">Email: <strong>ana.costa@cni.com.br</strong></li>
+              <li class="gpe-ud-sep"></li>
+              <li><a href="../../acesso-usuarios/autenticacao/flow.html#foto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="12" cy="12" r="3"/></svg>Alterar Foto do Perfil</a></li>
+              <li><a href="../../acesso-usuarios/autenticacao/flow.html#alterar-senha"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Alterar Senha</a></li>
+              <li><a href="../../acesso-usuarios/autenticacao/flow.html#login"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>Logout</a></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+
+      <!-- Menu horizontal (p-menubar montado com o menu que o login devolve) -->
+      <nav class="gpe-menubar" aria-label="Menu principal">
+        <div class="gpe-menu-item"><a class="gpe-menu-link" href="../../acesso-usuarios/autenticacao/flow.html#inicio"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" opacity=".35"/><path d="M12 12l5-5" stroke="#fff" stroke-width="2"/></svg>Dashboard</a></div>
+        <div class="gpe-menu-item">
+          <button class="gpe-menu-link" id="menu-admin" onclick="toggleSubmenu(this, event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Administração<svg class="gpe-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+          <ul class="gpe-submenu">
+            <li><a href="../../acesso-usuarios/usuarios/flow.html">Usuários</a></li>
+            <li><a href="../../pessoas/cadastro-pessoas/flow.html">Pessoas</a></li>
+            <li><a href="#catalogo" id="submenu-catalogo" onclick="abrirCatalogo(false); return false;">Catálogo de legendas</a></li>
+          </ul>
+        </div>
+        <div class="gpe-menu-item">
+          <button class="gpe-menu-link is-active" id="menu-eventos" onclick="toggleSubmenu(this, event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Eventos<svg class="gpe-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+          <ul class="gpe-submenu">
+            <li><a href="../../eventos/cadastro-eventos/flow.html" id="submenu-cadastro" class="is-active">Cadastro</a></li>
+          </ul>
+        </div>
+      </nav>
+
+      <main class="dsc-main">
+
+        <!-- ═══════════════ Tela 1: Configuração de Legendas (EVT-LEG-01 · 03 · 04 · 05 · 07) ═══════════════ -->
+        <div id="screen-configuracao" class="dsc-screen is-active">
+          <nav class="dsc-breadcrumb"><span>Início</span><span class="dsc-sep">›</span><span>Eventos</span><span class="dsc-sep">›</span><a href="../../eventos/cadastro-eventos/flow.html">Cadastro</a><span class="dsc-sep">›</span><span class="is-current">Configuração de Legendas</span></nav>
+
+          <div class="dsc-card">
+            <div class="dsc-flex dsc-items-center" style="gap:16px;flex-wrap:wrap">
+              <h2 class="dsc-page-title" style="font-size:32px;margin:0">Configuração de Legendas</h2>
+              <span class="gpe-save-state" id="ind-gravacao" aria-live="polite"></span>
+            </div>
+            <p class="gpe-cfg-evento" id="cfg-evento">Reunião do Conselho de Política Industrial</p>
+            <p class="dsc-text-muted" style="margin:0" id="cfg-contagem">4 blocos configurados</p>
+
+            <!-- Barra de ações: à esquerda Carregar / Salvar como preset / Gerenciar catálogo / Adicionar bloco; à direita Simular / Executar -->
+            <div class="dsc-flex dsc-justify-between dsc-items-center" style="flex-wrap:wrap;gap:10px;margin-top:22px">
+              <div class="dsc-flex dsc-gap-1" style="flex-wrap:wrap">
+                <button type="button" class="dsc-btn dsc-btn--outline" onclick="abrirCarregar()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v1"/><path d="M3 7v11a1 1 0 0 0 1 1h14l3-8H6l-3 8"/></svg>Carregar configuração</button>
+                <button type="button" class="dsc-btn dsc-btn--outline" onclick="abrirSalvarPreset()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>Salvar como preset</button>
+                <button type="button" class="dsc-btn dsc-btn--outline" onclick="abrirCatalogo(true)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>Gerenciar catálogo</button>
+                <button type="button" class="dsc-btn" onclick="abrirAdicionarBloco()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>Adicionar bloco</button>
+              </div>
+              <div class="dsc-flex dsc-gap-1" style="flex-wrap:wrap">
+                <button type="button" class="dsc-btn dsc-btn--outline" onclick="simular()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="6 4 20 12 6 20 6 4"/></svg>Simular</button>
+                <button type="button" class="dsc-btn" onclick="pedirExecucao()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>Executar</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Um cartão por bloco, na ordem dos números -->
+          <div id="cfg-blocos" style="margin-top:24px"></div>
+
+          <!-- Estado vazio -->
+          <div class="dsc-card" id="cfg-vazio" style="display:none;margin-top:24px">
+            <div class="dsc-state">
+              <span class="dsc-state-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg></span>
+              <span class="dsc-state-title">Nenhum bloco configurado</span>
+              <span class="dsc-state-text">Adicione o primeiro bloco de legenda para começar a montar as regras deste evento.</span>
+              <button type="button" class="dsc-btn" onclick="abrirAdicionarBloco()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>Adicionar bloco</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══════════════ Tela 2: Catálogo de blocos (EVT-LEG-11 · 12 · 13 · 14) ═══════════════ -->
+        <div id="screen-catalogo" class="dsc-screen">
+          <nav class="dsc-breadcrumb" id="bc-catalogo"><span>Início</span><span class="dsc-sep">›</span><span>Administração</span><span class="dsc-sep">›</span><span class="is-current">Catálogo de legendas</span></nav>
+
+          <div class="dsc-card">
+            <div class="dsc-flex dsc-justify-between" style="align-items:flex-start;gap:16px;flex-wrap:wrap">
+              <div>
+                <h2 class="dsc-page-title" style="font-size:32px;margin:0">Catálogo de blocos</h2>
+                <p class="dsc-text-muted" style="margin:6px 0 0">Blocos de legenda reutilizáveis nas configurações dos eventos.</p>
+              </div>
+              <div class="dsc-flex dsc-gap-1">
+                <button type="button" class="dsc-btn dsc-btn--outline" onclick="voltarDoCatalogo()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Voltar</button>
+                <button type="button" class="dsc-btn" onclick="abrirBloco(null)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>Novo bloco</button>
+              </div>
+            </div>
+
+            <div class="dsc-search" style="margin-top:22px;max-width:520px">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+              <input class="dsc-input" id="cat-busca" type="text" placeholder="Buscar bloco pelo nome" aria-label="Buscar bloco pelo nome" oninput="digitarBuscaCatalogo()">
+            </div>
+
+            <div class="dsc-table-wrap" style="margin-top:18px">
+              <div id="cat-loading" style="display:none;padding:12px 0">
+                <div class="dsc-skeleton" style="height:40px;margin-bottom:10px"></div>
+                <div class="dsc-skeleton" style="height:40px;margin-bottom:10px"></div>
+                <div class="dsc-skeleton" style="height:40px"></div>
+              </div>
+              <table class="dsc-table" id="cat-tabela">
+                <thead>
+                  <tr>
+                    <th class="dsc-sortable gpe-left" onclick="ordenarCatalogo()" id="cat-th-nome">Nome</th>
+                    <th style="width:120px">Cor</th>
+                    <th style="width:140px">Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="cat-corpo"></tbody>
+              </table>
+              <div id="cat-vazio" style="display:none">
+                <div class="dsc-state">
+                  <span class="dsc-state-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg></span>
+                  <span class="dsc-state-text">Nenhum bloco encontrado.</span>
+                </div>
+              </div>
+            </div>
+            <div class="gpe-paginator" id="cat-paginador"></div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ═══════════════ Janela "Adicionar bloco" (EVT-LEG-02 · EVT-LEG-12 pela configuração) ═══════════════ -->
+  <div id="modal-adicionar-bloco" class="dsc-modal-mask" style="display:none">
+    <div class="dsc-modal" role="dialog" aria-labelledby="t-add">
+      <div class="dsc-modal-header"><span id="t-add">Adicionar bloco</span>
+        <button class="dsc-modal-close" aria-label="Fechar" onclick="toggleModal('modal-adicionar-bloco',false)">✕</button></div>
+      <div class="dsc-modal-body">
+        <div class="gpe-tabs" role="tablist">
+          <button class="gpe-tab is-active" id="tab-existente" onclick="abrirAbaAdd('existente')">Usar bloco existente</button>
+          <button class="gpe-tab" id="tab-criar" onclick="abrirAbaAdd('criar')">Criar novo bloco</button>
+        </div>
+        <div class="gpe-tab-panel is-active" id="aba-existente">
+          <div class="dsc-search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+            <input class="dsc-input" id="add-busca" type="text" placeholder="Buscar bloco pelo nome" aria-label="Buscar bloco pelo nome" oninput="renderListaAdd()">
+          </div>
+          <div id="add-lista" style="margin-top:14px"></div>
+        </div>
+        <div class="gpe-tab-panel" id="aba-criar"></div>
+      </div>
+      <div class="dsc-modal-footer">
+        <button class="dsc-btn dsc-btn--outline" onclick="toggleModal('modal-adicionar-bloco',false)">Cancelar</button>
+        <button class="dsc-btn" id="btn-add-evento" onclick="adicionarAoEvento()" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>Adicionar ao evento</button>
+        <button class="dsc-btn" id="btn-criar-adicionar" onclick="criarEAdicionar()" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>Criar e adicionar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ Janela "Simulação de aplicação de legendas" (EVT-LEG-06) ═══════════════ -->
+  <div id="modal-simulacao" class="dsc-modal-mask" style="display:none">
+    <div class="dsc-modal gpe-modal--lg" role="dialog" aria-labelledby="t-sim">
+      <div class="dsc-modal-header"><span id="t-sim">Simulação de aplicação de legendas</span>
+        <button class="dsc-modal-close" aria-label="Fechar" onclick="toggleModal('modal-simulacao',false)">✕</button></div>
+      <div class="dsc-modal-body">
+        <div class="dsc-grid-4 dsc-gap-2">
+          <div class="gpe-panel-soft"><div class="gpe-stat-value" id="sim-participantes">0</div><div class="gpe-stat-label">Participantes</div></div>
+          <div class="gpe-panel-soft"><div class="gpe-stat-value" id="sim-removidas">0</div><div class="gpe-stat-label">Legendas removidas</div></div>
+          <div class="gpe-panel-soft"><div class="gpe-stat-value" id="sim-aplicadas">0</div><div class="gpe-stat-label">Legendas aplicadas</div></div>
+          <div class="gpe-panel-soft"><div class="gpe-stat-value" id="sim-manuais">0</div><div class="gpe-stat-label">Manuais preservadas</div></div>
+        </div>
+        <div class="dsc-alert dsc-alert--warning" id="sim-ignorados" role="status" style="margin-top:16px;display:none">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+          <span id="sim-ignorados-texto">Blocos ignorados: Assento livre</span>
+        </div>
+        <div style="margin-top:20px">
+          <div class="gpe-sim-head" id="sim-cabecalho"><div class="gpe-sim-cols"><span></span><span>Nº</span><span>Cor</span><span>Legenda</span><span>Quantidade</span></div></div>
+          <div id="sim-grupos"></div>
+          <div class="dsc-table-empty" id="sim-vazio" style="display:none">Nenhum bloco produziu resultado.</div>
+        </div>
+      </div>
+      <div class="dsc-modal-footer">
+        <button class="dsc-btn dsc-btn--outline" onclick="toggleModal('modal-simulacao',false)">Fechar</button>
+        <button class="dsc-btn" onclick="toggleModal('modal-simulacao',false); pedirExecucao()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>Executar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ Janela "Salvar como preset" (EVT-LEG-08) ═══════════════ -->
+  <div id="modal-salvar-preset" class="dsc-modal-mask" style="display:none">
+    <div class="dsc-modal gpe-modal--sm" role="dialog" aria-labelledby="t-preset">
+      <div class="dsc-modal-header"><span id="t-preset">Salvar como preset</span>
+        <button class="dsc-modal-close" aria-label="Fechar" onclick="toggleModal('modal-salvar-preset',false)">✕</button></div>
+      <div class="dsc-modal-body">
+        <div class="dsc-field" id="fld-preset-nome">
+          <label class="dsc-field-label" for="preset-nome">Nome do preset <span class="dsc-req">*</span></label>
+          <input class="dsc-input" id="preset-nome" maxlength="100" placeholder="Digite um nome para o preset" onblur="validarNomePreset()" oninput="if(this.closest('.dsc-field').classList.contains('is-invalid'))validarNomePreset()">
+        </div>
+        <div class="dsc-field" style="margin-top:14px">
+          <label class="dsc-field-label" for="preset-descricao">Descrição</label>
+          <textarea class="dsc-textarea" id="preset-descricao" rows="3" maxlength="255" placeholder="Descrição opcional"></textarea>
+        </div>
+      </div>
+      <div class="dsc-modal-footer">
+        <button class="dsc-btn dsc-btn--outline" onclick="toggleModal('modal-salvar-preset',false)">Cancelar</button>
+        <button class="dsc-btn" onclick="salvarPreset()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>Salvar preset</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ Janela "Carregar configuração" (EVT-LEG-09 · EVT-LEG-10) ═══════════════ -->
+  <div id="modal-carregar" class="dsc-modal-mask" style="display:none">
+    <div class="dsc-modal" role="dialog" aria-labelledby="t-carregar">
+      <div class="dsc-modal-header"><span id="t-carregar">Carregar configuração</span>
+        <button class="dsc-modal-close" aria-label="Fechar" onclick="toggleModal('modal-carregar',false)">✕</button></div>
+      <div class="dsc-modal-body">
+        <div class="dsc-flex dsc-items-center" style="gap:18px;flex-wrap:wrap;margin-bottom:18px">
+          <span class="dsc-field-label" style="margin:0">Ao aplicar:</span>
+          <div class="gpe-radio-group">
+            <label><input type="radio" class="dsc-radio" name="modo-carga" value="substituir" id="modo-substituir" checked>Substituir configuração atual</label>
+            <label><input type="radio" class="dsc-radio" name="modo-carga" value="mesclar" id="modo-mesclar">Mesclar (adicionar blocos ausentes)</label>
+          </div>
+        </div>
+        <div class="gpe-tabs" role="tablist">
+          <button class="gpe-tab is-active" id="tab-presets" onclick="abrirAbaCarregar('presets')">Biblioteca de presets</button>
+          <button class="gpe-tab" id="tab-eventos" onclick="abrirAbaCarregar('eventos')">De outro evento</button>
+        </div>
+        <div class="gpe-tab-panel is-active" id="aba-presets"></div>
+        <div class="gpe-tab-panel" id="aba-eventos"></div>
+      </div>
+      <div class="dsc-modal-footer">
+        <button class="dsc-btn dsc-btn--outline" onclick="toggleModal('modal-carregar',false)">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ Janela "Novo bloco" / "Editar bloco" do catálogo (EVT-LEG-12 · EVT-LEG-13) ═══════════════ -->
+  <div id="modal-bloco" class="dsc-modal-mask" style="display:none">
+    <div class="dsc-modal gpe-modal--sm" role="dialog" aria-labelledby="t-bloco">
+      <div class="dsc-modal-header"><span id="t-bloco">Novo bloco</span>
+        <button class="dsc-modal-close" aria-label="Fechar" onclick="toggleModal('modal-bloco',false)">✕</button></div>
+      <div class="dsc-modal-body" id="form-bloco"></div>
+      <div class="dsc-modal-footer">
+        <button class="dsc-btn dsc-btn--outline" onclick="toggleModal('modal-bloco',false)">Cancelar</button>
+        <button class="dsc-btn" id="btn-salvar-bloco" onclick="salvarBloco()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ Confirmações (p-confirmDialog) — ficam depois das janelas para abrir por cima delas ═══════════════ -->
+  <!-- Remover bloco do evento (EVT-LEG-05) -->
+  <div id="modal-remover-bloco" class="dsc-modal-mask" style="display:none">
+    <div class="dsc-modal gpe-modal--sm" role="alertdialog" aria-labelledby="t-remover">
+      <div class="dsc-modal-header"><span id="t-remover">Remover bloco</span>
+        <button class="dsc-modal-close" aria-label="Fechar" onclick="toggleModal('modal-remover-bloco',false)">✕</button></div>
+      <div class="dsc-modal-body"><div class="gpe-confirm-body"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg><span id="msg-remover">Remover o bloco 'Diretores da CNI' deste evento?</span></div></div>
+      <div class="dsc-modal-footer">
+        <button class="dsc-btn dsc-btn--outline" onclick="toggleModal('modal-remover-bloco',false)">Cancelar</button>
+        <button class="dsc-btn dsc-btn--danger" onclick="confirmarRemoverBloco()">Remover</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Executar aplicação de legendas (EVT-LEG-07) -->
+  <div id="modal-executar" class="dsc-modal-mask" style="display:none">
+    <div class="dsc-modal gpe-modal--sm" role="alertdialog" aria-labelledby="t-executar">
+      <div class="dsc-modal-header"><span id="t-executar">Executar aplicação de legendas</span>
+        <button class="dsc-modal-close" aria-label="Fechar" onclick="toggleModal('modal-executar',false)">✕</button></div>
+      <div class="dsc-modal-body"><div class="gpe-confirm-body"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg><span>As associações de legenda deste evento serão recriadas a partir dos blocos configurados. As legendas atribuídas manualmente serão preservadas. Outros eventos não serão afetados. Deseja continuar?</span></div></div>
+      <div class="dsc-modal-footer">
+        <button class="dsc-btn dsc-btn--outline" onclick="toggleModal('modal-executar',false)">Cancelar</button>
+        <button class="dsc-btn" onclick="executar()">Executar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Excluir preset (EVT-LEG-10), aberta por cima de "Carregar configuração" -->
+  <div id="modal-excluir-preset" class="dsc-modal-mask" style="display:none">
+    <div class="dsc-modal gpe-modal--sm" role="alertdialog" aria-labelledby="t-excluir-preset">
+      <div class="dsc-modal-header"><span id="t-excluir-preset">Excluir preset</span>
+        <button class="dsc-modal-close" aria-label="Fechar" onclick="toggleModal('modal-excluir-preset',false)">✕</button></div>
+      <div class="dsc-modal-body"><div class="gpe-confirm-body"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg><span id="msg-excluir-preset">Excluir o preset 'Reuniões da MEI'? Esta ação não pode ser desfeita.</span></div></div>
+      <div class="dsc-modal-footer">
+        <button class="dsc-btn dsc-btn--outline" onclick="toggleModal('modal-excluir-preset',false)">Cancelar</button>
+        <button class="dsc-btn dsc-btn--danger" onclick="confirmarExcluirPreset()">Excluir</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Excluir bloco do catálogo (EVT-LEG-14): o uso em eventos não bloqueia; muda só o texto da pergunta -->
+  <div id="modal-excluir-bloco" class="dsc-modal-mask" style="display:none">
+    <div class="dsc-modal gpe-modal--sm" role="alertdialog" aria-labelledby="t-excluir-bloco">
+      <div class="dsc-modal-header"><span id="t-excluir-bloco">Excluir bloco</span>
+        <button class="dsc-modal-close" aria-label="Fechar" onclick="toggleModal('modal-excluir-bloco',false)">✕</button></div>
+      <div class="dsc-modal-body"><div class="gpe-confirm-body"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg><span id="msg-excluir-bloco">Excluir o bloco 'Imprensa'?</span></div></div>
+      <div class="dsc-modal-footer">
+        <button class="dsc-btn dsc-btn--outline" onclick="toggleModal('modal-excluir-bloco',false)">Cancelar</button>
+        <button class="dsc-btn dsc-btn--danger" onclick="confirmarExcluirBloco()">Excluir</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ Toasts (p-toast, canto superior direito) ═══════════════ -->
+  <div class="gpe-toast-stack" id="toasts"></div>
+
+  <div class="dsc-proto-notes">
+    <strong>📋 Notas do protótipo — Legendas (EVT-LEG)</strong>
+    <ul>
+      <li><strong>Visual recuperado do código-fonte</strong>: rótulos, dicas, botões, colunas e mensagens vêm do inventário extraído do <code>sistema_mesa_checkin_frontend</code> (<code>arquivos/engenharia-reversa/frontend-inventory.md</code>, 4.0 e 4.17 a 4.22; listas de campo, operador e conectivo de 4.17 e endpoints de 6.5) e dos N3 EVT-LEG-01 a 14. ⚠️ <strong>A tela atual não tem captura</strong>: as imagens de GPE006 (<code>image2.png</code> a <code>image4.png</code>) retratam o <em>modelo anterior</em> — chave Ativa/Inativa por legenda, botões "Salvar Regras", "Simular Execução", "Executar Regras" e "Resetar", quadro "Preview da condição" e quadros "Importante" e "Dicas", nada disso existe hoje — e serviram só para a moldura (barra azul e menu horizontal); o protótipo anexado ao ticket <code>PDTIC25148-34</code> (<code>prototipo_regras_legenda_v3</code>) não foi trazido. As telas foram montadas no visual PrimeNG do restante do sistema (camada <code>tema-gpe.css</code>). A cor e o estilo dos botões da barra de ações e das ações de linha do catálogo não constam do inventário; seguiu-se o azul das demais telas.</li>
+      <li><strong>Gravação automática</strong> (EVT-LEG-01): não há botão de salvar nem mensagem de sucesso. Adicionar, remover e mover bloco, incluir e excluir condição e trocar conectivo, campo ou operador gravam na hora; o valor grava 600 ms depois da última tecla e ao sair do campo. Ao lado do título aparece "Salvando…" e depois "Salvo", que some em 2,5 s.</li>
+      <li><strong>Simulação e geração de verdade</strong>: o evento tem 14 participantes fictícios (cargo, nome fantasia, grupos de trabalho com papel e temas), e o protótipo avalia as condições como o N3 EVT-LEG-07 descreve — da esquerda para a direita, sem precedência do E sobre o OU; "Igual a" com vírgula vira lista; "Diferente de" em grupo, papel e tema alcança quem não tem o registro; cada condição de grupo e de papel avaliada sozinha ⚠️. Na abertura, "Simular" mostra 14 participantes, 6 legendas removidas, 8 aplicadas e 2 manuais preservadas, e "Blocos ignorados: Assento livre" (bloco sem condição). Mude uma condição e simule de novo. ❓ Nenhuma fonte diz se a comparação diferencia maiúsculas; o protótipo não diferencia.</li>
+      <li><strong>Executar</strong> (EVT-LEG-07): pergunta de confirmação e, confirmada, a mensagem "Legendas aplicadas" com "8 legendas aplicadas, 2 manuais preservadas.". ⚠️ O texto usa sempre o plural ("1 legendas aplicadas"); a tela não muda depois da geração, não há indicador de processamento e o botão continua habilitado; os blocos ignorados não são informados. Os blocos não se excluem: quem atende a dois blocos recebe as duas legendas ⚠️ (GPE006 sugeria uma só, pela prioridade).</li>
+      <li><strong>Reordenar e remover</strong> (EVT-LEG-04 e 05): só pelas setas, sem arrastar; a seta para cima fica desabilitada no bloco 1 e a para baixo, no último. Remover pede "Remover o bloco '…' deste evento?" ⚠️ — a pergunta não avisa que as condições se perdem nem que quem já recebeu a legenda fica com ela até a próxima geração. Remova os quatro blocos para ver o estado "Nenhum bloco configurado". ⚠️ O "Resetar" de GPE006 não existe mais (pendência no N2): o efeito hoje é remover os blocos e executar.</li>
+      <li><strong>Adicionar bloco</strong> (EVT-LEG-02 e 12): a lista traz só os blocos do catálogo que ainda não estão no evento. Busque "Imprensa" para ver "Nenhum bloco encontrado para "Imprensa"." e o atalho que leva à aba "Criar novo bloco" com o nome preenchido. Em "Criar e adicionar": nome vazio mostra "Este campo é obrigatório"; ⚠️ nome só com espaços passa pela tela e volta do servidor como "Erro Interno" — "O nome do bloco de legenda é obrigatório."; nome repetido (ex.: "palestrantes") volta como "Erro Interno" — "Já existe um bloco de legenda com este nome.", com a janela aberta. ⚠️ O ticket pede também a composição de mesa na criação do bloco (CA02), que o código não tem.</li>
+      <li><strong>Salvar como preset</strong> (EVT-LEG-08): ⚠️ a janela fecha ao acionar "Salvar preset", antes da resposta; salve com o nome "Reuniões da MEI" para ver a recusa "Já existe um preset com este nome." chegar com a janela já fechada e o que foi digitado perdido. O botão funciona mesmo sem blocos.</li>
+      <li><strong>Carregar configuração</strong> (EVT-LEG-09 e 10): ⚠️ substituir não pede confirmação nem tem volta. O preset "Conselhos temáticos" foi salvo com um bloco que saiu do catálogo — aplicá-lo traz o aviso "Blocos ignorados". O preset "Modelo vazio" (0 blocos), aplicado em substituição, esvazia a configuração ⚠️. Na aba "De outro evento", ⚠️ a data do evento não chega à tela e a linha mostra só "· {n} bloco(s)". "Excluir preset" abre a confirmação por cima da janela e, confirmada, recarrega a lista com a janela aberta.</li>
+      <li><strong>Catálogo de blocos</strong> (EVT-LEG-11 a 14): 14 blocos, 10 por página, só "Nome" ordenável; a busca não tem botão (300 ms depois da última tecla). "Voltar" leva à configuração quando o catálogo foi aberto por "Gerenciar catálogo" e à lista de eventos quando foi aberto pelo menu. Na edição, "Governo | Parceiros - presidentes e/ou secretários" tem cor fora da paleta: nenhuma cor da paleta fica marcada. ⚠️ A edição vale em todos os eventos, inclusive os já realizados, sem aviso.</li>
+      <li><strong>Excluir bloco</strong> (EVT-LEG-14): o N3 <em>não prevê bloqueio</em> — o uso em eventos não impede a exclusão, só muda o texto da confirmação. Experimente "Palestrantes" (em uso em outros eventos), "Empresas – presidentes" (só neste evento, quando o catálogo veio de "Gerenciar catálogo"), "Anfitrião" (sem uso) e "Presidentes e Diretores de Associações Brasileiras" (em uso num evento excluído, que aparece pelo nome ⚠️). ⚠️ Aberto a partir do evento, a lista de nomes omite o próprio evento; a exclusão apaga também as legendas <em>manuais</em> do bloco (João Lima tem "Anfitrião" manual) sem que a pergunta diga isso.</li>
+      <li>⚠️ <strong>Perfis</strong>: as telas de legendas não conferem o perfil; o que as esconde da Secretaria Mesa e da Secretaria Check-In é o menu (matriz do N2). ⚠️ Pelos endereços, <code>/regras-legenda</code> sem número abre o catálogo, e <code>/catalogo-legendas/{id}</code> abre a configuração.</li>
+      <li>Não representado: a abertura sem indicador de carregamento, que mostra "0 blocos configurados" até a configuração chegar ⚠️ (a tela abre aqui já carregada, em repouso); "Evento não informado na URL."; os erros de gravação com detalhe de regra ("Bloco de legenda inexistente: …", "A configuração tem blocos de legenda repetidos.") — use a caixa abaixo para ver a falha genérica; o limite de 1.000 blocos da janela "Adicionar bloco"; o nome e a cor antigos do bloco trazido de preset até a tela ser reaberta. A tela mostra só o nome do evento — data e local não aparecem (inventário 4.17).</li>
+    </ul>
+    <label class="gpe-proto-perfil"><input type="checkbox" class="dsc-check" id="proto-falha">Simular falha do servidor na próxima gravação ou ação ("Erro Interno" — "Ocorreu um erro inesperado. Contate o suporte."; na configuração, a tela volta ao que está gravado)</label>
+  </div>
+
+  <script>
+    /* ---------- Dados fictícios ---------- */
+    var EVENTO = { id: 12, nome: 'Reunião do Conselho de Política Industrial' };
+
+    // Catálogo de blocos (nome e cor; sem número, sem posição)
+    var CATALOGO = [
+      { id: 1, nome: 'Anfitrião', cor: '#F44336' },
+      { id: 2, nome: 'Assento livre', cor: '#607D8B' },
+      { id: 3, nome: 'Comitê estratégico', cor: '#FFEB3B' },
+      { id: 4, nome: 'Diretores da CNI', cor: '#E91E63' },
+      { id: 5, nome: 'Empresas – diretores', cor: '#3F51B5' },
+      { id: 6, nome: 'Empresas – presidentes', cor: '#2196F3' },
+      { id: 7, nome: 'Empresas - vice-presidentes', cor: '#00BCD4' },
+      { id: 8, nome: 'GT da MEI – coordenadores', cor: '#4CAF50' },
+      { id: 9, nome: 'GT da MEI – titulares', cor: '#8BC34A' },
+      { id: 10, nome: 'Governo | Parceiros (BNDES, FINEP e EMBRAPII) presidentes e/ou diretores', cor: '#795548' },
+      { id: 11, nome: 'Governo | Parceiros - presidentes e/ou secretários', cor: '#A1887F' },
+      { id: 12, nome: 'ICT – Reitores', cor: '#9C27B0' },
+      { id: 13, nome: 'Palestrantes', cor: '#FF9800' },
+      { id: 14, nome: 'Presidentes e Diretores de Associações Brasileiras', cor: '#009688' }
+    ];
+    var proximoIdBloco = 15;
+    var PALETA = ['#2196F3', '#4CAF50', '#FF9800', '#F44336', '#9C27B0', '#00BCD4', '#FFEB3B', '#795548', '#607D8B', '#E91E63', '#3F51B5', '#009688', '#8BC34A', '#FF5722', '#673AB7', '#CDDC39'];
+
+    var CAMPOS = [['grupoTrabalho', 'Grupo de trabalho'], ['tema', 'Tema'], ['cargo', 'Cargo'], ['nomeFantasia', 'Nome fantasia'], ['papelDesempenhado', 'Papel desempenhado']];
+    var OPERADORES = [['IGUAL', 'Igual a'], ['DIFERENTE', 'Diferente de'], ['CONTEM', 'Contém'], ['EM', 'Em (lista)']];
+    function cond(conectivo, campo, operador, valor) { return { conectivo: conectivo, campo: campo, operador: operador, valor: valor }; }
+
+    // Configuração do evento: blocos em ordem (o número é a posição), cada um com as suas condições
+    var config = [
+      { legendaId: 3, condicoes: [cond(null, 'grupoTrabalho', 'IGUAL', 'Comitê Estratégico'), cond('E', 'papelDesempenhado', 'EM', 'Coordenador, Coordenadora, Titular')] },
+      { legendaId: 4, condicoes: [cond(null, 'cargo', 'CONTEM', 'Diretor'), cond('E', 'nomeFantasia', 'IGUAL', 'CNI')] },
+      { legendaId: 6, condicoes: [cond(null, 'tema', 'IGUAL', 'Empresa'), cond('E', 'cargo', 'IGUAL', 'Presidente')] },
+      { legendaId: 2, condicoes: [] }
+    ];
+    var configGravada = clonar(config);
+
+    // Outros eventos com configuração (o excluído serve de origem? não — mas aparece no uso do bloco)
+    var OUTROS_EVENTOS = [
+      { id: 9, nome: 'Reunião de Março', blocos: [
+        { legendaId: 3, condicoes: [cond(null, 'grupoTrabalho', 'IGUAL', 'Comitê Estratégico')] },
+        { legendaId: 13, condicoes: [cond(null, 'papelDesempenhado', 'IGUAL', 'Palestrante')] },
+        { legendaId: 2, condicoes: [] }] },
+      { id: 10, nome: 'Seminário de Inovação', blocos: [
+        { legendaId: 13, condicoes: [cond(null, 'papelDesempenhado', 'IGUAL', 'Palestrante')] },
+        { legendaId: 4, condicoes: [cond(null, 'cargo', 'CONTEM', 'Diretor')] }] },
+      { id: 11, nome: 'Fórum de Competitividade Industrial', blocos: [
+        { legendaId: 5, condicoes: [cond(null, 'cargo', 'CONTEM', 'Diretor'), cond('E', 'tema', 'IGUAL', 'Empresa')] }] },
+      { id: 8, nome: 'Encontro de Associações Setoriais', excluido: true, blocos: [
+        { legendaId: 14, condicoes: [cond(null, 'tema', 'IGUAL', 'Associação')] }] }
+    ];
+
+    // Biblioteca de presets (o 99 é um bloco que já saiu do catálogo)
+    var PRESETS = [
+      { id: 1, nome: 'Reuniões da MEI', descricao: 'Padrão das reuniões ordinárias', blocos: [
+        { legendaId: 1, condicoes: [] },
+        { legendaId: 13, condicoes: [cond(null, 'papelDesempenhado', 'IGUAL', 'Palestrante')] },
+        { legendaId: 4, condicoes: [cond(null, 'cargo', 'CONTEM', 'Diretor'), cond('E', 'nomeFantasia', 'IGUAL', 'CNI')] }] },
+      { id: 2, nome: 'Conselhos temáticos', descricao: 'Conselhos com governo e parceiros', blocos: [
+        { legendaId: 3, condicoes: [cond(null, 'grupoTrabalho', 'IGUAL', 'Comitê Estratégico')] },
+        { legendaId: 11, condicoes: [cond(null, 'tema', 'IGUAL', 'Governo'), cond('E', 'cargo', 'CONTEM', 'Secretário')] },
+        { legendaId: 12, condicoes: [cond(null, 'tema', 'IGUAL', 'ICT'), cond('E', 'cargo', 'CONTEM', 'Reitor')] },
+        { legendaId: 99, condicoes: [cond(null, 'cargo', 'CONTEM', 'Jornalista')] }] },
+      { id: 3, nome: 'Seminários abertos', descricao: '', blocos: [
+        { legendaId: 13, condicoes: [cond(null, 'papelDesempenhado', 'IGUAL', 'Palestrante')] },
+        { legendaId: 6, condicoes: [cond(null, 'cargo', 'IGUAL', 'Presidente')] },
+        { legendaId: 7, condicoes: [cond(null, 'cargo', 'CONTEM', 'Vice-Presidente')] },
+        { legendaId: 2, condicoes: [] }] },
+      { id: 4, nome: 'Modelo vazio', descricao: 'Salvo por engano, sem blocos', blocos: [] }
+    ];
+    var proximoIdPreset = 5;
+
+    // Participantes do evento: dados que as condições avaliam (Pessoas › cargas de GT, temas e cadastro)
+    var PARTICIPANTES = [
+      { nome: 'Ana Beatriz Moreira', cargo: 'Diretora', fantasia: 'Aurora Metais', gts: [['GT Indústria 4.0', 'Titular']], temas: ['Empresa'] },
+      { nome: 'Carlos Eduardo Lins', cargo: 'Presidente', fantasia: 'Têxtil NE', gts: [['Comitê Estratégico', 'Titular']], temas: ['Empresa'] },
+      { nome: 'Fernanda Rocha Prado', cargo: 'Vice-Presidente', fantasia: 'Agro Cerrado', gts: [], temas: ['Empresa'] },
+      { nome: 'Gustavo Henrique Tavares', cargo: 'CEO', fantasia: 'Química Vale', gts: [['GT Indústria 4.0', 'Coordenador']], temas: ['Empresa'] },
+      { nome: 'Helena Duarte Campos', cargo: 'Reitora', fantasia: 'Universidade Federal do Planalto', gts: [['GT Inovação', 'Titular']], temas: ['ICT'] },
+      { nome: 'João Lima', cargo: 'Gerente', fantasia: 'Cerâmica São José', gts: [['GT Comércio Exterior', 'Titular']], temas: ['Empresa'] },
+      { nome: 'Juliana Castro Mendes', cargo: 'Diretora', fantasia: 'Inovatech', gts: [], temas: ['Empresa'] },
+      { nome: 'Luciana Ferraz Rocha', cargo: 'Diretora de Relações Institucionais', fantasia: 'CNI', gts: [], temas: [] },
+      { nome: 'Marcos Vinícius Andrade', cargo: 'Presidente', fantasia: 'Papel Sul', gts: [['Comitê Estratégico', 'Coordenador']], temas: ['Empresa'] },
+      { nome: 'Maria Souza', cargo: 'Diretora', fantasia: 'Exemplo', gts: [['Comitê Estratégico', 'Coordenadora'], ['GT Indústria 4.0', 'Titular']], temas: ['Empresa', 'Inovação'] },
+      { nome: 'Paulo Roberto Nunes', cargo: 'Presidente', fantasia: 'Serra Alimentos', gts: [], temas: ['Empresa'] },
+      { nome: 'Ricardo Menezes Prado', cargo: 'Secretário de Desenvolvimento', fantasia: 'Secretaria de Desenvolvimento do Planalto', gts: [], temas: ['Governo'] },
+      { nome: 'Roberto Alves Teixeira', cargo: 'Diretor de Inovação', fantasia: 'CNI', gts: [['Comitê Estratégico', 'Secretário-executivo']], temas: ['Inovação'] },
+      { nome: 'Sérgio Oliveira Bastos', cargo: 'Presidente', fantasia: 'Associação Brasileira de Fundição Leve', gts: [], temas: ['Associação'] }
+    ];
+    // Legendas que os participantes têm hoje: 2 manuais e 6 da geração anterior
+    var LEGENDAS_ATUAIS = [
+      { pessoa: 'João Lima', legendaId: 1, manual: true },
+      { pessoa: 'Helena Duarte Campos', legendaId: 13, manual: true },
+      { pessoa: 'Maria Souza', legendaId: 3, manual: false },
+      { pessoa: 'Carlos Eduardo Lins', legendaId: 3, manual: false },
+      { pessoa: 'Marcos Vinícius Andrade', legendaId: 3, manual: false },
+      { pessoa: 'Roberto Alves Teixeira', legendaId: 4, manual: false },
+      { pessoa: 'Luciana Ferraz Rocha', legendaId: 4, manual: false },
+      { pessoa: 'Paulo Roberto Nunes', legendaId: 6, manual: false }
+    ];
+
+    var ICO = {
+      lapis: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.8 9.95l-3.75-3.75L3 17.25zm17.7-10.2a1 1 0 0 0 0-1.4l-2.35-2.35a1 1 0 0 0-1.4 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>',
+      lixeira: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>',
+      lixo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/></svg>',
+      cima: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>',
+      baixo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>',
+      mais: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>',
+      caret: '<svg class="gpe-sim-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="9 6 15 12 9 18"/></svg>',
+      ok: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>',
+      info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>',
+      aviso: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>',
+      erro: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>'
+    };
+
+    /* ---------- Shell ---------- */
+    function showScreen(id) {
+      document.querySelectorAll('.dsc-screen').forEach(function (s) { s.classList.remove('is-active'); });
+      document.getElementById(id).classList.add('is-active');
+      var noCatalogo = id === 'screen-catalogo';
+      document.getElementById('menu-admin').classList.toggle('is-active', noCatalogo);
+      document.getElementById('submenu-catalogo').classList.toggle('is-active', noCatalogo);
+      document.getElementById('menu-eventos').classList.toggle('is-active', !noCatalogo);
+      document.getElementById('submenu-cadastro').classList.toggle('is-active', !noCatalogo);
+      fecharMenus();
+      window.scrollTo(0, 0);
+    }
+    function toggleModal(id, show) { document.getElementById(id).style.display = show ? 'flex' : 'none'; }
+    function toggleSubmenu(btn, ev) {
+      ev.stopPropagation();
+      var item = btn.parentElement, aberto = item.classList.contains('is-open');
+      fecharMenus(); if (!aberto) item.classList.add('is-open');
+    }
+    function toggleUserMenu(ev) {
+      ev.stopPropagation();
+      var m = document.getElementById('user-menu'), aberto = m.classList.contains('is-open');
+      fecharMenus(); if (!aberto) m.classList.add('is-open');
+    }
+    function fecharMenus() { document.querySelectorAll('.is-open').forEach(function (e) { e.classList.remove('is-open'); }); }
+    document.addEventListener('click', fecharMenus);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { document.querySelectorAll('.dsc-modal-mask').forEach(function (m) { m.style.display = 'none'; }); fecharMenus(); } });
+
+    /* p-toast: resumo + detalhe; some em ~4 s, a menos que seja fixo (sticky) */
+    function toast(tipo, resumo, detalhe, fixo) {
+      var cls = { sucesso: 'dsc-toast--positive', aviso: 'dsc-toast--warning', erro: 'dsc-toast--danger', info: '' }[tipo];
+      var ico = { sucesso: ICO.ok, aviso: ICO.aviso, erro: ICO.erro, info: ICO.info }[tipo];
+      var t = document.createElement('div');
+      t.className = 'dsc-toast ' + cls; t.setAttribute('role', 'status');
+      t.innerHTML = ico + '<div style="flex:1"><strong>' + resumo + '</strong>' + (detalhe ? '<span>' + detalhe + '</span>' : '') + '</div>' +
+        '<button class="dsc-icon-action" aria-label="Fechar mensagem" title="Fechar" style="width:24px;height:24px">✕</button>';
+      t.querySelector('button').onclick = function () { t.remove(); };
+      document.getElementById('toasts').appendChild(t);
+      if (!fixo) setTimeout(function () { t.remove(); }, 4000);
+    }
+    function erroInterno() { toast('erro', 'Erro Interno', 'Ocorreu um erro inesperado. Contate o suporte.'); }
+    function falhaSimulada() { var c = document.getElementById('proto-falha'); if (c.checked) { c.checked = false; return true; } return false; }
+
+    /* ---------- Utilitários ---------- */
+    function clonar(o) { return JSON.parse(JSON.stringify(o)); }
+    function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+    function bloco(id) { for (var i = 0; i < CATALOGO.length; i++) if (CATALOGO[i].id === id) return CATALOGO[i]; return null; }
+    function porNome(a, b) { return a.nome.localeCompare(b.nome, 'pt-BR'); }
+    function corTexto(hex) {
+      var r = parseInt(hex.substr(1, 2), 16), g = parseInt(hex.substr(3, 2), 16), b = parseInt(hex.substr(5, 2), 16);
+      return (0.299 * r + 0.587 * g + 0.114 * b) > 160 ? '#212529' : '#ffffff';
+    }
+    function opcoes(lista, atual) { return lista.map(function (o) { return '<option value="' + o[0] + '"' + (o[0] === atual ? ' selected' : '') + '>' + o[1] + '</option>'; }).join(''); }
+    function plural(n, um, varios) { return n + ' ' + (n === 1 ? um : varios); }
+
+    /* ---------- Consultar Configuração de Legendas (EVT-LEG-01) ---------- */
+    function renderConfig() {
+      var n = config.length;
+      document.getElementById('cfg-contagem').textContent = plural(n, 'bloco configurado', 'blocos configurados');
+      document.getElementById('cfg-vazio').style.display = n ? 'none' : 'block';
+      document.getElementById('cfg-blocos').innerHTML = config.map(function (b, i) {
+        var cat = bloco(b.legendaId) || { nome: '', cor: '#f8f9fa' };
+        var conds = b.condicoes.length
+          ? '<div class="gpe-cond-row gpe-cond-head"><span>Conectivo</span><span>Campo</span><span>Operador</span><span>Valor</span><span></span></div>' +
+            b.condicoes.map(function (c, j) { return linhaCondicao(i, j, c); }).join('')
+          : '<p class="gpe-block-empty">Nenhuma condição definida. Este bloco não será aplicado automaticamente até ter ao menos uma condição.</p>';
+        return '<div class="gpe-block-card">' +
+          '<span class="gpe-block-num" title="Ordem de aplicação">' + (i + 1) + '</span>' +
+          '<div class="gpe-block-body">' +
+            '<div class="gpe-block-head">' +
+              '<span class="gpe-block-title"><span class="gpe-swatch gpe-swatch--lg" style="background:' + cat.cor + '" title="' + cat.cor + '"></span>' + esc(cat.nome) + '</span>' +
+              '<span class="gpe-block-tools">' +
+                '<button class="dsc-icon-action" aria-label="Mover para cima: ' + esc(cat.nome) + '" title="Mover para cima" onclick="moverBloco(' + i + ',-1)"' + (i === 0 ? ' disabled' : '') + '>' + ICO.cima + '</button>' +
+                '<button class="dsc-icon-action" aria-label="Mover para baixo: ' + esc(cat.nome) + '" title="Mover para baixo" onclick="moverBloco(' + i + ',1)"' + (i === n - 1 ? ' disabled' : '') + '>' + ICO.baixo + '</button>' +
+                '<button class="dsc-icon-action gpe-c-red" aria-label="Remover bloco do evento: ' + esc(cat.nome) + '" title="Remover bloco do evento" onclick="pedirRemoverBloco(' + i + ')">' + ICO.lixo + '</button>' +
+              '</span>' +
+            '</div>' + conds +
+            '<button type="button" class="dsc-btn dsc-btn--sm dsc-btn--outline" style="margin-top:14px" onclick="adicionarCondicao(' + i + ')">' + ICO.mais + 'Adicionar condição</button>' +
+          '</div></div>';
+      }).join('');
+    }
+
+    /* Gravação automática: cada alteração grava a configuração inteira; "Salvando…" e depois "Salvo" por 2,5 s.
+       Uma gravação nova cancela a anterior (a última leva a configuração inteira). Na falha, volta ao que está gravado. */
+    var timerGravacao, timerSalvo;
+    function indicador(estado) {
+      var el = document.getElementById('ind-gravacao');
+      clearTimeout(timerSalvo);
+      el.classList.toggle('is-ok', estado === 'salvo');
+      el.innerHTML = estado === 'salvando' ? '<span class="dsc-spinner gpe-spinner-sm"></span>Salvando…' : (estado === 'salvo' ? ICO.ok + 'Salvo' : '');
+      if (estado === 'salvo') timerSalvo = setTimeout(function () { indicador(null); }, 2500);
+    }
+    function gravar() {
+      indicador('salvando');
+      clearTimeout(timerGravacao);
+      timerGravacao = setTimeout(function () {
+        if (falhaSimulada()) {
+          indicador(null); erroInterno();
+          config = clonar(configGravada); renderConfig();
+          return;
+        }
+        configGravada = clonar(config);
+        indicador('salvo');
+      }, 700);
+    }
+
+    /* ---------- Configurar Condições de Legenda (EVT-LEG-03) ---------- */
+    function linhaCondicao(i, j, c) {
+      var conectivo = j === 0 ? '<span></span>' :
+        '<select class="dsc-select" aria-label="Conectivo" onchange="mudarCondicao(' + i + ',' + j + ',\'conectivo\',this.value)">' + opcoes([['E', 'E'], ['OU', 'OU']], c.conectivo || 'E') + '</select>';
+      return '<div class="gpe-cond-row">' + conectivo +
+        '<select class="dsc-select" aria-label="Campo" onchange="mudarCondicao(' + i + ',' + j + ',\'campo\',this.value)">' + opcoes(CAMPOS, c.campo) + '</select>' +
+        '<select class="dsc-select" aria-label="Operador" onchange="mudarOperador(' + i + ',' + j + ',this)">' + opcoes(OPERADORES, c.operador) + '</select>' +
+        '<input class="dsc-input" aria-label="Valor" id="valor-' + i + '-' + j + '" value="' + esc(c.valor) + '" placeholder="' + (c.operador === 'EM' ? 'valores separados por vírgula' : 'Digite o valor') + '" oninput="digitarValor(' + i + ',' + j + ',this.value)" onchange="gravar()">' +
+        '<button class="dsc-icon-action gpe-c-red" aria-label="Remover condição" title="Remover condição" onclick="removerCondicao(' + i + ',' + j + ')">' + ICO.lixo + '</button>' +
+      '</div>';
+    }
+    function adicionarCondicao(i) {
+      var conds = config[i].condicoes;
+      conds.push(cond(conds.length ? 'E' : null, 'grupoTrabalho', 'IGUAL', ''));
+      renderConfig(); gravar();
+    }
+    function removerCondicao(i, j) {
+      var conds = config[i].condicoes;
+      conds.splice(j, 1);
+      if (conds.length) conds[0].conectivo = null; // a que passa a ser a primeira perde o conectivo
+      renderConfig(); gravar();
+    }
+    function mudarCondicao(i, j, prop, valor) { config[i].condicoes[j][prop] = valor; gravar(); }
+    function mudarOperador(i, j, sel) {
+      config[i].condicoes[j].operador = sel.value;
+      document.getElementById('valor-' + i + '-' + j).placeholder = sel.value === 'EM' ? 'valores separados por vírgula' : 'Digite o valor';
+      gravar();
+    }
+    var timerValor;
+    function digitarValor(i, j, v) {
+      config[i].condicoes[j].valor = v;
+      clearTimeout(timerValor);
+      timerValor = setTimeout(gravar, 600); // pausa na digitação
+    }
+
+    /* ---------- Reordenar Blocos de Legenda (EVT-LEG-04) ---------- */
+    function moverBloco(i, d) {
+      var j = i + d; if (j < 0 || j >= config.length) return;
+      var t = config[i]; config[i] = config[j]; config[j] = t;
+      renderConfig(); gravar();
+    }
+
+    /* ---------- Remover Bloco de Legenda do Evento (EVT-LEG-05) ---------- */
+    var removerIdx = null;
+    function pedirRemoverBloco(i) {
+      removerIdx = i;
+      document.getElementById('msg-remover').textContent = "Remover o bloco '" + bloco(config[i].legendaId).nome + "' deste evento?";
+      toggleModal('modal-remover-bloco', true);
+    }
+    function confirmarRemoverBloco() {
+      toggleModal('modal-remover-bloco', false);
+      config.splice(removerIdx, 1); // as condições vão junto; os demais são renumerados
+      renderConfig(); gravar();
+    }
+
+    /* ---------- Avaliação (a mesma para Simular e Executar — EVT-LEG-06 e 07) ---------- */
+    function norm(s) { return String(s || '').trim().toLowerCase(); }
+    function lista(v) { return v.split(',').map(norm).filter(function (x) { return x; }); }
+    function dadosDaPessoa(p, campo) {
+      if (campo === 'cargo') return [p.cargo];
+      if (campo === 'nomeFantasia') return [p.fantasia];
+      if (campo === 'tema') return p.temas;
+      if (campo === 'grupoTrabalho') return p.gts.map(function (g) { return g[0]; });
+      return p.gts.map(function (g) { return g[1]; }); // papelDesempenhado
+    }
+    function completa(c) {
+      if (!norm(c.valor)) return false;
+      if (c.operador === 'EM' || (c.operador === 'IGUAL' && c.valor.indexOf(',') >= 0)) return lista(c.valor).length > 0;
+      return true;
+    }
+    function atende(p, c) {
+      var dados = dadosDaPessoa(p, c.campo).map(norm), v = norm(c.valor);
+      var unico = c.campo === 'cargo' || c.campo === 'nomeFantasia';
+      var op = (c.operador === 'IGUAL' && c.valor.indexOf(',') >= 0) ? 'EM' : c.operador; // Igual a com vírgula vira lista
+      if (op === 'IGUAL') return dados.some(function (d) { return d === v; });
+      if (op === 'CONTEM') return dados.some(function (d) { return d.indexOf(v) >= 0; });
+      if (op === 'EM') { var l = lista(c.valor); return dados.some(function (d) { return l.indexOf(d) >= 0; }); }
+      // DIFERENTE: valor único → dado preenchido e diferente; vários registros → nenhum registro igual (inclui quem não tem nenhum)
+      if (unico) return dados[0] !== '' && dados[0] !== v;
+      return !dados.some(function (d) { return d === v; });
+    }
+    function avaliar(configuracao) {
+      var res = { participantes: PARTICIPANTES.length, grupos: [], ignorados: [], aplicadas: 0,
+        removidas: LEGENDAS_ATUAIS.filter(function (l) { return !l.manual; }).length,
+        manuais: LEGENDAS_ATUAIS.filter(function (l) { return l.manual; }).length, atribuicoes: [] };
+      configuracao.forEach(function (b, i) {
+        var cat = bloco(b.legendaId) || { nome: '', cor: '#f8f9fa' };
+        var conds = b.condicoes.filter(completa);
+        if (!conds.length) { res.ignorados.push(cat.nome); return; }
+        var nomes = PARTICIPANTES.filter(function (p) {
+          var temManual = LEGENDAS_ATUAIS.some(function (l) { return l.manual && l.pessoa === p.nome && l.legendaId === b.legendaId; });
+          if (temManual) return false;
+          var r = atende(p, conds[0]);
+          for (var k = 1; k < conds.length; k++) {
+            var v = atende(p, conds[k]);
+            r = (conds[k].conectivo === 'OU') ? (r || v) : (r && v); // da esquerda para a direita, sem precedência
+          }
+          return r;
+        }).map(function (p) { return p.nome; });
+        res.grupos.push({ numero: i + 1, nome: cat.nome, cor: cat.cor, nomes: nomes });
+        res.aplicadas += nomes.length;
+        nomes.forEach(function (n) { res.atribuicoes.push({ pessoa: n, legendaId: b.legendaId, manual: false }); });
+      });
+      return res;
+    }
+
+    /* ---------- Simular Aplicação de Legendas (EVT-LEG-06) ---------- */
+    function simular() {
+      // sem indicador: a janela só aparece quando o resultado chega
+      setTimeout(function () {
+        if (falhaSimulada()) { erroInterno(); return; }
+        var r = avaliar(config);
+        document.getElementById('sim-participantes').textContent = r.participantes;
+        document.getElementById('sim-removidas').textContent = r.removidas;
+        document.getElementById('sim-aplicadas').textContent = r.aplicadas;
+        document.getElementById('sim-manuais').textContent = r.manuais;
+        document.getElementById('sim-ignorados').style.display = r.ignorados.length ? 'flex' : 'none';
+        document.getElementById('sim-ignorados-texto').textContent = 'Blocos ignorados: ' + r.ignorados.join(', ');
+        document.getElementById('sim-cabecalho').style.display = r.grupos.length ? '' : 'none';
+        document.getElementById('sim-vazio').style.display = r.grupos.length ? 'none' : 'block';
+        document.getElementById('sim-grupos').innerHTML = r.grupos.map(function (g) {
+          return '<details class="gpe-sim-group"><summary><div class="gpe-sim-cols">' + ICO.caret +
+            '<span>' + g.numero + '</span><span class="gpe-swatch" style="background:' + g.cor + '" title="' + g.cor + '"></span>' +
+            '<span>' + esc(g.nome) + '</span><span>' + g.nomes.length + '</span></div></summary>' +
+            (g.nomes.length ? '<ul>' + g.nomes.map(function (n) { return '<li>' + esc(n) + '</li>'; }).join('') + '</ul>'
+                            : '<ul style="list-style:none"><li>Nenhum participante nesta legenda.</li></ul>') +
+          '</details>';
+        }).join('');
+        toggleModal('modal-simulacao', true);
+      }, 450);
+    }
+
+    /* ---------- Gerar Legendas do Evento (EVT-LEG-07) ---------- */
+    function pedirExecucao() { toggleModal('modal-executar', true); }
+    function executar() {
+      toggleModal('modal-executar', false);
+      // sem indicador de processamento; o botão "Executar" continua habilitado ⚠️
+      setTimeout(function () {
+        if (falhaSimulada()) { erroInterno(); return; } // nada muda: nem a configuração nem as legendas
+        var r = avaliar(config);
+        configGravada = clonar(config); // a geração grava a configuração antes de avaliar
+        LEGENDAS_ATUAIS = LEGENDAS_ATUAIS.filter(function (l) { return l.manual; }).concat(r.atribuicoes);
+        toast('sucesso', 'Legendas aplicadas', r.aplicadas + ' legendas aplicadas, ' + r.manuais + ' manuais preservadas.');
+      }, 700);
+    }
+
+    /* ---------- Formulário do bloco (compartilhado: aba "Criar novo bloco" e janela do catálogo) ---------- */
+    function montarFormBloco(p) {
+      return '<div class="dsc-field" id="' + p + '-fld-nome">' +
+          '<label class="dsc-field-label" for="' + p + '-nome">Nome da legenda <span class="dsc-req">*</span></label>' +
+          '<input class="dsc-input" id="' + p + '-nome" maxlength="100" placeholder="Digite o nome da legenda" onblur="validarNomeBloco(\'' + p + '\')" oninput="if(this.closest(\'.dsc-field\').classList.contains(\'is-invalid\'))validarNomeBloco(\'' + p + '\')">' +
+        '</div>' +
+        '<div class="dsc-field" style="margin-top:16px">' +
+          '<span class="dsc-field-label">Cor <span class="dsc-req">*</span></span>' +
+          '<div class="dsc-flex dsc-items-center dsc-gap-1">' +
+            '<input type="color" class="gpe-colorpicker" id="' + p + '-cor" value="#2196f3" aria-label="Seletor de cor" oninput="escolherCor(\'' + p + '\', this.value)">' +
+            '<span class="gpe-color-code" id="' + p + '-codigo">#2196F3</span>' +
+          '</div>' +
+          '<div class="gpe-palette" id="' + p + '-paleta">' +
+            PALETA.map(function (c) { return '<button type="button" style="background:' + c + ';color:' + corTexto(c) + '" data-cor="' + c + '" aria-label="Cor ' + c + '" title="' + c + '" onclick="escolherCor(\'' + p + '\', \'' + c + '\')"></button>'; }).join('') +
+          '</div>' +
+        '</div>';
+    }
+    function escolherCor(p, c) {
+      c = c.toUpperCase();
+      document.getElementById(p + '-cor').value = c.toLowerCase();
+      document.getElementById(p + '-codigo').textContent = c;
+      document.querySelectorAll('#' + p + '-paleta button').forEach(function (b) {
+        var sel = b.dataset.cor === c;
+        b.classList.toggle('is-selected', sel);
+        b.innerHTML = sel ? ICO.ok : '';
+      });
+    }
+    function prepararFormBloco(p, nome, cor) {
+      document.getElementById(p + '-nome').value = nome || '';
+      erroCampo(p + '-nome', '');
+      escolherCor(p, cor || PALETA[0]);
+    }
+    function erroCampo(inputId, msg) {
+      var fld = document.getElementById(inputId).closest('.dsc-field');
+      var e = fld.querySelector('.dsc-field-error'); if (e) e.remove();
+      fld.classList.toggle('is-invalid', !!msg);
+      if (msg) { e = document.createElement('span'); e.className = 'dsc-field-error'; e.textContent = msg; fld.appendChild(e); }
+    }
+    function validarNomeBloco(p) {
+      var vazio = document.getElementById(p + '-nome').value === ''; // "required" do Angular: só espaços passa ⚠️
+      erroCampo(p + '-nome', vazio ? 'Este campo é obrigatório' : '');
+      return !vazio;
+    }
+    // O que o servidor confere ao gravar o bloco (resposta "Erro Interno" com o detalhe)
+    function recusaDoServidor(nome, idProprio) {
+      if (!nome.trim()) return 'O nome do bloco de legenda é obrigatório.';
+      var repetido = CATALOGO.some(function (b) { return b.id !== idProprio && norm(b.nome) === norm(nome); });
+      if (repetido) return 'Já existe um bloco de legenda com este nome.';
+      return '';
+    }
+
+    /* ---------- Adicionar Bloco de Legenda ao Evento (EVT-LEG-02) e Criar novo bloco (EVT-LEG-12) ---------- */
+    var selecaoAdd = [], carregandoAdd = false;
+    function abrirAdicionarBloco() {
+      selecaoAdd = [];
+      document.getElementById('add-busca').value = '';
+      prepararFormBloco('nb', '', PALETA[0]);
+      abrirAbaAdd('existente');
+      carregandoAdd = true; renderListaAdd();
+      toggleModal('modal-adicionar-bloco', true);
+      setTimeout(function () { carregandoAdd = false; renderListaAdd(); }, 450);
+    }
+    function abrirAbaAdd(qual) {
+      var existente = qual === 'existente';
+      document.getElementById('tab-existente').classList.toggle('is-active', existente);
+      document.getElementById('tab-criar').classList.toggle('is-active', !existente);
+      document.getElementById('aba-existente').classList.toggle('is-active', existente);
+      document.getElementById('aba-criar').classList.toggle('is-active', !existente);
+      document.getElementById('btn-add-evento').style.display = existente ? '' : 'none';
+      document.getElementById('btn-criar-adicionar').style.display = existente ? 'none' : '';
+    }
+    function renderListaAdd() {
+      var area = document.getElementById('add-lista');
+      document.getElementById('btn-add-evento').disabled = !selecaoAdd.length;
+      if (carregandoAdd) { area.innerHTML = '<div class="dsc-table-empty"><span class="dsc-spinner" style="vertical-align:middle;margin-right:8px"></span>Carregando catálogo…</div>'; return; }
+      var noEvento = config.map(function (b) { return b.legendaId; });
+      var disponiveis = CATALOGO.filter(function (b) { return noEvento.indexOf(b.id) < 0; }).sort(porNome);
+      var termo = document.getElementById('add-busca').value;
+      var visiveis = disponiveis.filter(function (b) { return !norm(termo) || norm(b.nome).indexOf(norm(termo)) >= 0; });
+      if (!disponiveis.length) { area.innerHTML = '<div class="dsc-table-empty">Nenhum bloco disponível para adicionar.</div>'; return; }
+      if (!visiveis.length) {
+        area.innerHTML = '<div class="dsc-table-empty">Nenhum bloco encontrado para "' + esc(termo) + '".<br>' +
+          '<button type="button" class="gpe-link" style="margin-top:10px" onclick="criarPelaBusca()">Adicionar bloco "' + esc(termo) + '"</button></div>';
+        return;
+      }
+      area.innerHTML = '<div class="gpe-listbox" role="listbox" aria-multiselectable="true">' + visiveis.map(function (b) {
+        var marcado = selecaoAdd.indexOf(b.id) >= 0;
+        return '<label class="' + (marcado ? 'is-selected' : '') + '"><input type="checkbox" class="dsc-check"' + (marcado ? ' checked' : '') + ' onchange="marcarBloco(' + b.id + ', this.checked)">' +
+          '<span class="gpe-swatch" style="background:' + b.cor + '"></span>' + esc(b.nome) + '</label>';
+      }).join('') + '</div>';
+    }
+    function marcarBloco(id, marcado) {
+      var k = selecaoAdd.indexOf(id);
+      if (marcado && k < 0) selecaoAdd.push(id);
+      if (!marcado && k >= 0) selecaoAdd.splice(k, 1);
+      renderListaAdd();
+    }
+    function criarPelaBusca() {
+      prepararFormBloco('nb', document.getElementById('add-busca').value, PALETA[0]);
+      abrirAbaAdd('criar');
+    }
+    function adicionarAoEvento() {
+      if (!selecaoAdd.length) return;
+      selecaoAdd.forEach(function (id) { config.push({ legendaId: id, condicoes: [] }); }); // no fim, na ordem em que foram marcados
+      toggleModal('modal-adicionar-bloco', false);
+      renderConfig(); gravar();
+    }
+    function criarEAdicionar() {
+      if (!validarNomeBloco('nb')) return;
+      var btn = document.getElementById('btn-criar-adicionar');
+      var nome = document.getElementById('nb-nome').value, cor = document.getElementById('nb-codigo').textContent;
+      btn.disabled = true;
+      setTimeout(function () {
+        btn.disabled = false;
+        if (falhaSimulada()) { erroInterno(); return; }
+        var recusa = recusaDoServidor(nome, null);
+        if (recusa) { toast('erro', 'Erro Interno', recusa); return; } // a janela continua aberta
+        var novo = { id: proximoIdBloco++, nome: nome.trim(), cor: cor };
+        CATALOGO.push(novo);
+        config.push({ legendaId: novo.id, condicoes: [] });
+        toggleModal('modal-adicionar-bloco', false);
+        renderConfig(); gravar(); // sem mensagem própria do cadastro: só "Salvando…" e "Salvo"
+      }, 500);
+    }
+
+    /* ---------- Salvar Preset de Legendas (EVT-LEG-08) ---------- */
+    function abrirSalvarPreset() {
+      document.getElementById('preset-nome').value = '';
+      document.getElementById('preset-descricao').value = '';
+      erroCampo('preset-nome', '');
+      toggleModal('modal-salvar-preset', true);
+    }
+    function validarNomePreset() {
+      var vazio = !document.getElementById('preset-nome').value.trim();
+      erroCampo('preset-nome', vazio ? 'Este campo é obrigatório' : '');
+      return !vazio;
+    }
+    function salvarPreset() {
+      if (!validarNomePreset()) return;
+      var nome = document.getElementById('preset-nome').value.trim(), descricao = document.getElementById('preset-descricao').value.trim();
+      var retrato = clonar(config);
+      toggleModal('modal-salvar-preset', false); // ⚠️ fecha antes da resposta do servidor
+      setTimeout(function () {
+        if (falhaSimulada()) { erroInterno(); return; }
+        if (PRESETS.some(function (p) { return p.nome === nome; })) { toast('erro', 'Erro Interno', 'Já existe um preset com este nome.'); return; }
+        PRESETS.push({ id: proximoIdPreset++, nome: nome, descricao: descricao, blocos: retrato });
+        toast('sucesso', 'Preset salvo', "O preset '" + esc(nome) + "' foi salvo.");
+      }, 600);
+    }
+
+    /* ---------- Carregar Configuração de Legendas (EVT-LEG-09) e Excluir Preset (EVT-LEG-10) ---------- */
+    var carregandoPresets = false, carregandoEventos = false;
+    function abrirCarregar() {
+      document.getElementById('modo-substituir').checked = true;
+      abrirAbaCarregar('presets');
+      carregandoPresets = carregandoEventos = true; renderPresets(); renderOrigens();
+      toggleModal('modal-carregar', true);
+      setTimeout(function () { carregandoPresets = carregandoEventos = false; renderPresets(); renderOrigens(); }, 450);
+    }
+    function abrirAbaCarregar(qual) {
+      var p = qual === 'presets';
+      document.getElementById('tab-presets').classList.toggle('is-active', p);
+      document.getElementById('tab-eventos').classList.toggle('is-active', !p);
+      document.getElementById('aba-presets').classList.toggle('is-active', p);
+      document.getElementById('aba-eventos').classList.toggle('is-active', !p);
+    }
+    function blocosValidos(blocos) { return blocos.filter(function (b) { return !!bloco(b.legendaId); }); }
+    function renderPresets() {
+      var area = document.getElementById('aba-presets');
+      if (carregandoPresets) { area.innerHTML = '<div class="dsc-table-empty"><span class="dsc-spinner" style="vertical-align:middle;margin-right:8px"></span>Carregando presets…</div>'; return; }
+      if (!PRESETS.length) { area.innerHTML = '<div class="dsc-table-empty">Nenhum preset salvo ainda.</div>'; return; }
+      area.innerHTML = PRESETS.map(function (p) {
+        var validos = blocosValidos(p.blocos); // o cartão mostra só os blocos que continuam no catálogo
+        return '<div class="gpe-block-card"><div class="gpe-block-body">' +
+          '<div class="gpe-block-head"><span><strong style="font-size:17px">' + esc(p.nome) + '</strong> <span class="dsc-text-muted" style="margin-left:8px">' + plural(validos.length, 'bloco', 'blocos') + '</span></span>' +
+            '<span class="dsc-flex dsc-gap-1">' +
+              '<button type="button" class="dsc-btn dsc-btn--sm" onclick="aplicarPreset(' + p.id + ')">Aplicar ao evento</button>' +
+              '<button type="button" class="dsc-btn dsc-btn--sm dsc-btn--danger" onclick="pedirExcluirPreset(' + p.id + ')">' + ICO.lixo + 'Excluir preset</button>' +
+            '</span></div>' +
+          (p.descricao ? '<p class="dsc-text-muted" style="margin:6px 0 0">' + esc(p.descricao) + '</p>' : '') +
+          (validos.length ? '<div class="dsc-flex" style="flex-wrap:wrap;gap:6px;margin-top:10px">' + validos.map(function (b) {
+            var c = bloco(b.legendaId);
+            return '<span class="gpe-color-tag" style="background:' + c.cor + ';color:' + corTexto(c.cor) + '">' + esc(c.nome) + '</span>';
+          }).join('') + '</div>' : '') +
+        '</div></div>';
+      }).join('');
+    }
+    function renderOrigens() {
+      var area = document.getElementById('aba-eventos');
+      if (carregandoEventos) { area.innerHTML = '<div class="dsc-table-empty"><span class="dsc-spinner" style="vertical-align:middle;margin-right:8px"></span>Carregando eventos…</div>'; return; }
+      var origens = OUTROS_EVENTOS.filter(function (e) { return !e.excluido && e.blocos.length; });
+      if (!origens.length) { area.innerHTML = '<div class="dsc-table-empty">Nenhum outro evento com blocos configurados.</div>'; return; }
+      area.innerHTML = origens.map(function (e) {
+        return '<div class="gpe-block-card"><div class="gpe-block-body"><div class="gpe-block-head">' +
+          '<span><strong style="font-size:17px">' + esc(e.nome) + '</strong><span class="gpe-subtext">· ' + e.blocos.length + ' bloco(s)</span></span>' + // ⚠️ a data não chega à tela
+          '<button type="button" class="dsc-btn dsc-btn--sm" onclick="aplicarEvento(' + e.id + ')">Aplicar ao evento</button>' +
+        '</div></div></div>';
+      }).join('');
+    }
+    function modoCarga() { return document.getElementById('modo-mesclar').checked ? 'mesclar' : 'substituir'; }
+    function aplicarOrigem(blocos) {
+      var trazidos = clonar(blocos);
+      if (modoCarga() === 'substituir') config = trazidos; // sem confirmação ⚠️
+      else {
+        var ids = config.map(function (b) { return b.legendaId; });
+        trazidos.forEach(function (b) { if (ids.indexOf(b.legendaId) < 0) config.push(b); }); // legenda já presente: valem as condições do evento
+      }
+      toggleModal('modal-carregar', false);
+      renderConfig(); gravar();
+    }
+    function aplicarPreset(id) {
+      var p = PRESETS.filter(function (x) { return x.id === id; })[0];
+      var validos = blocosValidos(p.blocos), ignorados = p.blocos.length - validos.length;
+      aplicarOrigem(validos);
+      if (ignorados) toast('aviso', 'Blocos ignorados', ignorados + ' bloco(s) do preset não existe(m) mais no catálogo e foram ignorados.');
+    }
+    function aplicarEvento(id) { aplicarOrigem(OUTROS_EVENTOS.filter(function (e) { return e.id === id; })[0].blocos); }
+    var presetExcluir = null;
+    function pedirExcluirPreset(id) {
+      presetExcluir = PRESETS.filter(function (x) { return x.id === id; })[0];
+      document.getElementById('msg-excluir-preset').textContent = "Excluir o preset '" + presetExcluir.nome + "'? Esta ação não pode ser desfeita.";
+      toggleModal('modal-excluir-preset', true);
+    }
+    function confirmarExcluirPreset() {
+      toggleModal('modal-excluir-preset', false);
+      var p = presetExcluir;
+      setTimeout(function () {
+        if (falhaSimulada()) { erroInterno(); return; } // a lista não é recarregada depois do erro
+        PRESETS = PRESETS.filter(function (x) { return x.id !== p.id; });
+        toast('sucesso', 'Preset excluído', "O preset '" + esc(p.nome) + "' foi removido.");
+        carregandoPresets = true; renderPresets(); // recarrega a lista, com a janela aberta
+        setTimeout(function () { carregandoPresets = false; renderPresets(); }, 400);
+      }, 300);
+    }
+
+    /* ---------- Pesquisar Blocos de Legenda (EVT-LEG-11) ---------- */
+    var cat = { termo: '', pagina: 0, asc: true, doEvento: false };
+    function abrirCatalogo(doEvento, semCarregamento) {
+      cat.doEvento = doEvento; cat.termo = ''; cat.pagina = 0; cat.asc = true;
+      document.getElementById('cat-busca').value = '';
+      document.getElementById('bc-catalogo').innerHTML = doEvento
+        ? '<span>Início</span><span class="dsc-sep">›</span><span>Eventos</span><span class="dsc-sep">›</span><a href="#" onclick="mostrarConfiguracao(); return false;">Configuração de Legendas</a><span class="dsc-sep">›</span><span class="is-current">Catálogo de blocos</span>'
+        : '<span>Início</span><span class="dsc-sep">›</span><span>Administração</span><span class="dsc-sep">›</span><span class="is-current">Catálogo de legendas</span>';
+      showScreen('screen-catalogo');
+      if (semCarregamento) renderCatalogo(); else carregarCatalogo();
+    }
+    function voltarDoCatalogo() {
+      if (cat.doEvento) mostrarConfiguracao();
+      else location.href = '../../eventos/cadastro-eventos/flow.html'; // aberto pelo menu: volta à lista de eventos
+    }
+    function mostrarConfiguracao() { renderConfig(); showScreen('screen-configuracao'); }
+    function listaCatalogo() {
+      var t = norm(cat.termo);
+      return CATALOGO.filter(function (b) { return !t || norm(b.nome).indexOf(t) >= 0; })
+        .sort(function (a, b) { return cat.asc ? porNome(a, b) : porNome(b, a); });
+    }
+    function carregarCatalogo() {
+      document.getElementById('cat-loading').style.display = 'block';
+      document.getElementById('cat-tabela').style.display = 'none';
+      document.getElementById('cat-vazio').style.display = 'none';
+      setTimeout(function () { document.getElementById('cat-loading').style.display = 'none'; renderCatalogo(); }, 400);
+    }
+    function renderCatalogo() {
+      var todos = listaCatalogo(), paginas = Math.max(1, Math.ceil(todos.length / 10));
+      if (cat.pagina >= paginas) cat.pagina = paginas - 1;
+      var pagina = todos.slice(cat.pagina * 10, cat.pagina * 10 + 10);
+      document.getElementById('cat-th-nome').classList.add('is-sorted');
+      document.getElementById('cat-tabela').style.display = todos.length ? '' : 'none';
+      document.getElementById('cat-vazio').style.display = todos.length ? 'none' : 'block';
+      document.getElementById('cat-corpo').innerHTML = pagina.map(function (b) {
+        return '<tr><td class="gpe-left">' + esc(b.nome) + '</td>' +
+          '<td><span class="gpe-swatch gpe-swatch--lg" style="background:' + b.cor + '" title="' + b.cor + '"></span></td>' +
+          '<td class="dsc-col-actions"><span class="gpe-row-actions">' +
+            '<button class="dsc-icon-action gpe-icon-solid gpe-icon-solid--primary" aria-label="Editar bloco ' + esc(b.nome) + '" title="Editar bloco" onclick="abrirBloco(' + b.id + ')">' + ICO.lapis + '</button>' +
+            '<button class="dsc-icon-action gpe-icon-solid gpe-icon-solid--danger" aria-label="Excluir bloco ' + esc(b.nome) + '" title="Excluir bloco" onclick="pedirExcluirBloco(' + b.id + ')">' + ICO.lixeira + '</button>' +
+          '</span></td></tr>';
+      }).join('');
+      var pg = document.getElementById('cat-paginador');
+      if (!todos.length) { pg.innerHTML = ''; return; }
+      var html = '<button aria-label="Primeira página" onclick="irPagina(0)"' + (cat.pagina === 0 ? ' disabled' : '') + '>«</button>' +
+        '<button aria-label="Página anterior" onclick="irPagina(' + (cat.pagina - 1) + ')"' + (cat.pagina === 0 ? ' disabled' : '') + '>‹</button>';
+      for (var k = 0; k < paginas; k++) html += '<button class="' + (k === cat.pagina ? 'is-active' : '') + '" onclick="irPagina(' + k + ')">' + (k + 1) + '</button>';
+      html += '<button aria-label="Próxima página" onclick="irPagina(' + (cat.pagina + 1) + ')"' + (cat.pagina === paginas - 1 ? ' disabled' : '') + '>›</button>' +
+        '<button aria-label="Última página" onclick="irPagina(' + (paginas - 1) + ')"' + (cat.pagina === paginas - 1 ? ' disabled' : '') + '>»</button>';
+      pg.innerHTML = html;
+    }
+    function irPagina(k) { cat.pagina = k; carregarCatalogo(); }
+    function ordenarCatalogo() { cat.asc = !cat.asc; carregarCatalogo(); }
+    var timerBusca;
+    function digitarBuscaCatalogo() {
+      clearTimeout(timerBusca);
+      timerBusca = setTimeout(function () {
+        var t = document.getElementById('cat-busca').value.trim();
+        if (t === cat.termo) return; // só pesquisa se o termo mudou
+        cat.termo = t; cat.pagina = 0; carregarCatalogo();
+      }, 300);
+    }
+
+    /* ---------- Cadastrar (EVT-LEG-12) e Editar Bloco de Legenda (EVT-LEG-13) ---------- */
+    var blocoEditado = null;
+    function abrirBloco(id) {
+      blocoEditado = id ? bloco(id) : null;
+      document.getElementById('t-bloco').textContent = blocoEditado ? 'Editar bloco' : 'Novo bloco';
+      prepararFormBloco('cb', blocoEditado ? blocoEditado.nome : '', blocoEditado ? blocoEditado.cor : PALETA[0]);
+      toggleModal('modal-bloco', true);
+    }
+    function salvarBloco() {
+      if (!validarNomeBloco('cb')) return;
+      var btn = document.getElementById('btn-salvar-bloco');
+      var nome = document.getElementById('cb-nome').value, cor = document.getElementById('cb-codigo').textContent;
+      btn.disabled = true; btn.classList.add('is-loading');
+      setTimeout(function () {
+        btn.disabled = false; btn.classList.remove('is-loading');
+        if (falhaSimulada()) { erroInterno(); return; } // a janela continua aberta
+        var recusa = recusaDoServidor(nome, blocoEditado ? blocoEditado.id : null);
+        if (recusa) { toast('erro', 'Erro Interno', recusa); return; }
+        toggleModal('modal-bloco', false);
+        if (blocoEditado) {
+          blocoEditado.nome = nome.trim(); blocoEditado.cor = cor; // vale em todos os eventos que usam o bloco
+          toast('sucesso', 'Bloco atualizado', 'O bloco foi atualizado com sucesso.');
+          carregarCatalogo(); // mesma página
+        } else {
+          CATALOGO.push({ id: proximoIdBloco++, nome: nome.trim(), cor: cor });
+          toast('sucesso', 'Bloco criado', 'O bloco foi criado com sucesso.');
+          cat.pagina = 0; carregarCatalogo();
+        }
+      }, 600);
+    }
+
+    /* ---------- Excluir Bloco de Legenda (EVT-LEG-14) ---------- */
+    var blocoExcluir = null;
+    function eventosQueUsam(id) {
+      var usam = [];
+      if (config.some(function (b) { return b.legendaId === id; })) usam.push(EVENTO);
+      OUTROS_EVENTOS.forEach(function (e) { if (e.blocos.some(function (b) { return b.legendaId === id; })) usam.push(e); }); // inclui evento excluído ⚠️
+      return usam;
+    }
+    function pedirExcluirBloco(id) {
+      blocoExcluir = bloco(id);
+      // primeiro consulta o uso (sem indicador), depois pergunta
+      setTimeout(function () {
+        if (falhaSimulada()) { erroInterno(); return; } // sem a consulta de uso, não há pergunta
+        var nome = blocoExcluir.nome, usos = eventosQueUsam(id), msg;
+        var fim = '. Excluir também o removerá dessas configurações e das legendas dos participantes. Deseja continuar?';
+        if (cat.doEvento) {
+          var outros = usos.filter(function (e) { return e.id !== EVENTO.id; }); // ⚠️ o evento de origem nunca entra na lista
+          if (outros.length) msg = "O bloco '" + nome + "' está em uso em outros eventos: " + outros.map(function (e) { return e.nome; }).join(', ') + fim;
+          else if (usos.length) msg = "Excluir o bloco '" + nome + "'? Ele será removido da configuração deste evento e das legendas dos participantes.";
+          else msg = "Excluir o bloco '" + nome + "'?";
+        } else {
+          msg = usos.length ? "O bloco '" + nome + "' está em uso nos eventos: " + usos.map(function (e) { return e.nome; }).join(', ') + fim : "Excluir o bloco '" + nome + "'?";
+        }
+        document.getElementById('msg-excluir-bloco').textContent = msg;
+        toggleModal('modal-excluir-bloco', true);
+      }, 250);
+    }
+    function confirmarExcluirBloco() {
+      toggleModal('modal-excluir-bloco', false);
+      var id = blocoExcluir.id;
+      setTimeout(function () {
+        if (falhaSimulada()) { erroInterno(); return; } // nada é alterado
+        CATALOGO = CATALOGO.filter(function (b) { return b.id !== id; });
+        var tirar = function (lista) { return lista.filter(function (b) { return b.legendaId !== id; }); };
+        config = tirar(config); configGravada = tirar(configGravada); // sai da configuração de todos os eventos, renumerando
+        OUTROS_EVENTOS.forEach(function (e) { e.blocos = tirar(e.blocos); });
+        LEGENDAS_ATUAIS = LEGENDAS_ATUAIS.filter(function (l) { return l.legendaId !== id; }); // inclusive as manuais ⚠️
+        toast('sucesso', 'Bloco excluído', 'O bloco foi excluído com sucesso.');
+        cat.pagina = 0; carregarCatalogo();
+      }, 300);
+    }
+
+    /* ---------- Inicialização e entrada por endereço ---------- */
+    document.getElementById('aba-criar').innerHTML = montarFormBloco('nb');
+    document.getElementById('form-bloco').innerHTML = montarFormBloco('cb');
+    renderConfig();
+    /* flow.html#configuracao (padrão) abre a Configuração de Legendas do evento — é o destino do ícone da lista de eventos;
+       flow.html#catalogo abre o Catálogo de blocos como pelo menu Administração › Catálogo de legendas */
+    function rotear() {
+      if (location.hash === '#catalogo') abrirCatalogo(false, true);
+      else mostrarConfiguracao();
+    }
+    window.addEventListener('hashchange', rotear);
+    rotear();
+  </script>
+</body>
+</html>
