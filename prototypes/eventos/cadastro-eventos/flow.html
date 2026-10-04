@@ -17,53 +17,6 @@
   <!-- Biblioteca de componentes + camada de tema do GPE (visual recuperado do código-fonte) -->
   <link rel="stylesheet" href="../../_biblioteca-ds/ds.css">
   <link rel="stylesheet" href="../../_biblioteca-ds/tema-gpe.css">
-  <style>
-    /* candidato a tema-gpe.css — campo de data com o botão de calendário à direita (p-datePicker com ícone) */
-    .gpe-date { position: relative; display: flex; }
-    .gpe-date > .dsc-input { flex: 1; min-width: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; }
-    .gpe-date-btn { flex: none; width: 46px; display: grid; place-items: center; border: 1px solid #ced4da; border-left: 0; border-radius: 0 6px 6px 0; background: #f4f5f7; color: #495057; cursor: pointer; }
-    .gpe-date-btn:hover { background: #e9ecef; }
-    .gpe-date-btn svg { width: 18px; height: 18px; }
-    .gpe-date--curta { max-width: 272px; }
-
-    /* candidato a tema-gpe.css — painel do calendário (mês/ano navegáveis, dias, hora em 24h, Hoje e Limpar) */
-    .gpe-cal { position: absolute; top: calc(100% + 4px); left: 0; z-index: 160; width: 304px; padding: 12px; background: #fff; border: 1px solid var(--dsc-border-neutral-3); border-radius: 6px; box-shadow: var(--dsc-elevation-2); }
-    .gpe-cal-head { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
-    .gpe-cal-head select { flex: 1; height: 32px; border: 1px solid var(--dsc-border-neutral-3); border-radius: 4px; font-family: inherit; padding: 0 6px; }
-    .gpe-cal-head button { width: 32px; height: 32px; border: 0; border-radius: 50%; background: transparent; cursor: pointer; font-size: 18px; color: var(--dsc-content-neutral-4); }
-    .gpe-cal-head button:hover { background: var(--dsc-bg-neutral-3); }
-    .gpe-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; text-align: center; font-size: 13px; }
-    .gpe-cal-grid span { padding: 4px 0; font-weight: 600; color: var(--dsc-grayscale-90); }
-    .gpe-cal-grid button { height: 34px; border: 0; border-radius: 50%; background: transparent; font-family: inherit; font-size: 14px; cursor: pointer; color: var(--dsc-content-neutral-5); }
-    .gpe-cal-grid button:hover { background: var(--dsc-bg-neutral-3); }
-    .gpe-cal-grid button.is-today { color: var(--dsc-primary-90); font-weight: 700; }
-    .gpe-cal-grid button.is-selected { background: var(--dsc-primary-10); color: var(--dsc-primary-110); font-weight: 700; }
-    .gpe-cal-time { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--dsc-border-neutral-3); font-size: 18px; }
-    .gpe-cal-time input { width: 52px; height: 34px; text-align: center; border: 1px solid #ced4da; border-radius: 4px; font-family: inherit; font-size: 15px; }
-    .gpe-cal-foot { display: flex; justify-content: space-between; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--dsc-border-neutral-3); }
-
-    /* candidato a tema-gpe.css — p-select com showClear (✕ antes da seta) */
-    .gpe-select-clear { position: relative; }
-    .gpe-select-clear > .dsc-select { width: 100%; padding-right: 64px; }
-    .gpe-select-clear > button { display: none; position: absolute; right: 34px; top: 50%; transform: translateY(-50%); width: 24px; height: 24px; padding: 0; border: 0; background: transparent; color: var(--dsc-grayscale-90); cursor: pointer; place-items: center; }
-    .gpe-select-clear > button svg { width: 16px; height: 16px; }
-    .gpe-select-clear.has-value > button { display: grid; }
-
-    /* candidato a tema-gpe.css — linha de evento finalizado (opacidade reduzida) e célula do nome com o selo */
-    .gpe-row-finalizado { opacity: 0.55; }
-    .gpe-name-cell { display: inline-flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-    .gpe-qtd { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; font-size: 16px; }
-    .gpe-qtd svg { width: 15px; height: 15px; color: #9aa3ad; }
-    .dsc-tag.gpe-tag-tipo svg { width: 13px; height: 13px; }
-
-    /* candidato a tema-gpe.css — título de formulário com ícone ("Novo Evento" / "Editar Evento") */
-    .gpe-form-title { display: flex; align-items: center; gap: 14px; font-size: 32px; font-weight: 600; line-height: 1.2; color: var(--dsc-content-neutral-5); margin: 0 0 26px; }
-    .gpe-form-title svg { width: 22px; height: 22px; }
-
-    /* candidato a tema-gpe.css — título de seção dentro de janela ("Carga de Convidados", "Inscritos do CRM") */
-    .gpe-section-title { font-size: 24px; font-weight: 600; color: var(--dsc-content-neutral-4); margin: 4px 0 14px; }
-    .gpe-section-title ~ .gpe-section-title { margin-top: 28px; }
-  </style>
 </head>
 <body>
 
@@ -84,10 +37,10 @@
               <span class="dsc-avatar">AC</span>
             </button>
             <ul class="gpe-user-dropdown">
-              <li class="gpe-ud-info">Nome: <strong>Ana Costa</strong></li>
-              <li class="gpe-ud-info">Login: <strong>ana.costa</strong></li>
-              <li class="gpe-ud-info">Perfil: <strong id="ud-perfil">Administrador</strong></li>
-              <li class="gpe-ud-info">Email: <strong>ana.costa@cni.com.br</strong></li>
+              <li class="gpe-ud-info"><strong>Nome:</strong> <span>Ana Costa</span></li>
+              <li class="gpe-ud-info"><strong>Login:</strong> <span>ana.costa</span></li>
+              <li class="gpe-ud-info"><strong>Perfil:</strong> <span id="ud-perfil">Administrador</span></li>
+              <li class="gpe-ud-info"><strong>Email:</strong> <span>ana.costa@cni.com.br</span></li>
               <li class="gpe-ud-sep"></li>
               <li><a href="../../acesso-usuarios/autenticacao/flow.html#foto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="12" cy="12" r="3"/></svg>Alterar Foto do Perfil</a></li>
               <li><a href="../../acesso-usuarios/autenticacao/flow.html#alterar-senha"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Alterar Senha</a></li>
@@ -509,7 +462,7 @@
         '<td><span class="dsc-tag dsc-tag--success gpe-tag-tipo">' + ICO.mesa + e.mesa + '</span></td>' +
         '<td><span class="gpe-qtd">' + ICO.usuarios + e.participantes.toLocaleString('pt-BR') + '</span></td>' +
         '<td><strong>' + (e.principal ? 'Sim' : 'Não') + '</strong></td>' +
-        '<td class="dsc-col-actions"><span class="gpe-row-actions">' +
+        '<td class="dsc-col-actions"><span class="gpe-row-actions gpe-row-actions--many">' +
           acao('gpe-c-blue', 'Configuração de Legendas', ICO.legendas, 'irLegendas(' + i + ')', e.nome) +
           (e.principal
             ? '<span class="dsc-icon-action gpe-icon-round gpe-c-green" role="img" style="cursor:default" aria-label="Este evento é o principal — ' + e.nome + '" title="Este evento é o principal">' + ICO.bandeiraCheia + '</span>'

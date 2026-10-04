@@ -193,11 +193,11 @@ body { background: var(--gpe-app-bg); }
 .gpe-icon-solid--danger { background: var(--dsc-danger-90); }
 .gpe-icon-solid--danger:hover { background: var(--dsc-danger-on); }
 .gpe-icon-round {
-  width: 40px; height: 40px; border-radius: 50%;
+  width: 36px; height: 36px; border-radius: 50%;
   background: #fff; border: 1.5px solid currentColor;
 }
 .gpe-icon-round:hover { background: var(--dsc-bg-neutral-3); }
-.gpe-icon-round svg { width: 20px; height: 20px; }
+.gpe-icon-round svg { width: 18px; height: 18px; }
 .gpe-c-blue   { color: #1d5fbf; }
 .gpe-c-orange { color: #e07a1f; }
 .gpe-c-yellow { color: #d6a10a; }
@@ -282,6 +282,9 @@ body { background: var(--gpe-app-bg); }
 .dsc-sortable::after { content: "⇅"; opacity: 0.75; font-size: 13px; }
 .dsc-col-actions { text-align: center; }
 .gpe-row-actions { display: inline-flex; gap: 6px; flex-wrap: nowrap; }
+/* Muitas ações redondas (lista de eventos): até 4 por linha quando falta largura */
+.gpe-row-actions--many { flex-wrap: wrap; justify-content: center; min-width: 162px; }
+@media (min-width: 1500px) { .gpe-row-actions--many { flex-wrap: nowrap; } }
 .gpe-subtext { display: block; font-size: 12px; color: var(--dsc-grayscale-90); }
 
 /* Paginador (p-paginator) */
@@ -432,6 +435,150 @@ body { background: var(--gpe-app-bg); }
 .gpe-login-art { background: linear-gradient(160deg, #0a5fc4 0%, #0b56b5 55%, #0a4a9e 100%); display: grid; place-items: center; color: rgba(255, 255, 255, 0.85); font-size: 15px; padding: 40px; text-align: center; }
 .gpe-brand-cni { margin-top: 70px; font-weight: 800; font-style: italic; color: #1b3f94; font-size: 26px; line-height: 1.05; }
 .gpe-brand-cni small { display: block; font-size: 12px; font-style: normal; letter-spacing: 1px; }
+
+/* ============================ Componentes trazidos pelos fluxos =========== */
+/* Regras criadas durante a geração de cada flow.html (2026-10-04) e movidas
+   para cá, para o tema ser a única fonte de estilo dos protótipos.           */
+.gpe-map-center { grid-template-columns: minmax(0, 1fr); } /* o mapa não transborda a página */
+
+/* --- Autenticação (ACE-AUT) — prototypes/acesso-usuarios/autenticacao/flow.html --- */
+/* Rótulos sem estilo das telas Recuperar senha e Alterar senha: a aplicação não aplica
+   a fonte nem a cor do tema a eles, e o navegador os mostra com a fonte serifada padrão
+   (imagens "Esqueci Minha Senha" e "Alterar senha do primeiro acesso" de GPE001). */
+.gpe-label-plain { display: block; font-family: "Times New Roman", Times, serif; font-weight: 400; font-size: 17px; color: #212529; }
+
+/* --- Usuários (ACE-USU) — prototypes/acesso-usuarios/usuarios/flow.html --- */
+/* quadro com cabeçalho cinza e ícone (p-panel do formulário Usuário) */
+.gpe-fieldset { border: 1px solid var(--dsc-border-neutral-3); border-radius: 6px; margin-top: 22px; background: #fff; }
+.gpe-fieldset-head { display: flex; align-items: center; gap: 8px; padding: 16px 20px; background: var(--dsc-bg-neutral-2); border-bottom: 1px solid var(--dsc-border-neutral-3); border-radius: 6px 6px 0 0; font-size: 16px; color: var(--dsc-content-neutral-5); }
+.gpe-fieldset-head svg { width: 17px; height: 17px; }
+.gpe-fieldset-body { display: grid; gap: 18px; padding: 20px; }
+/* telefone em duas caixas: DDD + número (dois p-inputMask) */
+.gpe-phone { display: flex; gap: 12px; }
+.gpe-phone .gpe-phone-ddd { width: 64px; }
+.gpe-phone .gpe-phone-num { width: 130px; }
+/* seta da ordenação decrescente (p-sortIcon) */
+.dsc-sortable.is-sorted.gpe-sort-desc::after { content: "↓"; }
+
+/* --- Cadastro de Eventos (EVT-CAD) — prototypes/eventos/cadastro-eventos/flow.html --- */
+/* campo de data com o botão de calendário à direita (p-datePicker com ícone) */
+.gpe-date { position: relative; display: flex; }
+.gpe-date > .dsc-input { flex: 1; min-width: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; }
+.gpe-date-btn { flex: none; width: 46px; display: grid; place-items: center; border: 1px solid #ced4da; border-left: 0; border-radius: 0 6px 6px 0; background: #f4f5f7; color: #495057; cursor: pointer; }
+.gpe-date-btn:hover { background: #e9ecef; }
+.gpe-date-btn svg { width: 18px; height: 18px; }
+.gpe-date--curta { max-width: 272px; }
+
+/* painel do calendário (mês/ano navegáveis, dias, hora em 24h, Hoje e Limpar) */
+.gpe-cal { position: absolute; top: calc(100% + 4px); left: 0; z-index: 160; width: 304px; padding: 12px; background: #fff; border: 1px solid var(--dsc-border-neutral-3); border-radius: 6px; box-shadow: var(--dsc-elevation-2); }
+.gpe-cal-head { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+.gpe-cal-head select { flex: 1; height: 32px; border: 1px solid var(--dsc-border-neutral-3); border-radius: 4px; font-family: inherit; padding: 0 6px; }
+.gpe-cal-head button { width: 32px; height: 32px; border: 0; border-radius: 50%; background: transparent; cursor: pointer; font-size: 18px; color: var(--dsc-content-neutral-4); }
+.gpe-cal-head button:hover { background: var(--dsc-bg-neutral-3); }
+.gpe-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; text-align: center; font-size: 13px; }
+.gpe-cal-grid span { padding: 4px 0; font-weight: 600; color: var(--dsc-grayscale-90); }
+.gpe-cal-grid button { height: 34px; border: 0; border-radius: 50%; background: transparent; font-family: inherit; font-size: 14px; cursor: pointer; color: var(--dsc-content-neutral-5); }
+.gpe-cal-grid button:hover { background: var(--dsc-bg-neutral-3); }
+.gpe-cal-grid button.is-today { color: var(--dsc-primary-90); font-weight: 700; }
+.gpe-cal-grid button.is-selected { background: var(--dsc-primary-10); color: var(--dsc-primary-110); font-weight: 700; }
+.gpe-cal-time { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--dsc-border-neutral-3); font-size: 18px; }
+.gpe-cal-time input { width: 52px; height: 34px; text-align: center; border: 1px solid #ced4da; border-radius: 4px; font-family: inherit; font-size: 15px; }
+.gpe-cal-foot { display: flex; justify-content: space-between; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--dsc-border-neutral-3); }
+
+/* p-select com showClear (✕ antes da seta) */
+.gpe-select-clear { position: relative; }
+.gpe-select-clear > .dsc-select { width: 100%; padding-right: 64px; }
+.gpe-select-clear > button { display: none; position: absolute; right: 34px; top: 50%; transform: translateY(-50%); width: 24px; height: 24px; padding: 0; border: 0; background: transparent; color: var(--dsc-grayscale-90); cursor: pointer; place-items: center; }
+.gpe-select-clear > button svg { width: 16px; height: 16px; }
+.gpe-select-clear.has-value > button { display: grid; }
+
+/* linha de evento finalizado (opacidade reduzida) e célula do nome com o selo */
+.gpe-row-finalizado { opacity: 0.55; }
+.gpe-name-cell { display: inline-flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.gpe-qtd { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; font-size: 16px; }
+.gpe-qtd svg { width: 15px; height: 15px; color: #9aa3ad; }
+.dsc-tag.gpe-tag-tipo svg { width: 13px; height: 13px; }
+
+/* título de formulário com ícone ("Novo Evento" / "Editar Evento") */
+.gpe-form-title { display: flex; align-items: center; gap: 14px; font-size: 32px; font-weight: 600; line-height: 1.2; color: var(--dsc-content-neutral-5); margin: 0 0 26px; }
+.gpe-form-title svg { width: 22px; height: 22px; }
+
+/* título de seção dentro de janela ("Carga de Convidados", "Inscritos do CRM") */
+.gpe-section-title { font-size: 24px; font-weight: 600; color: var(--dsc-content-neutral-4); margin: 4px 0 14px; }
+.gpe-section-title ~ .gpe-section-title { margin-top: 28px; }
+
+/* --- Legendas (EVT-LEG) — prototypes/eventos/legendas/flow.html --- */
+/* cabeçalho da Configuração de Legendas e indicador de gravação automática */
+.gpe-cfg-evento { font-size: 18px; font-weight: 600; color: var(--gpe-navy); margin: 6px 0 2px; }
+.gpe-save-state { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 400; color: var(--dsc-grayscale-90); }
+.gpe-save-state.is-ok { color: var(--dsc-success-on); }
+.gpe-save-state svg { width: 16px; height: 16px; }
+.gpe-spinner-sm { width: 14px; height: 14px; border-width: 2px; }
+
+/* cartão do bloco: título, ferramentas, títulos das condições e estado sem condição */
+.gpe-block-title { display: inline-flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 600; color: var(--dsc-content-neutral-5); min-width: 0; }
+.gpe-block-tools { display: inline-flex; align-items: center; gap: 4px; }
+.gpe-block-tools button:disabled { opacity: 0.35; cursor: not-allowed; background: transparent; }
+.gpe-cond-head { margin-top: 14px; font-size: 13px; font-weight: 600; color: var(--dsc-grayscale-90); }
+.gpe-block-empty { margin: 12px 0 0; font-size: 14px; font-style: italic; color: var(--dsc-grayscale-90); }
+
+/* formulário do bloco: seletor de cor, código e marca da cor escolhida na paleta */
+.gpe-colorpicker { width: 42px; height: 42px; padding: 2px; border: 1px solid #ced4da; border-radius: 6px; background: #fff; cursor: pointer; }
+.gpe-color-code { font-family: Consolas, "Courier New", monospace; font-size: 15px; color: var(--dsc-content-neutral-4); }
+.gpe-palette button { display: grid; place-items: center; }
+.gpe-palette button svg { width: 16px; height: 16px; }
+
+/* etiqueta pintada com a cor do bloco (cartão do preset) */
+.gpe-color-tag { display: inline-flex; align-items: center; height: 24px; padding: 0 10px; border-radius: 4px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+
+/* simulação: cartões de totais e colunas da tabela expansível */
+.gpe-stat-value { font-size: 30px; font-weight: 700; line-height: 1.1; color: var(--dsc-content-neutral-5); }
+.gpe-stat-label { font-size: 14px; color: var(--dsc-grayscale-90); margin-top: 4px; }
+.gpe-sim-cols { display: grid; grid-template-columns: 20px 44px 52px minmax(0, 1fr) 100px; gap: 10px; align-items: center; flex: 1; }
+.gpe-sim-head { padding: 0 15px 8px; font-size: 14px; font-weight: 600; color: var(--dsc-content-neutral-4); }
+.gpe-sim-group summary { list-style: none; }
+.gpe-sim-group summary::-webkit-details-marker { display: none; }
+.gpe-sim-caret { width: 16px; height: 16px; color: var(--dsc-grayscale-90); transition: transform 0.15s; }
+.gpe-sim-group[open] .gpe-sim-caret { transform: rotate(90deg); }
+
+/* no celular as condições empilham: os títulos das colunas somem e cada condição ganha um separador */
+@media (max-width: 900px) {
+  .gpe-cond-head { display: none; }
+  .gpe-cond-row + .gpe-cond-row { border-top: 1px dashed var(--dsc-border-neutral-3); padding-top: 10px; }
+  .gpe-cond-row > span:empty { display: none; }
+}
+@media (max-width: 600px) {
+  .gpe-sim-cols { grid-template-columns: 16px 22px 22px minmax(0, 1fr) 78px; gap: 8px; }
+}
+
+/* --- Participantes (EVT-PAR) — prototypes/eventos/participantes/flow.html --- */
+/* seleção múltipla (p-multiSelect): gatilho com cara de select e painel com caixas de marcar */
+.gpe-ms { position: relative; }
+.gpe-ms-trigger { text-align: left; cursor: pointer; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: var(--dsc-content-neutral-4); }
+.gpe-ms-panel { display: none; position: absolute; left: 0; right: 0; top: calc(100% + 4px); z-index: 120; background: #fff; border-radius: 6px; box-shadow: var(--dsc-elevation-2); }
+.gpe-ms.is-open .gpe-ms-panel { display: block; }
+
+/* mesa principal: setor A no alto, B e C nas laterais, D embaixo e o texto "Mesa Principal" no centro */
+.gpe-map-stack { display: grid; gap: 28px; justify-items: center; align-content: start; }
+.gpe-main-table { display: grid; grid-template-columns: repeat(5, 92px); gap: 6px; align-content: start; }
+.gpe-main-table-center { grid-column: span 3; display: grid; place-items: center; border: 1px dashed var(--gpe-seat-border); border-radius: 6px; background: #f7f8fa; color: #8a96a3; font-size: 18px; font-weight: 600; }
+.gpe-seat[draggable="true"] { cursor: grab; }
+
+/* camada "Carregando dados da mesa..." sobre o mapa */
+.gpe-map-wrap { position: relative; }
+.gpe-map-overlay { position: absolute; inset: 0; z-index: 20; display: flex; align-items: center; justify-content: center; gap: 12px; background: rgba(255, 255, 255, 0.72); border-radius: 8px; font-size: 16px; color: var(--dsc-content-neutral-4); }
+
+/* lista de opções clicáveis (janela de legenda, Selecionar Pessoa, resultados da busca na mesa) */
+.gpe-option-list { border: 1px solid var(--dsc-border-neutral-3); border-radius: 6px; max-height: 300px; overflow-y: auto; }
+.gpe-option-list-head { padding: 8px 16px; font-size: 13px; color: var(--dsc-grayscale-90); background: var(--dsc-bg-neutral-2); }
+.gpe-option { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 16px; background: #fff; border: 0; border-top: 1px solid var(--dsc-border-neutral-3); font: inherit; color: inherit; text-align: left; cursor: pointer; }
+.gpe-option:first-child { border-top: 0; }
+.gpe-option:hover { background: var(--dsc-bg-neutral-3); }
+.gpe-option.is-selected { background: var(--dsc-primary-10); box-shadow: inset 3px 0 0 var(--dsc-primary-90); }
+.gpe-option small { display: block; font-size: 12px; color: var(--dsc-grayscale-90); }
+
+/* etiqueta "Check in não identificado" (amarela) do cartão do Administrador */
+.gpe-tag-check--pendente { background: #f5b301; color: #3b2a00; }
 
 /* ============================ Painel do protótipo ========================== */
 .dsc-proto-notes { margin: 0 20px 72px; background: #fffbea; border-color: #e8c765; }

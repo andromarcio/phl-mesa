@@ -17,35 +17,6 @@
   <!-- Biblioteca de componentes + camada de tema do GPE (visual recuperado do código-fonte) -->
   <link rel="stylesheet" href="../../_biblioteca-ds/ds.css">
   <link rel="stylesheet" href="../../_biblioteca-ds/tema-gpe.css">
-  <style>
-    /* candidato a tema-gpe.css — seleção múltipla (p-multiSelect): gatilho com cara de select e painel com caixas de marcar */
-    .gpe-ms { position: relative; }
-    .gpe-ms-trigger { text-align: left; cursor: pointer; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: var(--dsc-content-neutral-4); }
-    .gpe-ms-panel { display: none; position: absolute; left: 0; right: 0; top: calc(100% + 4px); z-index: 120; background: #fff; border-radius: 6px; box-shadow: var(--dsc-elevation-2); }
-    .gpe-ms.is-open .gpe-ms-panel { display: block; }
-
-    /* candidato a tema-gpe.css — mesa principal: setor A no alto, B e C nas laterais, D embaixo e o texto "Mesa Principal" no centro */
-    .gpe-map-stack { display: grid; gap: 28px; justify-items: center; align-content: start; }
-    .gpe-main-table { display: grid; grid-template-columns: repeat(5, 92px); gap: 6px; align-content: start; }
-    .gpe-main-table-center { grid-column: span 3; display: grid; place-items: center; border: 1px dashed var(--gpe-seat-border); border-radius: 6px; background: #f7f8fa; color: #8a96a3; font-size: 18px; font-weight: 600; }
-    .gpe-seat[draggable="true"] { cursor: grab; }
-
-    /* candidato a tema-gpe.css — camada "Carregando dados da mesa..." sobre o mapa */
-    .gpe-map-wrap { position: relative; }
-    .gpe-map-overlay { position: absolute; inset: 0; z-index: 20; display: flex; align-items: center; justify-content: center; gap: 12px; background: rgba(255, 255, 255, 0.72); border-radius: 8px; font-size: 16px; color: var(--dsc-content-neutral-4); }
-
-    /* candidato a tema-gpe.css — lista de opções clicáveis (janela de legenda, Selecionar Pessoa, resultados da busca na mesa) */
-    .gpe-option-list { border: 1px solid var(--dsc-border-neutral-3); border-radius: 6px; max-height: 300px; overflow-y: auto; }
-    .gpe-option-list-head { padding: 8px 16px; font-size: 13px; color: var(--dsc-grayscale-90); background: var(--dsc-bg-neutral-2); }
-    .gpe-option { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 16px; background: #fff; border: 0; border-top: 1px solid var(--dsc-border-neutral-3); font: inherit; color: inherit; text-align: left; cursor: pointer; }
-    .gpe-option:first-child { border-top: 0; }
-    .gpe-option:hover { background: var(--dsc-bg-neutral-3); }
-    .gpe-option.is-selected { background: var(--dsc-primary-10); box-shadow: inset 3px 0 0 var(--dsc-primary-90); }
-    .gpe-option small { display: block; font-size: 12px; color: var(--dsc-grayscale-90); }
-
-    /* candidato a tema-gpe.css — etiqueta "Check in não identificado" (amarela) do cartão do Administrador */
-    .gpe-tag-check--pendente { background: #f5b301; color: #3b2a00; }
-  </style>
 </head>
 <body>
 
@@ -66,10 +37,10 @@
               <span class="dsc-avatar">AC</span>
             </button>
             <ul class="gpe-user-dropdown">
-              <li class="gpe-ud-info">Nome: <strong>Ana Costa</strong></li>
-              <li class="gpe-ud-info">Login: <strong>ana.costa</strong></li>
-              <li class="gpe-ud-info">Perfil: <strong id="ud-perfil">Administrador</strong></li>
-              <li class="gpe-ud-info">Email: <strong>ana.costa@cni.com.br</strong></li>
+              <li class="gpe-ud-info"><strong>Nome:</strong> <span>Ana Costa</span></li>
+              <li class="gpe-ud-info"><strong>Login:</strong> <span>ana.costa</span></li>
+              <li class="gpe-ud-info"><strong>Perfil:</strong> <span id="ud-perfil">Administrador</span></li>
+              <li class="gpe-ud-info"><strong>Email:</strong> <span>ana.costa@cni.com.br</span></li>
               <li class="gpe-ud-sep"></li>
               <li><a href="../../acesso-usuarios/autenticacao/flow.html#foto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="12" cy="12" r="3"/></svg>Alterar Foto do Perfil</a></li>
               <li><a href="../../acesso-usuarios/autenticacao/flow.html#alterar-senha"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Alterar Senha</a></li>
