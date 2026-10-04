@@ -1,0 +1,629 @@
+<!-- docqui: 4.1.0 | prompt: PROMPT_PROTOTYPE_FLOW_FULL | atualizado: 2026-10-04 -->
+<!DOCTYPE html>
+<!--
+  ⚠️ PROTÓTIPO NAVEGÁVEL — treino, não jogo.
+  Fonte de verdade de LAYOUT, COMPORTAMENTO e ESTADOS — NUNCA de implementação.
+  Não copie este HTML/CSS/JS para o código de produção: aqui tudo é autocontido
+  e procedural DE PROPÓSITO (simulação). A implementação real segue outra
+  estratégia: componentes do design system do projeto (mapa de equivalência no
+  README do tema), catálogo global/PATTERNS.md e convenções do global/MASTER.md.
+  Classes .dsc-* são EXCLUSIVAS de protótipo — proibidas em código de produção.
+-->
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Protótipo: Usuários — Acesso e Usuários</title>
+  <!-- Biblioteca de componentes + camada de tema do GPE (visual recuperado do código-fonte) -->
+  <link rel="stylesheet" href="../../_biblioteca-ds/ds.css">
+  <link rel="stylesheet" href="../../_biblioteca-ds/tema-gpe.css">
+  <style>
+    /* candidato a tema-gpe.css — quadro com cabeçalho cinza e ícone (p-panel do formulário Usuário) */
+    .gpe-fieldset { border: 1px solid var(--dsc-border-neutral-3); border-radius: 6px; margin-top: 22px; background: #fff; }
+    .gpe-fieldset-head { display: flex; align-items: center; gap: 8px; padding: 16px 20px; background: var(--dsc-bg-neutral-2); border-bottom: 1px solid var(--dsc-border-neutral-3); border-radius: 6px 6px 0 0; font-size: 16px; color: var(--dsc-content-neutral-5); }
+    .gpe-fieldset-head svg { width: 17px; height: 17px; }
+    .gpe-fieldset-body { display: grid; gap: 18px; padding: 20px; }
+    /* candidato a tema-gpe.css — telefone em duas caixas: DDD + número (dois p-inputMask) */
+    .gpe-phone { display: flex; gap: 12px; }
+    .gpe-phone .gpe-phone-ddd { width: 64px; }
+    .gpe-phone .gpe-phone-num { width: 130px; }
+    /* candidato a tema-gpe.css — seta da ordenação decrescente (p-sortIcon) */
+    .dsc-sortable.is-sorted.gpe-sort-desc::after { content: "↓"; }
+  </style>
+</head>
+<body>
+
+  <div class="dsc-proto-badge">🎨 PROTÓTIPO — não é o sistema real</div>
+
+  <div class="dsc-app">
+    <div class="dsc-shell-main">
+
+      <!-- Topbar: título do sistema à esquerda, usuário à direita (topbar.component) -->
+      <header class="dsc-header">
+        <div class="dsc-header-start">
+          <span class="dsc-header-logo">Gestão de Participantes em Eventos</span>
+        </div>
+        <div class="dsc-header-actions">
+          <div class="gpe-user-menu" id="user-menu">
+            <button class="dsc-header-item" onclick="toggleUserMenu(event)" aria-haspopup="true">
+              <span class="dsc-hi-body"><span class="dsc-hi-title">Ana Costa</span><span class="dsc-hi-sub dsc-text-primary">Administrador</span></span>
+              <span class="dsc-avatar">AC</span>
+            </button>
+            <ul class="gpe-user-dropdown">
+              <li class="gpe-ud-info">Nome: <strong>Ana Costa</strong></li>
+              <li class="gpe-ud-info">Login: <strong>ana.costa</strong></li>
+              <li class="gpe-ud-info">Perfil: <strong>Administrador</strong></li>
+              <li class="gpe-ud-info">Email: <strong>ana.costa@cni.com.br</strong></li>
+              <li class="gpe-ud-sep"></li>
+              <li><a href="../../acesso-usuarios/autenticacao/flow.html#foto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="12" cy="12" r="3"/></svg>Alterar Foto do Perfil</a></li>
+              <li><a href="../../acesso-usuarios/autenticacao/flow.html#alterar-senha"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Alterar Senha</a></li>
+              <li><a href="../../acesso-usuarios/autenticacao/flow.html#login"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>Logout</a></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+
+      <!-- Menu horizontal (p-menubar montado com o menu que o login devolve) -->
+      <nav class="gpe-menubar" aria-label="Menu principal">
+        <div class="gpe-menu-item"><a class="gpe-menu-link" href="../../acesso-usuarios/autenticacao/flow.html#inicio"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" opacity=".35"/><path d="M12 12l5-5" stroke="#fff" stroke-width="2"/></svg>Dashboard</a></div>
+        <div class="gpe-menu-item">
+          <button class="gpe-menu-link is-active" onclick="toggleSubmenu(this, event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Administração<svg class="gpe-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+          <ul class="gpe-submenu">
+            <li><a href="#" class="is-active" onclick="abrirLista(); return false;">Usuários</a></li>
+            <li><a href="../../pessoas/cadastro-pessoas/flow.html">Pessoas</a></li>
+            <li><a href="../../eventos/legendas/flow.html#catalogo">Catálogo de legendas</a></li>
+          </ul>
+        </div>
+        <div class="gpe-menu-item">
+          <button class="gpe-menu-link" onclick="toggleSubmenu(this, event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Eventos<svg class="gpe-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+          <ul class="gpe-submenu">
+            <li><a href="../../eventos/cadastro-eventos/flow.html">Cadastro</a></li>
+          </ul>
+        </div>
+      </nav>
+
+      <main class="dsc-main">
+
+        <!-- ═══════════════ Tela 1: Usuários (ACE-USU-01 · ACE-USU-04) ═══════════════ -->
+        <div id="screen-usuarios" class="dsc-screen is-active">
+          <nav class="dsc-breadcrumb"><span>Início</span><span class="dsc-sep">›</span><span>Administração</span><span class="dsc-sep">›</span><span class="is-current">Usuários</span></nav>
+
+          <!-- app-usuarios-filter -->
+          <div class="dsc-card">
+            <h1 class="dsc-page-title">Usuários</h1>
+            <form class="dsc-row" id="form-filtro" onsubmit="pesquisar(); return false;">
+              <div class="dsc-col-6 dsc-field">
+                <label class="dsc-field-label" for="f-entidade">Entidade</label>
+                <select class="dsc-select entidade-select" id="f-entidade" onchange="mostrarDepartamentoRegional()"><option value="">Selecione</option></select>
+              </div>
+              <!-- ⚠️ só aparece depois da primeira escolha de Entidade, e sempre sem opções -->
+              <div class="dsc-col-6 dsc-field" id="fld-dr" style="display:none">
+                <label class="dsc-field-label" for="f-dr">Departamento Regional</label>
+                <select class="dsc-select" id="f-dr"><option value="">Selecione</option><option disabled>Nenhum resultado encontrado</option></select>
+              </div>
+              <div class="dsc-col-6 dsc-field">
+                <label class="dsc-field-label" for="f-perfil">Perfil</label>
+                <select class="dsc-select perfil-select" id="f-perfil"><option value="">Selecione</option></select>
+              </div>
+              <div class="dsc-col-6 dsc-field">
+                <label class="dsc-field-label" for="f-nome">Nome</label>
+                <input class="dsc-input" id="f-nome" type="text">
+              </div>
+              <div class="dsc-col-6 dsc-field">
+                <label class="dsc-field-label" for="f-login">Login</label>
+                <input class="dsc-input" id="f-login" type="text">
+              </div>
+              <div class="dsc-col-12 gpe-form-actions" style="margin-top:4px">
+                <button type="submit" class="dsc-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>Pesquisar</button>
+                <button type="button" class="dsc-btn" onclick="limpar()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>Limpar</button>
+                <button type="button" class="dsc-btn" onclick="abrirInclusao()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>Adicionar</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- app-usuarios-list -->
+          <div class="dsc-card">
+            <div class="dsc-table-wrap">
+              <div class="gpe-table-caption"><span>Lista de Usuários</span></div>
+              <table class="dsc-table" id="tabela-usuarios">
+                <thead>
+                  <tr>
+                    <th style="width:110px"></th>
+                    <th class="dsc-sortable" data-col="nome" onclick="ordenar('nome')">Nome</th>
+                    <th class="dsc-sortable" data-col="login" onclick="ordenar('login')">Login</th>
+                    <th class="dsc-sortable" data-col="email" onclick="ordenar('email')">Email</th>
+                    <th>Perfil</th>
+                    <th>Situação</th>
+                    <th>Responsável Cadastrado</th>
+                    <th>Data Cadastro</th>
+                    <th>Responsável Atualização</th>
+                    <th>Data Atualização</th>
+                  </tr>
+                </thead>
+                <tbody id="corpo-usuarios"></tbody>
+              </table>
+              <div id="lista-vazia" class="dsc-table-empty" style="display:none">Nenhum usuário encontrado.</div>
+            </div>
+            <!-- p-paginator: 10 por página, só aparece com mais de 10 usuários -->
+            <div class="gpe-paginator" id="paginador"></div>
+          </div>
+        </div>
+
+        <!-- ═══════════════ Tela 2: Usuário — inclusão (ACE-USU-02) e edição (ACE-USU-03) ═══════════════ -->
+        <div id="screen-usuario" class="dsc-screen">
+          <nav class="dsc-breadcrumb"><span>Início</span><span class="dsc-sep">›</span><span>Administração</span><span class="dsc-sep">›</span><a href="#" onclick="abrirLista(); return false;">Usuários</a><span class="dsc-sep">›</span><span class="is-current" id="bc-usuario">Cadastrar Usuário</span></nav>
+
+          <div class="dsc-card">
+            <h2 class="dsc-page-title" style="font-size:34px;margin-bottom:16px" id="titulo-usuario">Cadastrar Usuário</h2>
+            <div class="dsc-flex dsc-gap-1" style="flex-wrap:wrap">
+              <button type="button" class="dsc-btn" id="btn-salvar" onclick="salvarUsuario()" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 3h11l3 3v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M7 3v5h8V3"/><rect x="7" y="13" width="10" height="6"/></svg><span id="rot-salvar">Cadastrar Usuário</span></button>
+              <button type="button" class="dsc-btn dsc-btn--danger" onclick="abrirLista()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 5 5v1"/></svg>Cancelar</button>
+            </div>
+
+            <!-- Login + Validar Login / Limpar -->
+            <div class="dsc-field" style="max-width:500px;margin-top:22px">
+              <label class="dsc-field-label" for="u-login">Login</label>
+              <input class="dsc-input" id="u-login" type="text" autocomplete="off" oninput="atualizarBotaoValidar()" onkeydown="if(event.key==='Enter'&&!document.getElementById('btn-validar').disabled)validarLogin()">
+            </div>
+            <div style="margin-top:14px" id="acoes-login">
+              <button type="button" class="dsc-btn" id="btn-validar" onclick="validarLogin()" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Validar Login</button>
+              <button type="button" class="dsc-btn" id="btn-limpar-login" onclick="abrirInclusao()" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>Limpar</button>
+            </div>
+
+            <!-- Painéis: só aparecem com o login validado (permitirCadastro) -->
+            <div id="paineis" style="display:none">
+
+              <section class="gpe-fieldset">
+                <div class="gpe-fieldset-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>Dados do Usuário</div>
+                <div class="gpe-fieldset-body">
+                  <div class="dsc-field" style="max-width:400px">
+                    <label class="dsc-field-label" for="u-nome">Nome <span class="dsc-req">*</span></label>
+                    <input class="dsc-input dado-usuario" id="u-nome" type="text">
+                  </div>
+                  <div class="dsc-field" style="max-width:220px">
+                    <label class="dsc-field-label" for="u-cpf">CPF <span class="dsc-req">*</span></label>
+                    <input class="dsc-input dado-usuario" id="u-cpf" type="text" inputmode="numeric" data-mascara="cpf">
+                  </div>
+                  <div class="dsc-field">
+                    <span class="dsc-field-label">Telefone</span>
+                    <div class="gpe-phone">
+                      <input class="dsc-input dado-usuario gpe-phone-ddd" id="u-tel-ddd" inputmode="numeric" data-mascara="ddd" aria-label="DDD do telefone">
+                      <input class="dsc-input dado-usuario gpe-phone-num" id="u-tel-num" inputmode="numeric" data-mascara="tel8" aria-label="Número do telefone">
+                    </div>
+                  </div>
+                  <div class="dsc-field">
+                    <span class="dsc-field-label">Celular</span>
+                    <div class="gpe-phone">
+                      <input class="dsc-input dado-usuario gpe-phone-ddd" id="u-cel-ddd" inputmode="numeric" data-mascara="ddd" aria-label="DDD do celular">
+                      <input class="dsc-input dado-usuario gpe-phone-num" id="u-cel-num" inputmode="numeric" data-mascara="tel9" aria-label="Número do celular">
+                    </div>
+                  </div>
+                  <div class="dsc-field" style="max-width:950px">
+                    <label class="dsc-field-label" for="u-email">Email <span class="dsc-req">*</span></label>
+                    <input class="dsc-input dado-usuario" id="u-email" type="text">
+                  </div>
+                  <div class="dsc-field" style="max-width:220px">
+                    <label class="dsc-field-label" for="u-cargo">Cargo</label>
+                    <input class="dsc-input dado-usuario" id="u-cargo" type="text">
+                  </div>
+                </div>
+              </section>
+
+              <section class="gpe-fieldset">
+                <div class="gpe-fieldset-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>Perfil de acesso ao sistema</div>
+                <div class="gpe-fieldset-body">
+                  <div class="dsc-field" style="max-width:260px">
+                    <label class="dsc-field-label" for="u-perfil">Perfil <span class="dsc-req">*</span></label>
+                    <select class="dsc-select perfil-select" id="u-perfil" onchange="trocarPerfil()"><option value="">Selecione</option></select>
+                  </div>
+                </div>
+              </section>
+
+              <!-- app-instituicoes-relacionadas: só com perfil escolhido (perfis oferecidos = tipo Departamento Nacional) -->
+              <section class="gpe-fieldset" id="painel-instituicoes" style="display:none">
+                <div class="gpe-fieldset-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18"/><path d="M4 10h16"/><path d="M12 3 3 8h18z"/><path d="M6 10v8M10 10v8M14 10v8M18 10v8"/></svg>Instituições Relacionadas</div>
+                <div class="gpe-fieldset-body">
+                  <div class="dsc-field" style="max-width:420px" id="fld-inst-entidade">
+                    <label class="dsc-field-label" for="u-entidade">Entidade</label>
+                    <select class="dsc-select" id="u-entidade" onchange="erroCampo('u-entidade','')"><option value="">Selecione</option></select>
+                  </div>
+                  <div><button type="button" class="dsc-btn" onclick="adicionarInstituicao()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>Adicionar Instituição</button></div>
+                  <div class="dsc-table-wrap">
+                    <div class="gpe-table-caption"><span>Instituições Selecionadas</span></div>
+                    <table class="dsc-table">
+                      <thead><tr><th style="width:80px"></th><th class="gpe-left">Entidade</th></tr></thead>
+                      <tbody id="corpo-instituicoes"></tbody>
+                    </table>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ═══════════════ Confirmação de exclusão — p-confirmDialog (ACE-USU-04) ═══════════════ -->
+  <div id="modal-remover" class="dsc-modal-mask" style="display:none" onclick="if(event.target===this)toggleModal('modal-remover',false)">
+    <div class="dsc-modal gpe-modal--sm" role="alertdialog" aria-labelledby="t-remover" aria-describedby="m-remover">
+      <div class="dsc-modal-header"><span id="t-remover">Remover Usuário</span>
+        <button class="dsc-modal-close" aria-label="Fechar" onclick="toggleModal('modal-remover',false)">✕</button></div>
+      <div class="dsc-modal-body">
+        <div class="gpe-confirm-body"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg><p style="margin:4px 0 0" id="m-remover">Deseja remover este usuário?</p></div>
+      </div>
+      <!-- TODO: definir no Design System — o inventário dá os rótulos "Remover" e "Cancelar", não as cores dos botões -->
+      <div class="dsc-modal-footer">
+        <button class="dsc-btn dsc-btn--danger" onclick="confirmarRemocao()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Remover</button>
+        <button class="dsc-btn dsc-btn--outline" onclick="toggleModal('modal-remover',false)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M18 6 6 18M6 6l12 12"/></svg>Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ Toasts (p-toast, canto superior direito) ═══════════════ -->
+  <div class="gpe-toast-stack" id="toasts"></div>
+
+  <div class="dsc-proto-notes">
+    <strong>📋 Notas do protótipo — Usuários (ACE-USU)</strong>
+    <ul>
+      <li><strong>Visual recuperado do código-fonte</strong>: telas, rótulos, botões, colunas, dicas e mensagens vêm do inventário extraído do <code>sistema_mesa_checkin_frontend</code> (<code>arquivos/engenharia-reversa/frontend-inventory.md</code>, 4.0, 4.2 e 4.3; perfis em 2.x; listas em 7.1; sobras e defeitos em 8.1 e 8.4) e das imagens “Pesquisar Usuário” e “Incluir / Editar Usuário” de GPE002. O design system do kit (CAIXA) foi substituído pela camada <code>tema-gpe.css</code>.</li>
+      <li><strong>Pesquisa</strong>: a lista filtra de verdade os 23 usuários fictícios (Nome e Login por trecho, sem diferenciar maiúsculas; Entidade e Perfil pela escolha). Experimente Perfil “Secretaria Mesa”, Nome “ana” ou Entidade “Serviço Social da Indústria”; um texto que ninguém tem mostra “Nenhum usuário encontrado.”, sem o cabeçalho das colunas. Nome, Login e Email ordenam a cada clique, alternando crescente e decrescente; o paginador (10 por página) só aparece com mais de 10 usuários. Sem filtro de perfil, a lista traz também “Rafael Torres”, com o perfil Painel, que o filtro não oferece 🔍.</li>
+      <li>⚠️ <strong>Departamento Regional</strong>: o filtro surge só depois da primeira escolha de Entidade e fica sempre sem opções (“Nenhum resultado encontrado”); o valor dele não entra na pesquisa. Parece defeito ou sobra de outro sistema — não consta em GPE002.</li>
+      <li><strong>Validar Login — o desfecho depende do login digitado</strong>:
+        <br>• login de quem já está na lista (ex.: <code>joao.silva</code>, <code>maria.souza@empresa.com.br</code>) → erro “Usuário já cadastrado no sistema.” com o detalhe “O usuário informado já estas no sistema.” (⚠️ “já estas” é o texto literal); o formulário não abre;
+        <br>• <code>carla.ribeiro</code> ou <code>lucas.prado</code> (diretório corporativo, usuário interno) → formulário preenchido pelo diretório, com Nome, CPF, Telefone, Celular, Email e Cargo bloqueados, e o aviso “Usuário não cadastrado no sistema.” / “O usuário informado não foi encontrado no sistema.”;
+        <br>• <code>renato.siqueira@eventosplanalto.com.br</code> (externo que já consta no cadastro corporativo) → formulário preenchido e liberado, com o mesmo aviso 🔍;
+        <br>• qualquer outro e-mail (ex.: <code>novo.contato@eventosplanalto.com.br</code>) → usuário externo: formulário em branco e liberado, sem aviso;
+        <br>• qualquer outro login sem formato de e-mail (ex.: <code>joao.inexistente</code>) → aviso “Para usuários internos, o login deve existir no Active Directory. Para usuários externos, o login deve ser um e-mail válido.”; o formulário não abre;
+        <br>• <code>servico.indisponivel</code> → falha da consulta: erro “Erro” / “Serviço indisponível.”.
+        <br>Validado o login, o campo é bloqueado, “Validar Login” dá lugar a “Limpar” (volta a pedir o login) e “Cadastrar Usuário” se habilita. Concluída a inclusão ou a edição — ou acionado “Cancelar” —, o sistema volta à tela Usuários com os filtros vazios e todos os usuários; o incluído entra no fim da lista, na ordem em que o cadastro corporativo devolve ❓.</li>
+      <li><strong>Validação</strong>: “Campo obrigatório.” abaixo de Nome, CPF, Email e Perfil, depois de o campo ser tocado ou ao concluir — e então também o erro “Formulário inválido” / “Preencha todos os campos obrigatórios corretamente”. “CPF inválido” e “Email inválido” conferem o formato (CPF válido para teste: <code>132.677.360-72</code>). ⚠️ CPF com o primeiro dígito verificador errado (ex.: <code>132.677.360-82</code>) mostra “Campo obrigatório.” em vez de “CPF inválido” 🔍; CPF de dígitos iguais só é recusado quando é <code>000.000.000-00</code>. Para o usuário interno, só o Perfil é conferido.</li>
+      <li>⚠️ <strong>Cargo</strong> não tem asterisco nem é exigido; GPE002 o dá como obrigatório. Login, Nome e Email não têm limite de tamanho na tela (GPE002 fixa 255/256).</li>
+      <li><strong>Instituições Relacionadas</strong>: o painel aparece quando um perfil é escolhido (os três perfis oferecidos são do tipo Departamento Nacional, que pede só a Entidade). “Adicionar Instituição” sem entidade marca “Campo obrigatório.”; a entidade escolhida sai da lista. ⚠️ Adicionar uma segunda entidade <em>substitui</em> a primeira na tabela, em vez de somar. O cadastro se conclui sem instituição.</li>
+      <li><strong>Edição</strong> (lápis): título e botão viram “Atualizar Usuário”; Login bloqueado, sem “Validar Login” nem “Limpar”. “João Silva” (interno) só tem Perfil e instituições liberados — ⚠️ GPE002 diz que tudo pode ser editado, menos o login. “Maria Souza” (externa) tem tudo liberado, menos o login, e o e-mail pode deixar de coincidir com ele. “Rafael Torres” (perfil Painel) abre com Perfil em “Selecione”; “Atualizar Usuário” sem escolher outro marca “Campo obrigatório.”, sem o “Formulário inválido”. ⚠️ A imagem de GPE002 mostra “Limpar” na edição e asterisco em Cargo — parece de uma versão anterior 🔍.</li>
+      <li><strong>Exclusão</strong> (lixeira): caixa “Remover Usuário” — “Deseja remover este usuário?”, com “Remover” e “Cancelar”; confirmada, a linha sai da lista sem nova consulta. ⚠️ GPE002 chama a ação de “Excluir”. O GPE não impõe trava: dá para remover a própria Ana Costa ou o último Administrador ❓.</li>
+      <li>⚠️🔍 <strong>Mensagens sem quadro</strong>: a tela Usuários não tem quadro de mensagens, de modo que “Usuário Criado com Sucesso”, “Usuário Atualizado com Sucesso” e “Usuário removido com Sucesso” (e os erros de gravação e exclusão) tendem a não aparecer — a conclusão vem da leitura do código, sem execução. O protótipo mostra as mensagens previstas; desmarque para ver a tela como o código indica:
+        <br><label class="gpe-proto-perfil"><input type="checkbox" class="dsc-check" id="sim-quadro" checked> Exibir as mensagens previstas ao voltar à tela Usuários</label></li>
+      <li>❓ <strong>Situação</strong> Ativo/Inativo é só exibida: não há ação para inativar (pendência “Inativar Usuário” no N2). O código tem uma rotina de ativar/desativar, com as mensagens “Usuário Ativado com Sucesso.” e “Usuário Desativado com Sucesso.”, sem acionamento na tela — não representada.</li>
+      <li>🔍 As dicas “Editar Usuário” e “Remover Usuário” dos ícones podem não aparecer no sistema (o recurso de dica não está ligado nesta lista); aqui aparecem como dica do navegador.</li>
+      <li>Perfis: só o <strong>Administrador</strong> tem Administração › Usuários no menu (matriz do N2). ⚠️ A tela não confere o perfil: quem digita o endereço chega a ela.</li>
+      <li>⚠️ Depois de incluído, o usuário recebe por e-mail uma senha provisória 📄 — o envio cabe ao cadastro corporativo; o GPE não o dispara nem o confirma. Não representado.</li>
+      <li>Não representado: falhas do cadastro corporativo na pesquisa, na gravação e na exclusão (“Erro Interno”); a falha da conferência do usuário no sistema, tratada como “não cadastrado”; “Pesquisar” repetido sem mudar filtro não refaz a consulta 🔍; a lista “Entidade” das instituições que pode esvaziar na edição 🔍; o formulário que não é esvaziado entre duas validações 🔍; Departamento Regional e Unidade das instituições (só para perfis de outro tipo, que a tela não oferece); máscara “X” de limpar das listas; os botões de ajuda das instituições e as sobras “Áreas de Negócio” e “Linha(s) de Apoio Financeiro”, que estão no código e não na tela.</li>
+    </ul>
+  </div>
+
+  <script>
+    /* ---------- Listas fixas e dados fictícios ---------- */
+    var ENTIDADES = ['Confederação Nacional da Indústria', 'Instituto Euvaldo Lodi', 'Serviço Nacional de Aprendizagem Industrial', 'Serviço Social da Indústria'];
+    var PERFIS = ['Administrador', 'Secretaria Mesa', 'Secretaria Check-In']; // os atribuíveis pela tela (ids SMC.1, SMC.2, SMC.5)
+    var CNI = ENTIDADES[0];
+    function U(nome, login, email, perfil, ativo, interno, cpf, tel, cel, cargo, ent, rc, dc, ra, da) {
+      return { nome: nome, login: login, email: email, perfil: perfil, ativo: ativo, interno: interno, cpf: cpf, tel: tel, cel: cel, cargo: cargo, ent: ent, rc: rc, dc: dc, ra: ra, da: da };
+    }
+    /* Ordem em que o cadastro corporativo devolve (a tela não define ordem inicial) */
+    var USUARIOS = [
+      U('Ana Costa', 'ana.costa', 'ana.costa@cni.com.br', 'Administrador', true, true, '104.332.181-00', ['61','3317-9001'], ['61','99812-4410'], 'Coordenadora de Eventos', [CNI], 'Integração Corporativa', '12/03/2019', 'Helena Martins Rocha', '02/09/2026'),
+      U('André Luiz Barreto', 'andre.barreto', 'andre.barreto@cni.com.br', 'Administrador', true, true, '960.013.389-14', ['61','3317-9022'], null, 'Analista de Relações Institucionais', [CNI], 'Ana Costa', '05/08/2024', 'Ana Costa', '21/07/2026'),
+      U('Beatriz Nogueira', 'beatriz.nogueira@eventosplanalto.com.br', 'beatriz.nogueira@eventosplanalto.com.br', 'Secretaria Check-In', true, false, '083.863.794-99', null, ['61','99123-4567'], 'Recepcionista', [], 'Ana Costa', '10/09/2026', 'Ana Costa', '10/09/2026'),
+      U('Bruno Henrique Sales', 'bruno.sales', 'bruno.sales@cni.com.br', 'Secretaria Mesa', false, true, '026.542.351-14', ['61','3317-9045'], ['61','98441-0022'], 'Assistente Administrativo', [CNI], 'Helena Martins Rocha', '14/02/2023', 'Ana Costa', '30/06/2025'),
+      U('Camila Ferreira Dias', 'camila.dias@eventosplanalto.com.br', 'camila.dias@eventosplanalto.com.br', 'Secretaria Check-In', true, false, '161.559.407-89', null, ['61','99234-5678'], 'Recepcionista', [], 'Ana Costa', '10/09/2026', 'Ana Costa', '15/09/2026'),
+      U('Daniela Moura', 'daniela.moura', 'daniela.moura@cni.com.br', 'Secretaria Mesa', true, true, '816.184.959-50', ['61','3317-9033'], ['61','98112-0034'], 'Secretária Executiva', [CNI], 'Eduardo Pacheco', '03/05/2022', 'Ana Costa', '18/09/2026'),
+      U('Eduardo Pacheco', 'eduardo.pacheco', 'eduardo.pacheco@cni.com.br', 'Administrador', true, true, '310.341.316-56', ['61','3317-9010'], ['61','99987-0011'], 'Gerente de Eventos', [CNI], 'Integração Corporativa', '20/01/2020', 'Helena Martins Rocha', '11/04/2026'),
+      U('Fábio Rezende', 'fabio.rezende@recepcaobrasilia.com.br', 'fabio.rezende@recepcaobrasilia.com.br', 'Secretaria Check-In', false, false, '475.255.341-44', ['61','3045-1200'], ['61','99654-0087'], 'Coordenador de Recepção', [], 'Eduardo Pacheco', '22/11/2024', 'Ana Costa', '12/03/2026'),
+      U('Gabriela Antunes', 'gabriela.antunes', 'gabriela.antunes@cni.com.br', 'Secretaria Mesa', true, true, '928.327.648-51', ['61','3317-9077'], ['61','98223-1190'], 'Analista de Cerimonial', [ENTIDADES[3]], 'Ana Costa', '07/03/2025', 'Ana Costa', '07/03/2025'),
+      U('Helena Martins Rocha', 'helena.rocha', 'helena.rocha@cni.com.br', 'Administrador', true, true, '350.305.641-60', ['61','3317-9005'], ['61','99110-0220'], 'Gerente Executiva de Relacionamento', [CNI], 'Integração Corporativa', '12/03/2019', 'Eduardo Pacheco', '09/01/2026'),
+      U('Igor Vasconcelos', 'igor.vasconcelos@recepcaobrasilia.com.br', 'igor.vasconcelos@recepcaobrasilia.com.br', 'Secretaria Check-In', true, false, '395.376.724-09', null, ['61','99345-0021'], 'Recepcionista', [], 'Ana Costa', '16/09/2026', 'Ana Costa', '16/09/2026'),
+      U('João Silva', 'joao.silva', 'joao.silva@cni.com.br', 'Secretaria Mesa', true, true, '238.849.696-92', ['61','3317-9088'], ['61','98765-0043'], 'Assistente de Cerimonial', [CNI], 'Helena Martins Rocha', '18/06/2024', 'Ana Costa', '25/09/2026'),
+      U('Juliana Teixeira', 'juliana.teixeira', 'juliana.teixeira@cni.com.br', 'Secretaria Check-In', true, true, '532.871.012-69', ['61','3317-9066'], ['61','98456-7812'], 'Assistente Administrativa', [ENTIDADES[2]], 'Ana Costa', '02/04/2025', 'Ana Costa', '19/08/2026'),
+      U('Larissa Campos', 'larissa.campos@eventosplanalto.com.br', 'larissa.campos@eventosplanalto.com.br', 'Secretaria Mesa', true, false, '269.166.978-57', ['61','3028-9900'], ['61','99187-6540'], 'Cerimonialista', [], 'Ana Costa', '10/09/2026', 'Ana Costa', '29/09/2026'),
+      U('Marcelo Antunes Reis', 'marcelo.reis', 'marcelo.reis@cni.com.br', 'Administrador', false, true, '480.184.514-27', ['61','3317-9044'], null, 'Analista de Eventos', [ENTIDADES[1]], 'Integração Corporativa', '25/10/2021', 'Helena Martins Rocha', '03/02/2025'),
+      U('Maria Souza', 'maria.souza@empresa.com.br', 'maria.souza@empresa.com.br', 'Secretaria Check-In', true, false, '627.048.281-05', ['61','3224-5566'], ['61','99876-1234'], 'Recepcionista Bilíngue', [CNI], 'Ana Costa', '15/09/2026', 'Ana Costa', '01/10/2026'),
+      U('Natália Guimarães', 'natalia.guimaraes', 'natalia.guimaraes@cni.com.br', 'Secretaria Mesa', true, true, '489.325.288-70', ['61','3317-9091'], ['61','98321-4455'], 'Secretária Executiva', [CNI], 'Eduardo Pacheco', '28/08/2023', 'Ana Costa', '14/09/2026'),
+      U('Otávio Bastos', 'otavio.bastos@recepcaobrasilia.com.br', 'otavio.bastos@recepcaobrasilia.com.br', 'Secretaria Check-In', true, false, '095.701.543-73', null, ['61','99444-2211'], 'Recepcionista', [], 'Eduardo Pacheco', '22/11/2024', 'Ana Costa', '16/09/2026'),
+      U('Patrícia Lemos', 'patricia.lemos', 'patricia.lemos@cni.com.br', 'Administrador', true, true, '039.117.182-84', ['61','3317-9012'], ['61','98555-4433'], 'Coordenadora de Cerimonial', [CNI], 'Helena Martins Rocha', '11/11/2022', 'Helena Martins Rocha', '05/05/2026'),
+      U('Rafael Torres', 'rafael.torres', 'rafael.torres@cni.com.br', 'Painel', true, true, '278.248.963-15', ['61','3317-9099'], null, 'Analista de Comunicação', [CNI], 'Integração Corporativa', '30/06/2025', 'Integração Corporativa', '30/06/2025'),
+      U('Sérgio Araújo', 'sergio.araujo', 'sergio.araujo@cni.com.br', 'Secretaria Check-In', true, true, '834.657.871-70', ['61','3317-9055'], ['61','98654-3210'], 'Assistente Administrativo', [ENTIDADES[3]], 'Ana Costa', '21/07/2025', 'Ana Costa', '22/09/2026'),
+      U('Tatiana Freitas', 'tatiana.freitas@eventosplanalto.com.br', 'tatiana.freitas@eventosplanalto.com.br', 'Secretaria Mesa', true, false, '331.509.839-59', null, ['61','99765-1230'], 'Cerimonialista', [], 'Ana Costa', '10/09/2026', 'Ana Costa', '10/09/2026'),
+      U('Vinícius Rangel', 'vinicius.rangel', 'vinicius.rangel@cni.com.br', 'Administrador', true, true, '301.031.051-07', ['61','3317-9020'], ['61','98123-9876'], 'Especialista em Eventos', [CNI], 'Eduardo Pacheco', '14/03/2024', 'Ana Costa', '08/08/2026')
+    ];
+    /* Cadastro corporativo / diretório: logins que existem lá e ainda não estão neste sistema */
+    var CORPORATIVO = {
+      'carla.ribeiro': { nome: 'Carla Ribeiro Duarte', email: 'carla.ribeiro@cni.com.br', interno: true, cpf: '834.738.299-94', tel: ['61','3317-9140'], cel: ['61','99123-0987'], cargo: 'Analista de Eventos' },
+      'lucas.prado': { nome: 'Lucas Prado Menezes', email: 'lucas.prado@cni.com.br', interno: true, cpf: '737.631.165-32', tel: ['61','3317-9152'], cel: null, cargo: 'Assistente de Cerimonial' },
+      'renato.siqueira@eventosplanalto.com.br': { nome: 'Renato Siqueira', email: 'renato.siqueira@eventosplanalto.com.br', interno: false, cpf: '667.010.651-39', tel: null, cel: ['61','99222-0011'], cargo: 'Recepcionista' }
+    };
+    var HOJE = '04/10/2026';
+
+    var ICO = {
+      lapis: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.8 9.95l-3.75-3.75L3 17.25zm17.7-10.2a1 1 0 0 0 0-1.4l-2.35-2.35a1 1 0 0 0-1.4 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>',
+      lixeira: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>',
+      ok: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>',
+      info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>',
+      aviso: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>',
+      erro: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>'
+    };
+
+    /* ---------- Shell ---------- */
+    function showScreen(id) {
+      document.querySelectorAll('.dsc-screen').forEach(function (s) { s.classList.remove('is-active'); });
+      document.getElementById(id).classList.add('is-active');
+      fecharMenus();
+      window.scrollTo(0, 0);
+    }
+    function toggleModal(id, show) { document.getElementById(id).style.display = show ? 'flex' : 'none'; }
+    function toggleSubmenu(btn, ev) {
+      ev.stopPropagation();
+      var item = btn.parentElement, aberto = item.classList.contains('is-open');
+      fecharMenus(); if (!aberto) item.classList.add('is-open');
+    }
+    function toggleUserMenu(ev) {
+      ev.stopPropagation();
+      var m = document.getElementById('user-menu'), aberto = m.classList.contains('is-open');
+      fecharMenus(); if (!aberto) m.classList.add('is-open');
+    }
+    function fecharMenus() { document.querySelectorAll('.is-open').forEach(function (e) { e.classList.remove('is-open'); }); }
+    document.addEventListener('click', fecharMenus);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { document.querySelectorAll('.dsc-modal-mask').forEach(function (m) { m.style.display = 'none'; }); fecharMenus(); } });
+
+    /* p-toast: resumo + detalhe; some em ~4 s, a menos que seja fixo (sticky) */
+    function toast(tipo, resumo, detalhe, fixo) {
+      var cls = { sucesso: 'dsc-toast--positive', aviso: 'dsc-toast--warning', erro: 'dsc-toast--danger', info: '' }[tipo];
+      var ico = { sucesso: ICO.ok, aviso: ICO.aviso, erro: ICO.erro, info: ICO.info }[tipo];
+      var t = document.createElement('div');
+      t.className = 'dsc-toast ' + cls; t.setAttribute('role', 'status');
+      t.innerHTML = ico + '<div style="flex:1"><strong>' + resumo + '</strong>' + (detalhe ? '<span>' + detalhe + '</span>' : '') + '</div>' +
+        '<button class="dsc-icon-action" aria-label="Fechar mensagem" title="Fechar" style="width:24px;height:24px">✕</button>';
+      t.querySelector('button').onclick = function () { t.remove(); };
+      document.getElementById('toasts').appendChild(t);
+      if (!fixo) setTimeout(function () { t.remove(); }, 4000);
+    }
+    /* ⚠️🔍 A tela Usuários não tem quadro de mensagens: o que for emitido para ela só aparece com a simulação ligada */
+    function toastNaLista(tipo, resumo, detalhe) { if (document.getElementById('sim-quadro').checked) toast(tipo, resumo, detalhe); }
+
+    function val(id) { return document.getElementById(id).value.trim(); }
+    function setv(id, v) { document.getElementById(id).value = v || ''; }
+    function opcoes(sel, lista) { lista.forEach(function (v) { var o = document.createElement('option'); o.textContent = v; o.value = v; sel.appendChild(o); }); }
+
+    /* ---------- Pesquisar Usuários (ACE-USU-01) ---------- */
+    var listaAtual = USUARIOS.slice(), pagina = 1, ordem = { col: null, dir: 1 }, removerAlvo = null;
+    function contem(valor, trecho) { return !trecho || String(valor || '').toLowerCase().indexOf(trecho.toLowerCase()) >= 0; }
+    /* Entrar na rota /administracao-usuarios: filtros vazios, todos os usuários, sem ordenação, primeira página */
+    function abrirLista() {
+      document.getElementById('form-filtro').reset(); document.getElementById('fld-dr').style.display = 'none';
+      ordem = { col: null, dir: 1 }; pagina = 1;
+      document.querySelectorAll('#tabela-usuarios th.dsc-sortable').forEach(function (th) { th.classList.remove('is-sorted', 'gpe-sort-desc'); });
+      listaAtual = USUARIOS.slice(); renderLista(); showScreen('screen-usuarios');
+    }
+    function filtrar() {
+      var f = { ent: val('f-entidade'), perfil: val('f-perfil'), nome: val('f-nome'), login: val('f-login') }; // Departamento Regional não entra ⚠️
+      return USUARIOS.filter(function (u) {
+        return (!f.ent || u.ent.indexOf(f.ent) >= 0) && (!f.perfil || u.perfil === f.perfil) && contem(u.nome, f.nome) && contem(u.login, f.login);
+      });
+    }
+    function pesquisar() { listaAtual = filtrar(); pagina = 1; renderLista(); }
+    function limpar() { document.getElementById('form-filtro').reset(); pesquisar(); }
+    function mostrarDepartamentoRegional() { document.getElementById('fld-dr').style.display = ''; }
+    function ordenar(col) {
+      ordem.dir = (ordem.col === col) ? -ordem.dir : 1; ordem.col = col; pagina = 1;
+      document.querySelectorAll('#tabela-usuarios th.dsc-sortable').forEach(function (th) {
+        var ativo = th.dataset.col === col;
+        th.classList.toggle('is-sorted', ativo); th.classList.toggle('gpe-sort-desc', ativo && ordem.dir < 0);
+      });
+      renderLista();
+    }
+    function irPagina(n) { pagina = n; renderLista(); }
+    function quebraEmail(v) { return String(v).replace('@', '@<wbr>'); } // e-mail longo quebra depois da arroba
+    function renderLista() {
+      var lista = listaAtual.slice();
+      if (ordem.col) lista.sort(function (a, b) { return a[ordem.col].localeCompare(b[ordem.col], 'pt-BR', { sensitivity: 'base' }) * ordem.dir; });
+      var paginas = Math.max(1, Math.ceil(lista.length / 10)); if (pagina > paginas) pagina = paginas;
+      document.getElementById('corpo-usuarios').innerHTML = lista.slice((pagina - 1) * 10, pagina * 10).map(function (u) {
+        var i = USUARIOS.indexOf(u);
+        return '<tr>' +
+          '<td class="dsc-col-actions"><span class="gpe-row-actions">' +
+            '<button class="dsc-icon-action gpe-icon-solid gpe-icon-solid--primary" aria-label="Editar Usuário ' + u.nome + '" title="Editar Usuário" onclick="abrirEdicao(' + i + ')">' + ICO.lapis + '</button>' +
+            '<button class="dsc-icon-action gpe-icon-solid gpe-icon-solid--danger" aria-label="Remover Usuário ' + u.nome + '" title="Remover Usuário" onclick="pedirRemocao(' + i + ')">' + ICO.lixeira + '</button>' +
+          '</span></td>' +
+          '<td class="gpe-left">' + u.nome + '</td><td>' + quebraEmail(u.login) + '</td><td>' + quebraEmail(u.email) + '</td><td>' + u.perfil + '</td>' +
+          '<td>' + (u.ativo ? 'Ativo' : 'Inativo') + '</td><td>' + u.rc + '</td><td>' + u.dc + '</td><td>' + u.ra + '</td><td>' + u.da + '</td></tr>';
+      }).join('');
+      var vazia = lista.length === 0;
+      document.getElementById('tabela-usuarios').style.display = vazia ? 'none' : '';
+      document.getElementById('lista-vazia').style.display = vazia ? 'block' : 'none';
+      var pg = document.getElementById('paginador');
+      if (lista.length <= 10) { pg.style.display = 'none'; pg.innerHTML = ''; return; }
+      pg.style.display = '';
+      var html = '<button aria-label="Primeira página" ' + (pagina === 1 ? 'disabled' : 'onclick="irPagina(1)"') + '>«</button>' +
+                 '<button aria-label="Página anterior" ' + (pagina === 1 ? 'disabled' : 'onclick="irPagina(' + (pagina - 1) + ')"') + '>‹</button>';
+      for (var p = 1; p <= paginas; p++) html += '<button class="' + (p === pagina ? 'is-active' : '') + '" onclick="irPagina(' + p + ')">' + p + '</button>';
+      html += '<button aria-label="Próxima página" ' + (pagina === paginas ? 'disabled' : 'onclick="irPagina(' + (pagina + 1) + ')"') + '>›</button>' +
+              '<button aria-label="Última página" ' + (pagina === paginas ? 'disabled' : 'onclick="irPagina(' + paginas + ')"') + '>»</button>';
+      pg.innerHTML = html;
+    }
+
+    /* ---------- Excluir Usuário (ACE-USU-04) ---------- */
+    function pedirRemocao(i) { removerAlvo = USUARIOS[i]; toggleModal('modal-remover', true); }
+    function confirmarRemocao() {
+      toggleModal('modal-remover', false);
+      USUARIOS.splice(USUARIOS.indexOf(removerAlvo), 1);
+      listaAtual.splice(listaAtual.indexOf(removerAlvo), 1); // retira a linha da lista em memória, sem nova consulta
+      renderLista();
+      toastNaLista('sucesso', 'Usuário removido com Sucesso');
+    }
+
+    /* ---------- Cadastrar Usuário (ACE-USU-02) e Editar Usuário (ACE-USU-03) ---------- */
+    var DADOS = ['u-nome', 'u-cpf', 'u-tel-ddd', 'u-tel-num', 'u-cel-ddd', 'u-cel-num', 'u-email', 'u-cargo'];
+    var form = { edicao: false, alvo: null, interno: false, perfilFora: null, instituicoes: [] };
+
+    function limparFormulario() {
+      DADOS.concat(['u-perfil', 'u-entidade']).forEach(function (id) { setv(id, ''); var el = document.getElementById(id); el.disabled = false; el.classList.remove('was-touched'); });
+      document.querySelectorAll('#screen-usuario .dsc-field.is-invalid').forEach(function (f) { f.classList.remove('is-invalid'); });
+      document.querySelectorAll('#screen-usuario .dsc-field-error').forEach(function (e) { e.remove(); });
+      form.interno = false; form.perfilFora = null; form.instituicoes = [];
+    }
+    function permitirCadastro(sim) {
+      document.getElementById('paineis').style.display = sim ? '' : 'none';
+      document.getElementById('btn-salvar').disabled = !sim;
+      document.getElementById('u-login').disabled = sim;
+      document.getElementById('btn-validar').style.display = sim ? 'none' : '';
+      document.getElementById('btn-limpar-login').style.display = (sim && !form.edicao) ? '' : 'none';
+      if (form.edicao) document.getElementById('acoes-login').style.display = 'none';
+    }
+    function modoTela(edicao) {
+      form.edicao = edicao;
+      var t = edicao ? 'Atualizar Usuário' : 'Cadastrar Usuário';
+      document.getElementById('titulo-usuario').textContent = t;
+      document.getElementById('rot-salvar').textContent = t;
+      document.getElementById('bc-usuario').textContent = t;
+      document.getElementById('acoes-login').style.display = edicao ? 'none' : '';
+    }
+    function preencher(d) {
+      setv('u-nome', d.nome); setv('u-cpf', d.cpf); setv('u-email', d.email); setv('u-cargo', d.cargo);
+      setv('u-tel-ddd', d.tel ? '(' + d.tel[0] + ')' : ''); setv('u-tel-num', d.tel ? d.tel[1] : '');
+      setv('u-cel-ddd', d.cel ? '(' + d.cel[0] + ')' : ''); setv('u-cel-num', d.cel ? d.cel[1] : '');
+      form.interno = !!d.interno;
+      DADOS.forEach(function (id) { document.getElementById(id).disabled = form.interno; }); // usuário interno: dados do diretório, bloqueados
+    }
+    /* Adicionar → só o campo Login e "Validar Login" */
+    function abrirInclusao() {
+      limparFormulario(); modoTela(false);
+      setv('u-login', ''); permitirCadastro(false); atualizarBotaoValidar(); atualizarPainelInstituicoes();
+      showScreen('screen-usuario');
+    }
+    function atualizarBotaoValidar() { document.getElementById('btn-validar').disabled = !val('u-login'); }
+    function eEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+    function validarLogin() {
+      var login = val('u-login'), chave = login.toLowerCase();
+      limparFormulario();
+      if (chave === 'servico.indisponivel') { toast('erro', 'Erro', 'Serviço indisponível.'); permitirCadastro(false); return; }
+      var existente = USUARIOS.filter(function (u) { return u.login.toLowerCase() === chave; })[0];
+      if (existente) { toast('erro', 'Usuário já cadastrado no sistema.', 'O usuário informado já estas no sistema.'); permitirCadastro(false); return; }
+      var corp = CORPORATIVO[chave];
+      if (corp) {
+        preencher(corp);
+        toast('aviso', 'Usuário não cadastrado no sistema.', 'O usuário informado não foi encontrado no sistema.');
+        permitirCadastro(true); atualizarPainelInstituicoes(); return;
+      }
+      if (eEmail(login)) { permitirCadastro(true); atualizarPainelInstituicoes(); return; } // usuário externo: formulário em branco, sem aviso
+      toast('aviso', 'Para usuários internos, o login deve existir no Active Directory.<br>Para usuários externos, o login deve ser um e-mail válido.');
+      permitirCadastro(false);
+    }
+    /* Lápis → formulário preenchido, Login bloqueado */
+    function abrirEdicao(i) {
+      var u = USUARIOS[i];
+      limparFormulario(); modoTela(true); form.alvo = u;
+      setv('u-login', u.login); preencher(u);
+      if (PERFIS.indexOf(u.perfil) >= 0) setv('u-perfil', u.perfil); else form.perfilFora = u.perfil; // perfil que a tela não oferece: a lista mostra "Selecione"
+      form.instituicoes = u.ent.slice();
+      permitirCadastro(true); atualizarPainelInstituicoes();
+      showScreen('screen-usuario');
+    }
+
+    /* Instituições Relacionadas (perfis oferecidos: tipo Departamento Nacional → só Entidade) */
+    function trocarPerfil() { form.perfilFora = null; validarCampo('u-perfil', document.getElementById('u-perfil').classList.contains('was-touched')); atualizarPainelInstituicoes(); }
+    function atualizarPainelInstituicoes() {
+      var temTipo = !!(val('u-perfil') || form.perfilFora);
+      document.getElementById('painel-instituicoes').style.display = temTipo ? '' : 'none';
+      var sel = document.getElementById('u-entidade');
+      sel.innerHTML = '<option value="">Selecione</option>';
+      opcoes(sel, ENTIDADES.filter(function (e) { return form.instituicoes.indexOf(e) < 0; })); // as já escolhidas saem da lista
+      document.getElementById('corpo-instituicoes').innerHTML = form.instituicoes.length ? form.instituicoes.map(function (e, i) {
+        return '<tr><td><button class="dsc-icon-action gpe-icon-solid gpe-icon-solid--primary" aria-label="Remover instituição ' + e + '" title="Remover" onclick="removerInstituicao(' + i + ')">' + ICO.lixeira + '</button></td><td class="gpe-left">' + e + '</td></tr>';
+      }).join('') : '<tr><td colspan="2" class="gpe-left">Nenhuma instituição selecionada.</td></tr>';
+    }
+    function adicionarInstituicao() {
+      var e = val('u-entidade');
+      if (!e) { erroCampo('u-entidade', 'Campo obrigatório.'); return; }
+      form.instituicoes = [e]; // ⚠️ substitui a anterior em vez de somar
+      atualizarPainelInstituicoes();
+    }
+    function removerInstituicao(i) { form.instituicoes.splice(i, 1); atualizarPainelInstituicoes(); }
+
+    /* Validação: "Campo obrigatório.", "CPF inválido", "Email inválido" */
+    function digitos(v) { return String(v || '').replace(/\D/g, ''); }
+    function dvCpf(nums) { var s = 0; for (var k = 0; k < nums.length; k++) s += nums[k] * (nums.length + 1 - k); var r = (s * 10) % 11; return r === 10 ? 0 : r; }
+    function erroCpf(v) {
+      var d = digitos(v); if (!d) return 'Campo obrigatório.';
+      if (d === '00000000000') return 'CPF inválido';
+      var n = d.split('').map(Number);
+      if (dvCpf(n.slice(0, 9)) !== n[9]) return 'Campo obrigatório.'; // ⚠️🔍 erro no 1º dígito: a tela mostra a mensagem de obrigatório
+      if (dvCpf(n.slice(0, 10)) !== n[10]) return 'CPF inválido';
+      return '';
+    }
+    var REGRAS = {
+      'u-nome': function (v) { return v ? '' : 'Campo obrigatório.'; },
+      'u-cpf': erroCpf,
+      'u-email': function (v) { return !v ? 'Campo obrigatório.' : (eEmail(v) ? '' : 'Email inválido'); },
+      'u-perfil': function (v) { return (v || form.perfilFora) ? '' : 'Campo obrigatório.'; }
+    };
+    function erroCampo(id, msg) {
+      var fld = document.getElementById(id).closest('.dsc-field');
+      var e = fld.querySelector('.dsc-field-error'); if (e) e.remove();
+      fld.classList.toggle('is-invalid', !!msg);
+      if (msg) { e = document.createElement('span'); e.className = 'dsc-field-error'; e.textContent = msg; fld.appendChild(e); }
+    }
+    function validarCampo(id, mostrar) {
+      var el = document.getElementById(id);
+      var msg = el.disabled ? '' : REGRAS[id](val(id)); // campo bloqueado (usuário interno) não é conferido
+      if (mostrar) erroCampo(id, msg);
+      return !msg;
+    }
+    function validarFormulario(mostrar) {
+      var ok = true;
+      Object.keys(REGRAS).forEach(function (id) { if (!validarCampo(id, mostrar)) ok = false; });
+      return ok;
+    }
+    Object.keys(REGRAS).forEach(function (id) {
+      var el = document.getElementById(id);
+      el.addEventListener('input', function () { if (el.classList.contains('was-touched')) validarCampo(id, true); });
+      el.addEventListener('blur', function () { if (id === 'u-cpf' && digitos(el.value).length < 11) el.value = ''; el.classList.add('was-touched'); validarCampo(id, true); });
+    });
+
+    /* Máscaras dos p-inputMask: 999.999.999-99 · (99) · 9999-9999 · 99999-9999 */
+    function aplicarMascara(el, ev) {
+      if (ev && ev.inputType && ev.inputType.indexOf('delete') === 0) return; // apagar não reaplica a máscara
+      var d = digitos(el.value), m = el.dataset.mascara;
+      if (m === 'cpf') { d = d.slice(0, 11); el.value = d.replace(/^(\d{3})(\d)/, '$1.$2').replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3').replace(/\.(\d{3})(\d{1,2})$/, '.$1-$2'); }
+      if (m === 'ddd') { d = d.slice(0, 2); el.value = d ? '(' + d + (d.length === 2 ? ')' : '') : ''; }
+      if (m === 'tel8') { d = d.slice(0, 8); el.value = d.length > 4 ? d.slice(0, 4) + '-' + d.slice(4) : d; }
+      if (m === 'tel9') { d = d.slice(0, 9); el.value = d.length > 5 ? d.slice(0, 5) + '-' + d.slice(5) : d; }
+    }
+    document.querySelectorAll('[data-mascara]').forEach(function (el) { el.addEventListener('input', function (ev) { aplicarMascara(el, ev); }); });
+
+    function salvarUsuario() {
+      if (!validarFormulario(false)) {
+        Object.keys(REGRAS).forEach(function (id) { document.getElementById(id).classList.add('was-touched'); });
+        validarFormulario(true);
+        toast('erro', 'Formulário inválido', 'Preencha todos os campos obrigatórios corretamente'); // quadro de mensagens do formulário
+        return;
+      }
+      if (form.perfilFora && !val('u-perfil')) { form.perfilFora = null; erroCampo('u-perfil', 'Campo obrigatório.'); atualizarPainelInstituicoes(); return; } // perfil não oferecido: só o campo é marcado
+      var tel = [digitos(val('u-tel-ddd')), val('u-tel-num')], cel = [digitos(val('u-cel-ddd')), val('u-cel-num')];
+      var dados = { nome: val('u-nome'), cpf: val('u-cpf'), email: val('u-email'), cargo: val('u-cargo'), perfil: val('u-perfil'),
+                    tel: tel[0] && tel[1] ? tel : null, cel: cel[0] && cel[1] ? cel : null, ent: form.instituicoes.slice() };
+      if (form.edicao) {
+        Object.keys(dados).forEach(function (k) { form.alvo[k] = dados[k]; });
+        form.alvo.ra = 'Ana Costa'; form.alvo.da = HOJE; // a situação é reenviada como veio
+        abrirLista();
+        toastNaLista('sucesso', 'Usuário Atualizado com Sucesso');
+      } else {
+        var login = val('u-login');
+        USUARIOS.push(U(dados.nome, login, dados.email, dados.perfil, true, form.interno, dados.cpf, dados.tel, dados.cel, dados.cargo, dados.ent, 'Ana Costa', HOJE, 'Ana Costa', HOJE));
+        delete CORPORATIVO[login.toLowerCase()];
+        abrirLista();
+        toastNaLista('sucesso', 'Usuário Criado com Sucesso');
+      }
+    }
+
+    /* ---------- Inicialização ---------- */
+    document.querySelectorAll('.entidade-select').forEach(function (s) { opcoes(s, ENTIDADES); });
+    document.querySelectorAll('.perfil-select').forEach(function (s) { opcoes(s, PERFIS); });
+    renderLista();
+    /* Entrada por endereço: #usuarios abre a lista; #usuario (ou #usuario-novo) abre a inclusão;
+       #usuario-editar abre a edição de João Silva (usuário interno) */
+    if (location.hash === '#usuario' || location.hash === '#usuario-novo') abrirInclusao();
+    if (location.hash === '#usuario-editar') abrirEdicao(11);
+  </script>
+</body>
+</html>
