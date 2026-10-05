@@ -472,6 +472,19 @@ def prototipo_do_n3(md):
     m = re.search(r'`(prototypes/[^`]+\.html)`', sup) or re.search(r'(prototypes/[^\s)`]+\.html)', sup)
     return m.group(1) if m else None
 
+def prototipo_do_indice(feat_id):
+    """Protótipo que o manifesto `prototypes/INDEX.md` liga à feature, quando o N3 ainda
+    não aponta nenhum na ## Superfície. O manifesto é a fonte de verdade do vínculo
+    protótipo ↔ N3; no GPE os N3 ficaram com `Fidelidade ao protótipo: n/a` por decisão
+    de 2026-10-04, e o vínculo vive só lá. Pega a 1ª linha com `` `<ID>` `` e o link
+    `](./…html)` dela, sem o `#` da tela. None se não houver."""
+    if not feat_id: return None
+    for linha in rd(os.path.join(ROOT, "prototypes", "INDEX.md")).splitlines():
+        if f"`{feat_id}`" not in linha: continue
+        m = re.search(r'\]\(\./([^)#\s]+\.html)', linha)
+        if m: return "prototypes/" + m.group(1)
+    return None
+
 def telas_do_manifesto(proto_abs):
     """Lê o `<script id="docx-telas">` do protótipo. Retorna a lista de telas
     (cada uma {nome, features, setup}) ou None se não houver manifesto."""
@@ -598,7 +611,7 @@ def capturar_tela(proto_abs, setup, cache_base, altura=None):
 def telas_da_feature(fs_dir, sigla_n2, md, feat_id):
     """[(png, legenda)] das telas do protótipo que pertencem à feature `feat_id`. Usa o
     manifesto do protótipo referenciado no N3; sem manifesto, a tela de entrada."""
-    proto_rel = prototipo_do_n3(md)
+    proto_rel = prototipo_do_n3(md) or prototipo_do_indice(feat_id)
     if not proto_rel: return []
     proto_abs = os.path.join(ROOT, proto_rel)
     if not os.path.exists(proto_abs): return []

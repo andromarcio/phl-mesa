@@ -798,5 +798,68 @@
     window.addEventListener('hashchange', rotear);
     rotear();
   </script>
+  <!-- Manifesto de telas para a Especificação Funcional (.docx): scripts/gera-docx.py captura cada tela com o
+       `setup` aplicado e a coloca na seção "Telas e Protótipos" das features listadas. Não é executado. -->
+  <script type="application/json" id="docx-telas">
+{
+ "telas": [
+  {
+   "nome": "Eventos — filtros e lista",
+   "features": [
+    "EVT-CAD-01",
+    "EVT-CAD-05",
+    "EVT-CAD-06"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");"
+  },
+  {
+   "nome": "Eventos — confirmação da exclusão",
+   "features": [
+    "EVT-CAD-05"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");pedirRemocao(8);",
+   "viewport": 900
+  },
+  {
+   "nome": "Evento — inclusão",
+   "features": [
+    "EVT-CAD-02"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");abrirInclusao();"
+  },
+  {
+   "nome": "Evento — edição",
+   "features": [
+    "EVT-CAD-03"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");abrirEdicao(8);"
+  },
+  {
+   "nome": "Evento — visualização",
+   "features": [
+    "EVT-CAD-04"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");abrirVisualizacao(8);"
+  },
+  {
+   "nome": "Janela Cargas de Convidados e Confirmados",
+   "features": [
+    "EVT-CAD-07",
+    "EVT-CAD-08"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");abrirCargas(8);",
+   "viewport": 1000
+  },
+  {
+   "nome": "Janela Cargas — seção Inscritos do CRM",
+   "features": [
+    "EVT-CAD-09"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");abrirCargas(8);setTimeout(function(){var b=document.querySelector('#modal-cargas .dsc-modal-body');b.scrollTop=b.scrollHeight;},300);",
+   "viewport": 1000
+  }
+ ]
+}
+  </script>
 </body>
 </html>

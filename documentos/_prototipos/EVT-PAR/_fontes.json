@@ -1,0 +1,107 @@
+{
+ "EVT-PAR-01-ParticipantesListaDaSecretariaCheckIn": {
+  "origem": "prototypes/eventos/participantes/flow.html",
+  "sha": "f299ae421d19eb7af9ca80d94a535018bd3abca0a2f7bd6f115292f0d2b681ad",
+  "tipo": "arquivo"
+ },
+ "EVT-PAR-01-ParticipantesListaDoAdministrador": {
+  "origem": "prototypes/eventos/participantes/flow.html",
+  "sha": "f299ae421d19eb7af9ca80d94a535018bd3abca0a2f7bd6f115292f0d2b681ad",
+  "tipo": "arquivo"
+ },
+ "EVT-PAR-02-JanelaCadastrarPessoa": {
+  "origem": "prototypes/eventos/participantes/flow.html",
+  "sha": "f299ae421d19eb7af9ca80d94a535018bd3abca0a2f7bd6f115292f0d2b681ad",
+  "tipo": "arquivo"
+ },
+ "EVT-PAR-03-ParticipantesListaDaSecretariaCheckIn": {
+  "origem": "prototypes/eventos/participantes/flow.html",
+  "sha": "f299ae421d19eb7af9ca80d94a535018bd3abca0a2f7bd6f115292f0d2b681ad",
+  "tipo": "arquivo"
+ },
+ "EVT-PAR-03-ParticipantesListaDoAdministrador": {
+  "origem": "prototypes/eventos/participantes/flow.html",
+  "sha": "f299ae421d19eb7af9ca80d94a535018bd3abca0a2f7bd6f115292f0d2b681ad",
+  "tipo": "arquivo"
+ },
+ "EVT-PAR-04-JanelaGerenciarLegendaDaPessoa": {
+  "origem": "prototypes/eventos/participantes/flow.html",
+  "sha": "f299ae421d19eb7af9ca80d94a535018bd3abca0a2f7bd6f115292f0d2b681ad",
+  "tipo": "arquivo"
+ },
+ "EVT-PAR-05-JanelaGerenciarLegendaDaPessoa": {
+  "origem": "prototypes/eventos/participantes/flow.html",
+  "sha": "f299ae421d19eb7af9ca80d94a535018bd3abca0a2f7bd6f115292f0d2b681ad",
+  "tipo": "arquivo"
+ },
+ "EVT-PAR-06-JanelaGerenciarLegendaDaPessoa": {
+  "origem": "prototypes/eventos/participantes/flow.html",
+  "sha": "f299ae421d19eb7af9ca80d94a535018bd3abca0a2f7bd6f115292f0d2b681ad",
+  "tipo": "arquivo"
+ },
+ "EVT-PAR-07-MapaDeAssentosAdministrador": {
+  "origem": "prototypes/eventos/participantes/flow.html",
+  "sha": "f299ae421d19eb7af9ca80d94a535018bd3abca0a2f7bd6f115292f0d2b681ad",
+  "tipo": "arquivo"
+ },
+ "EVT-PAR-07-MapaDeAssentosSecretariaMesa": {
+  "origem": "prototypes/eventos/participantes/flow.html",
+  "sha": "f299ae421d19eb7af9ca80d94a535018bd3abca0a2f7bd6f115292f0d2b681ad",
+  "tipo": "arquivo"
+ },
+ "EVT-PAR-08-MapaDeAssentosAdministrador": {
+  "origem": "prototypes/eventos/participantes/flow.html",
+  "sha": "f299ae421d19eb7af9ca80d94a535018bd3abca0a2f7bd6f115292f0d2b681ad",
+  "tipo": "arquivo"
+ },
+ "EVT-PAR-08-MapaEscolhaDaPessoaParaOAssento": {
+  "origem": "prototypes/eventos/participantes/flow.html",
+  "sha": "f299ae421d19eb7af9ca80d94a535018bd3abca0a2f7bd6f115292f0d2b681ad",
+  "tipo": "arquivo"
+ },
+ "EVT-PAR-09-MapaDeAssentosAdministrador": {
+  "origem": "prototypes/eventos/participantes/flow.html",
+  "sha": "f299ae421d19eb7af9ca80d94a535018bd3abca0a2f7bd6f115292f0d2b681ad",
+  "tipo": "arquivo"
+ },
+ "EVT-PAR-10-MapaDeAssentosSecretariaMesa": {
+  "origem": "prototypes/eventos/participantes/flow.html",
+  "sha": "f299ae421d19eb7af9ca80d94a535018bd3abca0a2f7bd6f115292f0d2b681ad",
+  "tipo": "arquivo"
+ },
+ "EVT-PAR-11-MapaDeAssentosAdministrador": {
+  "origem": "prototypes/eventos/participantes/flow.html",
+  "sha": "f299ae421d19eb7af9ca80d94a535018bd3abca0a2f7bd6f115292f0d2b681ad",
+  "tipo": "arquivo"
+ },
+ "EVT-PAR-12-MapaDeAssentosAdministrador": {
+  "origem": "prototypes/eventos/participantes/flow.html",
+  "sha": "f299ae421d19eb7af9ca80d94a535018bd3abca0a2f7bd6f115292f0d2b681ad",
+  "tipo": "arquivo"
+ },
+ "EVT-PAR-12-MapaDeAssentosSecretariaMesa": {
+  "origem": "prototypes/eventos/participantes/flow.html",
+  "sha": "f299ae421d19eb7af9ca80d94a535018bd3abca0a2f7bd6f115292f0d2b681ad",
+  "tipo": "arquivo"
+ },
+ "EVT-PAR-13-ConfirmacaoDePresenca": {
+  "origem": "prototypes/eventos/participantes/flow.html",
+  "sha": "f299ae421d19eb7af9ca80d94a535018bd3abca0a2f7bd6f115292f0d2b681ad",
+  "tipo": "arquivo"
+ },
+ "EVT-PAR-13-ParticipantesListaDoAdministrador": {
+  "origem": "prototypes/eventos/participantes/flow.html",
+  "sha": "f299ae421d19eb7af9ca80d94a535018bd3abca0a2f7bd6f115292f0d2b681ad",
+  "tipo": "arquivo"
+ },
+ "EVT-PAR-14-ParticipantesListaDoAdministrador": {
+  "origem": "prototypes/eventos/participantes/flow.html",
+  "sha": "f299ae421d19eb7af9ca80d94a535018bd3abca0a2f7bd6f115292f0d2b681ad",
+  "tipo": "arquivo"
+ },
+ "EVT-PAR-15-MapaDeAssentosAdministrador": {
+  "origem": "prototypes/eventos/participantes/flow.html",
+  "sha": "f299ae421d19eb7af9ca80d94a535018bd3abca0a2f7bd6f115292f0d2b681ad",
+  "tipo": "arquivo"
+ }
+}

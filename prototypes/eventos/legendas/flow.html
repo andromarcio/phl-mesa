@@ -1106,5 +1106,123 @@
     window.addEventListener('hashchange', rotear);
     rotear();
   </script>
+  <!-- Manifesto de telas para a Especificação Funcional (.docx): scripts/gera-docx.py captura cada tela com o
+       `setup` aplicado e a coloca na seção "Telas e Protótipos" das features listadas. Não é executado. -->
+  <script type="application/json" id="docx-telas">
+{
+ "telas": [
+  {
+   "nome": "Configuração de Legendas",
+   "features": [
+    "EVT-LEG-01",
+    "EVT-LEG-03",
+    "EVT-LEG-04",
+    "EVT-LEG-05",
+    "EVT-LEG-07"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");"
+  },
+  {
+   "nome": "Confirmação Remover bloco",
+   "features": [
+    "EVT-LEG-05"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");pedirRemoverBloco(0);",
+   "viewport": 900
+  },
+  {
+   "nome": "Janela Adicionar bloco — Usar bloco existente",
+   "features": [
+    "EVT-LEG-02"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");abrirAdicionarBloco();",
+   "viewport": 1000
+  },
+  {
+   "nome": "Janela Adicionar bloco — Criar novo bloco",
+   "features": [
+    "EVT-LEG-02",
+    "EVT-LEG-12"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");abrirAdicionarBloco();abrirAbaAdd('criar');",
+   "viewport": 1000
+  },
+  {
+   "nome": "Janela Simulação de aplicação de legendas",
+   "features": [
+    "EVT-LEG-06"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");simular();",
+   "viewport": 1100
+  },
+  {
+   "nome": "Confirmação Executar aplicação de legendas",
+   "features": [
+    "EVT-LEG-07"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");pedirExecucao();",
+   "viewport": 900
+  },
+  {
+   "nome": "Janela Salvar como preset",
+   "features": [
+    "EVT-LEG-08"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");abrirSalvarPreset();",
+   "viewport": 900
+  },
+  {
+   "nome": "Janela Carregar configuração — Biblioteca de presets",
+   "features": [
+    "EVT-LEG-09",
+    "EVT-LEG-10"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");abrirCarregar();",
+   "viewport": 1000
+  },
+  {
+   "nome": "Janela Carregar configuração — De outro evento",
+   "features": [
+    "EVT-LEG-09"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");abrirCarregar();abrirAbaCarregar('eventos');",
+   "viewport": 1000
+  },
+  {
+   "nome": "Catálogo de blocos",
+   "features": [
+    "EVT-LEG-11",
+    "EVT-LEG-13",
+    "EVT-LEG-14"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");abrirCatalogo(false,true);"
+  },
+  {
+   "nome": "Janela do bloco — Novo bloco",
+   "features": [
+    "EVT-LEG-12"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");abrirCatalogo(false,true);abrirBloco(null);",
+   "viewport": 900
+  },
+  {
+   "nome": "Janela do bloco — Editar bloco",
+   "features": [
+    "EVT-LEG-13"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");abrirCatalogo(false,true);abrirBloco(CATALOGO.filter(function(b){return b.nome===\"Palestrantes\"})[0].id);",
+   "viewport": 900
+  },
+  {
+   "nome": "Catálogo — confirmação da exclusão do bloco",
+   "features": [
+    "EVT-LEG-14"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");abrirCatalogo(false,true);pedirExcluirBloco(CATALOGO.filter(function(b){return b.nome===\"Palestrantes\"})[0].id);",
+   "viewport": 900
+  }
+ ]
+}
+  </script>
 </body>
 </html>

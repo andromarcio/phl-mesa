@@ -585,6 +585,10 @@ body { background: var(--gpe-app-bg); }
 .gpe-proto-perfil { display: inline-flex; align-items: center; gap: 8px; margin-top: 10px; }
 .gpe-proto-perfil select { height: 32px; border: 1px solid var(--dsc-border-neutral-3); border-radius: 4px; padding: 0 8px; font-family: inherit; }
 
+/* Captura para a Especificação Funcional (.docx): o `setup` do manifesto `docx-telas`
+   põe a classe no <body> e a foto sai sem o andaime do protótipo. */
+.gpe-docx .dsc-proto-notes, .gpe-docx .dsc-proto-badge, .gpe-docx .gpe-toast-stack { display: none !important; }
+
 /* ============================ Responsivo =================================== */
 @media (max-width: 900px) {
   .dsc-header-logo { font-size: 20px; }

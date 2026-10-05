@@ -1,0 +1,52 @@
+{
+ "EVT-CAD-01-EventosFiltrosELista": {
+  "origem": "prototypes/eventos/cadastro-eventos/flow.html",
+  "sha": "38c348296df986e7413ca326a899bbdd81ce3e8cde7f2b8c83d3d7d8135f813c",
+  "tipo": "arquivo"
+ },
+ "EVT-CAD-02-EventoInclusao": {
+  "origem": "prototypes/eventos/cadastro-eventos/flow.html",
+  "sha": "38c348296df986e7413ca326a899bbdd81ce3e8cde7f2b8c83d3d7d8135f813c",
+  "tipo": "arquivo"
+ },
+ "EVT-CAD-03-EventoEdicao": {
+  "origem": "prototypes/eventos/cadastro-eventos/flow.html",
+  "sha": "38c348296df986e7413ca326a899bbdd81ce3e8cde7f2b8c83d3d7d8135f813c",
+  "tipo": "arquivo"
+ },
+ "EVT-CAD-04-EventoVisualizacao": {
+  "origem": "prototypes/eventos/cadastro-eventos/flow.html",
+  "sha": "38c348296df986e7413ca326a899bbdd81ce3e8cde7f2b8c83d3d7d8135f813c",
+  "tipo": "arquivo"
+ },
+ "EVT-CAD-05-EventosConfirmacaoDaExclusao": {
+  "origem": "prototypes/eventos/cadastro-eventos/flow.html",
+  "sha": "38c348296df986e7413ca326a899bbdd81ce3e8cde7f2b8c83d3d7d8135f813c",
+  "tipo": "arquivo"
+ },
+ "EVT-CAD-05-EventosFiltrosELista": {
+  "origem": "prototypes/eventos/cadastro-eventos/flow.html",
+  "sha": "38c348296df986e7413ca326a899bbdd81ce3e8cde7f2b8c83d3d7d8135f813c",
+  "tipo": "arquivo"
+ },
+ "EVT-CAD-06-EventosFiltrosELista": {
+  "origem": "prototypes/eventos/cadastro-eventos/flow.html",
+  "sha": "38c348296df986e7413ca326a899bbdd81ce3e8cde7f2b8c83d3d7d8135f813c",
+  "tipo": "arquivo"
+ },
+ "EVT-CAD-07-JanelaCargasDeConvidadosEConfirmados": {
+  "origem": "prototypes/eventos/cadastro-eventos/flow.html",
+  "sha": "38c348296df986e7413ca326a899bbdd81ce3e8cde7f2b8c83d3d7d8135f813c",
+  "tipo": "arquivo"
+ },
+ "EVT-CAD-08-JanelaCargasDeConvidadosEConfirmados": {
+  "origem": "prototypes/eventos/cadastro-eventos/flow.html",
+  "sha": "38c348296df986e7413ca326a899bbdd81ce3e8cde7f2b8c83d3d7d8135f813c",
+  "tipo": "arquivo"
+ },
+ "EVT-CAD-09-JanelaCargasSecaoInscritosDoCRM": {
+  "origem": "prototypes/eventos/cadastro-eventos/flow.html",
+  "sha": "38c348296df986e7413ca326a899bbdd81ce3e8cde7f2b8c83d3d7d8135f813c",
+  "tipo": "arquivo"
+ }
+}

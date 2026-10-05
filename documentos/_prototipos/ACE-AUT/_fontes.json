@@ -1,0 +1,37 @@
+{
+ "ACE-AUT-01-TelaDeAcesso": {
+  "origem": "prototypes/acesso-usuarios/autenticacao/flow.html",
+  "sha": "3500af620f4f67ef5adcc9ddfb71f5c2ed7b62809d9b9e553f2c54b27ea49104",
+  "tipo": "arquivo"
+ },
+ "ACE-AUT-02-TelaInicialComOMenuDoUsuarioAberto": {
+  "origem": "prototypes/acesso-usuarios/autenticacao/flow.html",
+  "sha": "3500af620f4f67ef5adcc9ddfb71f5c2ed7b62809d9b9e553f2c54b27ea49104",
+  "tipo": "arquivo"
+ },
+ "ACE-AUT-03-RecuperarSenha": {
+  "origem": "prototypes/acesso-usuarios/autenticacao/flow.html",
+  "sha": "3500af620f4f67ef5adcc9ddfb71f5c2ed7b62809d9b9e553f2c54b27ea49104",
+  "tipo": "arquivo"
+ },
+ "ACE-AUT-04-AlterarSenhaTrocaObrigatoria": {
+  "origem": "prototypes/acesso-usuarios/autenticacao/flow.html",
+  "sha": "3500af620f4f67ef5adcc9ddfb71f5c2ed7b62809d9b9e553f2c54b27ea49104",
+  "tipo": "arquivo"
+ },
+ "ACE-AUT-04-AlterarSenhaTrocaVoluntaria": {
+  "origem": "prototypes/acesso-usuarios/autenticacao/flow.html",
+  "sha": "3500af620f4f67ef5adcc9ddfb71f5c2ed7b62809d9b9e553f2c54b27ea49104",
+  "tipo": "arquivo"
+ },
+ "ACE-AUT-05-JanelaAlterarImagemDoPerfil": {
+  "origem": "prototypes/acesso-usuarios/autenticacao/flow.html",
+  "sha": "3500af620f4f67ef5adcc9ddfb71f5c2ed7b62809d9b9e553f2c54b27ea49104",
+  "tipo": "arquivo"
+ },
+ "ACE-AUT-06-TelaInicialComOMenuDoUsuarioAberto": {
+  "origem": "prototypes/acesso-usuarios/autenticacao/flow.html",
+  "sha": "3500af620f4f67ef5adcc9ddfb71f5c2ed7b62809d9b9e553f2c54b27ea49104",
+  "tipo": "arquivo"
+ }
+}

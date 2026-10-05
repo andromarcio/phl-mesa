@@ -1,0 +1,107 @@
+{
+ "EVT-LEG-01-ConfiguracaoDeLegendas": {
+  "origem": "prototypes/eventos/legendas/flow.html",
+  "sha": "98517131f5101fb02917b103bcf7863fcf3509535da0c941531d15f1868b5ed3",
+  "tipo": "arquivo"
+ },
+ "EVT-LEG-02-JanelaAdicionarBlocoCriarNovoBloco": {
+  "origem": "prototypes/eventos/legendas/flow.html",
+  "sha": "98517131f5101fb02917b103bcf7863fcf3509535da0c941531d15f1868b5ed3",
+  "tipo": "arquivo"
+ },
+ "EVT-LEG-02-JanelaAdicionarBlocoUsarBlocoExistente": {
+  "origem": "prototypes/eventos/legendas/flow.html",
+  "sha": "98517131f5101fb02917b103bcf7863fcf3509535da0c941531d15f1868b5ed3",
+  "tipo": "arquivo"
+ },
+ "EVT-LEG-03-ConfiguracaoDeLegendas": {
+  "origem": "prototypes/eventos/legendas/flow.html",
+  "sha": "98517131f5101fb02917b103bcf7863fcf3509535da0c941531d15f1868b5ed3",
+  "tipo": "arquivo"
+ },
+ "EVT-LEG-04-ConfiguracaoDeLegendas": {
+  "origem": "prototypes/eventos/legendas/flow.html",
+  "sha": "98517131f5101fb02917b103bcf7863fcf3509535da0c941531d15f1868b5ed3",
+  "tipo": "arquivo"
+ },
+ "EVT-LEG-05-ConfiguracaoDeLegendas": {
+  "origem": "prototypes/eventos/legendas/flow.html",
+  "sha": "98517131f5101fb02917b103bcf7863fcf3509535da0c941531d15f1868b5ed3",
+  "tipo": "arquivo"
+ },
+ "EVT-LEG-05-ConfirmacaoRemoverBloco": {
+  "origem": "prototypes/eventos/legendas/flow.html",
+  "sha": "98517131f5101fb02917b103bcf7863fcf3509535da0c941531d15f1868b5ed3",
+  "tipo": "arquivo"
+ },
+ "EVT-LEG-06-JanelaSimulacaoDeAplicacaoDeLegendas": {
+  "origem": "prototypes/eventos/legendas/flow.html",
+  "sha": "98517131f5101fb02917b103bcf7863fcf3509535da0c941531d15f1868b5ed3",
+  "tipo": "arquivo"
+ },
+ "EVT-LEG-07-ConfiguracaoDeLegendas": {
+  "origem": "prototypes/eventos/legendas/flow.html",
+  "sha": "98517131f5101fb02917b103bcf7863fcf3509535da0c941531d15f1868b5ed3",
+  "tipo": "arquivo"
+ },
+ "EVT-LEG-07-ConfirmacaoExecutarAplicacaoDeLegendas": {
+  "origem": "prototypes/eventos/legendas/flow.html",
+  "sha": "98517131f5101fb02917b103bcf7863fcf3509535da0c941531d15f1868b5ed3",
+  "tipo": "arquivo"
+ },
+ "EVT-LEG-08-JanelaSalvarComoPreset": {
+  "origem": "prototypes/eventos/legendas/flow.html",
+  "sha": "98517131f5101fb02917b103bcf7863fcf3509535da0c941531d15f1868b5ed3",
+  "tipo": "arquivo"
+ },
+ "EVT-LEG-09-JanelaCarregarConfiguracaoBibliotecaDePresets": {
+  "origem": "prototypes/eventos/legendas/flow.html",
+  "sha": "98517131f5101fb02917b103bcf7863fcf3509535da0c941531d15f1868b5ed3",
+  "tipo": "arquivo"
+ },
+ "EVT-LEG-09-JanelaCarregarConfiguracaoDeOutroEvento": {
+  "origem": "prototypes/eventos/legendas/flow.html",
+  "sha": "98517131f5101fb02917b103bcf7863fcf3509535da0c941531d15f1868b5ed3",
+  "tipo": "arquivo"
+ },
+ "EVT-LEG-10-JanelaCarregarConfiguracaoBibliotecaDePresets": {
+  "origem": "prototypes/eventos/legendas/flow.html",
+  "sha": "98517131f5101fb02917b103bcf7863fcf3509535da0c941531d15f1868b5ed3",
+  "tipo": "arquivo"
+ },
+ "EVT-LEG-11-CatalogoDeBlocos": {
+  "origem": "prototypes/eventos/legendas/flow.html",
+  "sha": "98517131f5101fb02917b103bcf7863fcf3509535da0c941531d15f1868b5ed3",
+  "tipo": "arquivo"
+ },
+ "EVT-LEG-12-JanelaAdicionarBlocoCriarNovoBloco": {
+  "origem": "prototypes/eventos/legendas/flow.html",
+  "sha": "98517131f5101fb02917b103bcf7863fcf3509535da0c941531d15f1868b5ed3",
+  "tipo": "arquivo"
+ },
+ "EVT-LEG-12-JanelaDoBlocoNovoBloco": {
+  "origem": "prototypes/eventos/legendas/flow.html",
+  "sha": "98517131f5101fb02917b103bcf7863fcf3509535da0c941531d15f1868b5ed3",
+  "tipo": "arquivo"
+ },
+ "EVT-LEG-13-CatalogoDeBlocos": {
+  "origem": "prototypes/eventos/legendas/flow.html",
+  "sha": "98517131f5101fb02917b103bcf7863fcf3509535da0c941531d15f1868b5ed3",
+  "tipo": "arquivo"
+ },
+ "EVT-LEG-13-JanelaDoBlocoEditarBloco": {
+  "origem": "prototypes/eventos/legendas/flow.html",
+  "sha": "98517131f5101fb02917b103bcf7863fcf3509535da0c941531d15f1868b5ed3",
+  "tipo": "arquivo"
+ },
+ "EVT-LEG-14-CatalogoConfirmacaoDaExclusaoDoBloco": {
+  "origem": "prototypes/eventos/legendas/flow.html",
+  "sha": "98517131f5101fb02917b103bcf7863fcf3509535da0c941531d15f1868b5ed3",
+  "tipo": "arquivo"
+ },
+ "EVT-LEG-14-CatalogoDeBlocos": {
+  "origem": "prototypes/eventos/legendas/flow.html",
+  "sha": "98517131f5101fb02917b103bcf7863fcf3509535da0c941531d15f1868b5ed3",
+  "tipo": "arquivo"
+ }
+}

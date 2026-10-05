@@ -1,0 +1,32 @@
+{
+ "ACE-USU-01-UsuariosFiltrosELista": {
+  "origem": "prototypes/acesso-usuarios/usuarios/flow.html",
+  "sha": "a0638fc99282308fddce0226ded3dc315e4b2170c6cd81450d62a2fae56f165e",
+  "tipo": "arquivo"
+ },
+ "ACE-USU-02-UsuarioInclusaoAntesDeValidarOLogin": {
+  "origem": "prototypes/acesso-usuarios/usuarios/flow.html",
+  "sha": "a0638fc99282308fddce0226ded3dc315e4b2170c6cd81450d62a2fae56f165e",
+  "tipo": "arquivo"
+ },
+ "ACE-USU-02-UsuarioInclusaoComOLoginValidado": {
+  "origem": "prototypes/acesso-usuarios/usuarios/flow.html",
+  "sha": "a0638fc99282308fddce0226ded3dc315e4b2170c6cd81450d62a2fae56f165e",
+  "tipo": "arquivo"
+ },
+ "ACE-USU-03-UsuarioEdicao": {
+  "origem": "prototypes/acesso-usuarios/usuarios/flow.html",
+  "sha": "a0638fc99282308fddce0226ded3dc315e4b2170c6cd81450d62a2fae56f165e",
+  "tipo": "arquivo"
+ },
+ "ACE-USU-04-UsuariosConfirmacaoRemoverUsuario": {
+  "origem": "prototypes/acesso-usuarios/usuarios/flow.html",
+  "sha": "a0638fc99282308fddce0226ded3dc315e4b2170c6cd81450d62a2fae56f165e",
+  "tipo": "arquivo"
+ },
+ "ACE-USU-04-UsuariosFiltrosELista": {
+  "origem": "prototypes/acesso-usuarios/usuarios/flow.html",
+  "sha": "a0638fc99282308fddce0226ded3dc315e4b2170c6cd81450d62a2fae56f165e",
+  "tipo": "arquivo"
+ }
+}

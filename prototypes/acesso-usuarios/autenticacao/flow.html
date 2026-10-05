@@ -526,5 +526,62 @@
     window.addEventListener('hashchange', abrirPorHash);
     abrirPorHash();
   </script>
+  <!-- Manifesto de telas para a Especificação Funcional (.docx): scripts/gera-docx.py captura cada tela com o
+       `setup` aplicado e a coloca na seção "Telas e Protótipos" das features listadas. Não é executado. -->
+  <script type="application/json" id="docx-telas">
+{
+ "telas": [
+  {
+   "nome": "Tela de acesso",
+   "features": [
+    "ACE-AUT-01"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");abrirAcesso();",
+   "viewport": 900
+  },
+  {
+   "nome": "Recuperar senha",
+   "features": [
+    "ACE-AUT-03"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");abrirRecuperacao();",
+   "viewport": 900
+  },
+  {
+   "nome": "Alterar senha — troca obrigatória",
+   "features": [
+    "ACE-AUT-04"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");trocaPendente={usuario:USUARIOS['novo.usuario'],senhaAtual:'provisoria1',concluida:false};abrirAlterarSenha(true);",
+   "viewport": 900
+  },
+  {
+   "nome": "Alterar senha — troca voluntária",
+   "features": [
+    "ACE-AUT-04"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");aplicarSessao(sessao);abrirAlterarSenha(false);",
+   "viewport": 900
+  },
+  {
+   "nome": "Tela inicial com o menu do usuário aberto",
+   "features": [
+    "ACE-AUT-02",
+    "ACE-AUT-06"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");aplicarSessao(sessao);showScreen('screen-inicio');document.getElementById('user-menu').classList.add('is-open');",
+   "viewport": 700
+  },
+  {
+   "nome": "Janela Alterar Imagem do Perfil",
+   "features": [
+    "ACE-AUT-05"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");aplicarSessao(sessao);showScreen('screen-inicio');abrirFoto();",
+   "viewport": 900
+  }
+ ]
+}
+  </script>
 </body>
 </html>

@@ -591,5 +591,81 @@
     if (location.hash === '#pessoa-nova') abrirInclusao();
     if (location.hash === '#pessoa') abrirEdicao(8);
   </script>
+  <!-- Manifesto de telas para a Especificação Funcional (.docx): scripts/gera-docx.py captura cada tela com o
+       `setup` aplicado e a coloca na seção "Telas e Protótipos" das features listadas. Não é executado. -->
+  <script type="application/json" id="docx-telas">
+{
+ "telas": [
+  {
+   "nome": "Pessoas — filtros e lista",
+   "features": [
+    "PES-CAD-01",
+    "PES-CAD-04"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");"
+  },
+  {
+   "nome": "Pessoas — confirmação da remoção",
+   "features": [
+    "PES-CAD-04"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");pedirRemocao(0);",
+   "viewport": 900
+  },
+  {
+   "nome": "Pessoa — inclusão",
+   "features": [
+    "PES-CAD-02"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");abrirInclusao();"
+  },
+  {
+   "nome": "Pessoa — edição, aba Cadastro",
+   "features": [
+    "PES-CAD-03"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");abrirEdicao(8);"
+  },
+  {
+   "nome": "Pessoa — edição, aba Relacionamento",
+   "features": [
+    "PES-CAD-03"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");abrirEdicao(8);abrirAba(document.querySelectorAll('.gpe-tab')[3],'aba-relacionamento');"
+  },
+  {
+   "nome": "Pessoa — edição, aba Histórico",
+   "features": [
+    "PES-CAD-03"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");abrirEdicao(8);abrirAba(document.querySelectorAll('.gpe-tab')[4],'aba-historico');"
+  },
+  {
+   "nome": "Janela Carga de Grupos Temáticos",
+   "features": [
+    "PES-CAD-05"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");abrirCarga('gt');",
+   "viewport": 900
+  },
+  {
+   "nome": "Janela Carga de Temas",
+   "features": [
+    "PES-CAD-06"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");abrirCarga('tema');",
+   "viewport": 900
+  },
+  {
+   "nome": "Janela Carga de Histórico",
+   "features": [
+    "PES-CAD-07"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");abrirCarga('historico');",
+   "viewport": 900
+  }
+ ]
+}
+  </script>
 </body>
 </html>

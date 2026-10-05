@@ -1167,5 +1167,86 @@
     window.addEventListener('hashchange', abrirPorEndereco);
     abrirPorEndereco();
   </script>
+  <!-- Manifesto de telas para a Especificação Funcional (.docx): scripts/gera-docx.py captura cada tela com o
+       `setup` aplicado e a coloca na seção "Telas e Protótipos" das features listadas. Não é executado. -->
+  <script type="application/json" id="docx-telas">
+{
+ "telas": [
+  {
+   "nome": "Participantes — lista do Administrador",
+   "features": [
+    "EVT-PAR-01",
+    "EVT-PAR-03",
+    "EVT-PAR-13",
+    "EVT-PAR-14"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");aplicarPerfil('Administrador','screen-lista');"
+  },
+  {
+   "nome": "Participantes — lista da Secretaria Check-In",
+   "features": [
+    "EVT-PAR-01",
+    "EVT-PAR-03"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");aplicarPerfil('Secretaria Check-In','screen-checkin');"
+  },
+  {
+   "nome": "Janela Cadastrar Pessoa",
+   "features": [
+    "EVT-PAR-02"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");aplicarPerfil('Administrador','screen-lista');abrirCadastro();",
+   "viewport": 1000
+  },
+  {
+   "nome": "Janela Gerenciar Legenda da Pessoa",
+   "features": [
+    "EVT-PAR-04",
+    "EVT-PAR-05",
+    "EVT-PAR-06"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");aplicarPerfil('Administrador','screen-lista');abrirLegenda(10,'a');",
+   "viewport": 1000
+  },
+  {
+   "nome": "Confirmação de presença",
+   "features": [
+    "EVT-PAR-13"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");aplicarPerfil('Administrador','screen-lista');pedirConfirmacao(2,'a');",
+   "viewport": 900
+  },
+  {
+   "nome": "Mapa de assentos — Administrador",
+   "features": [
+    "EVT-PAR-07",
+    "EVT-PAR-08",
+    "EVT-PAR-09",
+    "EVT-PAR-11",
+    "EVT-PAR-12",
+    "EVT-PAR-15"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");aplicarPerfil('Administrador','screen-mapa');"
+  },
+  {
+   "nome": "Mapa — escolha da pessoa para o assento",
+   "features": [
+    "EVT-PAR-08"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");aplicarPerfil('Administrador','screen-mapa');clicarAssento('B5');",
+   "viewport": 1000
+  },
+  {
+   "nome": "Mapa de assentos — Secretaria Mesa",
+   "features": [
+    "EVT-PAR-07",
+    "EVT-PAR-10",
+    "EVT-PAR-12"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");aplicarPerfil('Secretaria Mesa','screen-mapa-secretaria');"
+  }
+ ]
+}
+  </script>
 </body>
 </html>

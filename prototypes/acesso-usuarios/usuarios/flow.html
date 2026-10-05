@@ -612,5 +612,50 @@
     if (location.hash === '#usuario' || location.hash === '#usuario-novo') abrirInclusao();
     if (location.hash === '#usuario-editar') abrirEdicao(11);
   </script>
+  <!-- Manifesto de telas para a Especificação Funcional (.docx): scripts/gera-docx.py captura cada tela com o
+       `setup` aplicado e a coloca na seção "Telas e Protótipos" das features listadas. Não é executado. -->
+  <script type="application/json" id="docx-telas">
+{
+ "telas": [
+  {
+   "nome": "Usuários — filtros e lista",
+   "features": [
+    "ACE-USU-01",
+    "ACE-USU-04"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");"
+  },
+  {
+   "nome": "Usuários — confirmação Remover Usuário",
+   "features": [
+    "ACE-USU-04"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");pedirRemocao(5);",
+   "viewport": 900
+  },
+  {
+   "nome": "Usuário — inclusão, antes de validar o login",
+   "features": [
+    "ACE-USU-02"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");abrirInclusao();"
+  },
+  {
+   "nome": "Usuário — inclusão com o login validado",
+   "features": [
+    "ACE-USU-02"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");abrirInclusao();document.getElementById('u-login').value='carla.ribeiro';atualizarBotaoValidar();validarLogin();"
+  },
+  {
+   "nome": "Usuário — edição",
+   "features": [
+    "ACE-USU-03"
+   ],
+   "setup": "document.body.classList.add(\"gpe-docx\");abrirEdicao(11);"
+  }
+ ]
+}
+  </script>
 </body>
 </html>
