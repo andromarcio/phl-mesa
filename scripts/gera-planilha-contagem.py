@@ -440,6 +440,25 @@ def criterios_por_pe(cab, corpo):
                         normaliza_criterios(c[iK])))
     return out
 
+def pes_listados(cab, corpo):
+    """[(feature, PE)] de uma tabela de processos elementares (`Processo elementar | Da
+    feature | …`), com ou sem a coluna `Critérios`. É o que a sprint ALCANÇOU: quando a
+    AIM lista os PEs de uma feature, só eles entram no recorte (ver `PES_FORA`)."""
+    iP, iD = col(cab, r"^Processo elementar$"), col(cab, r"^Da feature$")
+    if min(iP, iD) < 0:
+        return []
+    out = []
+    for c in corpo:
+        if max(iP, iD) >= len(c):
+            continue
+        m = re.search(r"[A-Z]{3}-[A-Z]{3}-\d{2}", c[iD])
+        if m:
+            out.append((m.group(0), nome_pe_da_aim(c[iP])))
+    return out
+
+# PEs de feature alcançada que a AIM não lista — ficam fora do recorte e são avisados.
+PES_FORA = []
+
 def criterios_da_origem(linhas):
     """{chave: critérios} da `## Origem` do N3 — o elo recíproco da AIM, que a planilha
     usa quando a AIM não diz quais critérios a feature cobriu."""
@@ -540,6 +559,7 @@ def mapa_tickets(raiz, sprint=None, estimadas=None):
     linha. Vale a AIM do ticket; a da sprint só completa o que a do ticket não disse.
     """
     mapa = {}
+    listados = []   # (feature, PE) das tabelas de processos elementares das AIMs
 
     def registra_pe(fid, pe, chave, crit):
         if fid in mapa and chave and crit:
@@ -576,6 +596,7 @@ def mapa_tickets(raiz, sprint=None, estimadas=None):
         nat_por_id, ca_por_id, est_ids, do_pe = {}, {}, {}, []
         for cab, corpo in tabelas(trecho.splitlines(), 0, lambda l: False):
             do_pe += criterios_por_pe(cab, corpo)
+            listados += pes_listados(cab, corpo)
             iF, iN = col(cab, r"^Feature$"), col(cab, r"^Natureza$")
             iC = col(cab, r"CA-n", r"Crit[ée]rios.*")
             if iF < 0 or iN < 0:
@@ -609,6 +630,7 @@ def mapa_tickets(raiz, sprint=None, estimadas=None):
         do_pe = []
         for cab, corpo in tabelas(linhas, 0, lambda l: False):
             do_pe += criterios_por_pe(cab, corpo)
+            listados += pes_listados(cab, corpo)
             iF, iN = col(cab, r"^Feature$"), col(cab, r"^Natureza$")
             iJ = col(cab, r"^Ticket$", r"Item do Jira")
             iC = col(cab, r"CA-n", r"Crit[ée]rios.*")
@@ -635,6 +657,12 @@ def mapa_tickets(raiz, sprint=None, estimadas=None):
                                                if tk and re.search(rf"(?<!\d){re.escape(tk)}$", k)]
             if len(achadas) == 1:
                 registra_pe(fid, pe, achadas[0], crit)
+    # A sprint conta o PROCESSO ELEMENTAR, não a feature: a AIM que lista os PEs de uma
+    # feature diz quais deles a sprint alcançou (ex.: só a pesquisa, e não as combos que
+    # ela hospeda). A lista é a união das AIMs lidas no recorte.
+    for fid, pe in listados:
+        if fid in mapa:
+            mapa[fid].setdefault("pes", set()).add(pe)
     return mapa
 
 # A contagem ESTIMADA mora na AIM do ticket (`## Contagem estimada`): uma linha por função,
@@ -1301,6 +1329,14 @@ def main():
         # entregue sem item no Jira. Filtrar por `d["jira"]` deixaria essas de fora.
         linhas = [d for d in linhas
                   if (d["na_sprint"] and (not alvo or any(k.upper() in alvo for k in d["jira"].split())))]
+        # PE com PF de feature cujos PEs a AIM lista, e que não está na lista: não foi
+        # alcançado pela sprint. A linha de 0 PF fica (o PO quer ver o não contado).
+        def alcancado(d):
+            pes = (impacto.get(d["id"]) or {}).get("pes")
+            if not pes or not d["tipo"] or chave_pe(d["pe"]) in pes:
+                return True
+            PES_FORA.append(d); return False
+        linhas = [d for d in linhas if alcancado(d)]
     linhas.sort(key=lambda d: (d["id"], d["pe"]))
 
     # Planilha vazia pode ter três causas, e cada uma se corrige num lugar diferente:
@@ -1377,6 +1413,11 @@ def main():
     n = len(linhas)
     print(f"✓ {n} processo(s) elementar(es) e {len(dados)} função(ões) de dados em {saida}")
     print(f"   Escopo da Contagem (Resumo): {recorte_txt}")
+    if PES_FORA:
+        print(f"   {len(PES_FORA)} PE(s) de feature alcançada fora do recorte — as AIMs listam os PEs "
+              f"que a entrega alcançou, e estes não estão lá:")
+        for d in PES_FORA:
+            print(f"      {d['id']} — {d['pe']} ({d['tipo']})")
     if estimadas:
         print(f"⚠️  {len(estimadas)} com a contagem ainda ESTIMADA `(E)` na AIM — o ticket não entra nesta "
               f"planilha: a detalhada só leva o que foi contado no N3 e no DATA-MODEL. Conte "
