@@ -767,6 +767,59 @@ def registro_ali_aie(raiz):
             reg[nome] = (tipo if tipo in ("ALI", "AIE") else "", "" if dom in ("—", "-") else dom)
     return reg
 
+def _ders_da_lista(texto, n):
+    """Os DER de uma enumeração em prosa — "a, b, c e d" —, um por item. A vírgula separa;
+    o último "e" também, mas só se a contagem declarada `n` pedir: "Nome, Data e Hora"
+    com n = 2 são dois DER, não três. Sem `n`, vale a leitura usual do "e" final."""
+    partes = fora_de_parenteses(texto.strip().rstrip("."), ", ")
+    if partes and " e " in partes[-1] and (n is None or len(partes) < n):
+        ini, _, fim = partes[-1].rpartition(" e ")
+        partes[-1:] = [ini, fim]
+    out = []
+    for x in partes:
+        x = re.sub(r"^(?:o|a|os|as)\s+", "", so_o_nome(x.strip()))
+        if x:
+            out.append(x[0].upper() + x[1:])
+    return out
+
+def ders_da_memoria(flin):
+    """{arquivo lógico: [DER contados]} da memória de cálculo do fragmento de data-model —
+    a lista que sustenta o DER da tabela de arquivos lógicos. A tabela de atributos não
+    serve para isso: traz o que o modelo guarda (o marcador de exclusão lógica entra, o
+    identificador não), e o DER é o que a contagem reconheceu. Lê dois formatos:
+      **ALI: X** … "DER (n): a, b e c."  ou  "DER (n):" seguido de "- Entidade (k): a, b e c"
+      **ALI: X** … "- DER Entidade: a, b, c = k"   (template do engine)"""
+    out, atual, em_lista = {}, None, False
+    for l in flin:
+        s = l.strip()
+        m = re.match(r"^\*\*(?:ALI|AIE):\s*([^*]+?)\s*\*\*", s)
+        if m:
+            atual, em_lista = m.group(1).strip(), False
+            continue
+        if atual is None:
+            continue
+        if re.match(r"^#{1,6}\s|^\*\*[^*]+\*\*|^</details>", s):
+            atual = None
+            continue
+        m = re.match(r"^-\s*DER\s+(?!total)([^:]+):\s*(.+?)\s*=\s*(\d+)\s*$", s, re.I)
+        if m:
+            out.setdefault(atual, []).extend(_ders_da_lista(m.group(2), int(m.group(3))))
+            continue
+        m = re.search(r"\bDER\s*\((\d+)\):\s*(.*)$", s)
+        if m:
+            resto = re.split(r"\.(?:\s|$)", m.group(2), maxsplit=1)[0]
+            if resto.strip():
+                out.setdefault(atual, []).extend(_ders_da_lista(resto, int(m.group(1))))
+            em_lista = not resto.strip()
+            continue
+        if em_lista:
+            m = re.match(r"^[-*]\s+.+?\((\d+)\):\s*(.+)$", s)
+            if m:
+                out.setdefault(atual, []).extend(_ders_da_lista(m.group(2), int(m.group(1))))
+            elif s:
+                em_lista = False
+    return out
+
 def funcoes_de_dados(raiz):
     idx = raiz / "global" / "DATA-MODEL.md"
     if not idx.is_file():
@@ -788,9 +841,12 @@ def funcoes_de_dados(raiz):
     # Cada entidade abre com "> **ALI: X** · papel" (ou "> **AIE: X** · estrutura
     # externa de …"), que é o elo entidade→arquivo lógico; a tabela logo abaixo lista
     # os campos em Label PO. O título do fragmento dá o domínio de quem o declara.
-    const, campos, dom_frag = {}, {}, {}
+    const, campos, dom_frag, contados = {}, {}, {}, {}
+    cab_campos = re.compile(r"^\|\s*(?:Atributo\s*\(\s*)?Label PO")   # "| Label PO" ou "| Atributo (Label PO)"
     for frag in sorted((raiz / "global" / "data-models").glob("*.md")):
         flin = frag.read_text(encoding="utf-8").splitlines()
+        for ali, ders in ders_da_memoria(flin).items():
+            contados.setdefault(ali, ders)
         mdom = next((m for m in (re.match(r"#\s+Data Model:\s*(.+?)\s*$", l) for l in flin[:5]) if m), None)
         for k, l in enumerate(flin):
             m = re.match(r"^>\s*\*\*(?:ALI|AIE):\s*([^*]+)\*\*", l)
@@ -800,11 +856,11 @@ def funcoes_de_dados(raiz):
                 dom_frag.setdefault(m.group(1).strip(), mdom.group(1))
             ali = m.group(1).strip()
             j = k + 1
-            while j < len(flin) and not flin[j].startswith("| Label PO"):
+            while j < len(flin) and not cab_campos.match(flin[j]):
                 if re.match(r"^##\s", flin[j]):
                     break
                 j += 1
-            if j >= len(flin) or not flin[j].startswith("| Label PO"):
+            if j >= len(flin) or not cab_campos.match(flin[j]):
                 continue
             vistos = campos.setdefault(ali, [])
             for linha in flin[j + 2:]:
@@ -866,7 +922,12 @@ def funcoes_de_dados(raiz):
                     for e in fora_de_parenteses(grupo, ",") if (n := so_o_nome(lim(e), alr=True))]
             saida.append({
                 "requisito": dom, "pe": nome, "tipo": tipo,
-                "der_qtd": pega(iDER), "der_desc": "\n".join(n for c_ in campos.get(nome, []) if (n := so_o_nome(c_))),
+                # A Descrição do DER é a lista da memória de cálculo, que sustenta o
+                # número; sem ela, os atributos do modelo (população diferente — ver o
+                # aviso de DER no fim do main).
+                "der_qtd": pega(iDER),
+                "der_desc": "\n".join(contados.get(nome) or
+                                      [n for c_ in campos.get(nome, []) if (n := so_o_nome(c_))]),
                 "alr_qtd": pega(iRLR), "alr_desc": "\n".join(ents),
                 "tipo_registro": reg_tipo,
                 "id": nome,
@@ -920,12 +981,15 @@ def mapa_tickets_dados(raiz, sprint=None, estimadas=None):
             mapa.setdefault(nome, [])
             if chave not in mapa[nome]:
                 mapa[nome].append(chave)
-            mrlr = re.search(r"RLR\s+(\d+)\s*→\s*(\d+)", cabec)
-            mder = re.search(r"DER\s+(\d+)\s*→\s*(\d+)", cabec)
+            # O antes pode não ter sido apurado (`RLR ❓ → 6`): o depois vale do mesmo jeito.
+            mrlr = re.search(r"RLR\s+(\d+|❓|\?)\s*→\s*(\d+)", cabec)
+            mder = re.search(r"DER\s+(\d+|❓|\?)\s*→\s*(\d+)", cabec)
+            mnat = re.search(r"·\s*(inclu[íi]da|alterada)\s*$", cabec.strip())
             if mrlr or mder:
                 depois[nome] = {
                     "rlr": (mrlr.group(1), mrlr.group(2)) if mrlr else None,
                     "der": (mder.group(1), mder.group(2)) if mder else None,
+                    "natureza": ("incluída" if mnat.group(1).startswith("inclu") else "alterada") if mnat else "",
                 }
     return mapa, depois
 
@@ -1392,17 +1456,25 @@ def main():
         alt = depois.get(d["pe"])
         if alt:
             # a célula passa a levar o tamanho DEPOIS; o antes fica na descrição
-            nota = []
+            nota, sem_antes = [], False
+            incluida = (alt.get("natureza") or d["natureza"]) == "incluída"
             for chv, campo in (("rlr", "alr_qtd"), ("der", "der_qtd")):
                 if alt[chv]:
                     antes, dps = alt[chv]
                     d[campo] = dps
-                    nota.append(f"{chv.upper()} {antes} → {dps}")
+                    sem_antes |= not antes.isdigit()
+                    # função incluída não tem antes: o "0 →" da AIM só diz que ela não existia
+                    nota.append(f"{chv.upper()} {dps}" if incluida
+                                else f"{chv.upper()} {antes if antes.isdigit() else '?'} → {dps}")
             # A nota NÃO entra na enumeração: aquela coluna é a lista de DER e
             # nada mais — recado no meio dos campos faz o primeiro item parecer um
             # deles. Vai para a Observação (coluna U) da mesma linha.
-            if nota:
-                d["nota_alt"] = ("Alterado por " + (d["jira"] or "item sem chave") + ": " + " · ".join(nota)
+            quem = d["jira"] or "item sem chave"
+            if nota and incluida:
+                d["nota_alt"] = f"Incluído por {quem}: " + " · ".join(nota) + "."
+            elif nota:
+                d["nota_alt"] = (f"Alterado por {quem}: " + " · ".join(nota)
+                                 + (". O tamanho antes da alteração não foi apurado" if sem_antes else "")
                                  + ". A quantidade é a DEPOIS da alteração, base do CHGA.")
     if recorte:
         alvo = {k.upper() for k in a.jira or []}
