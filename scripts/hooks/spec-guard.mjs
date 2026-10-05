@@ -223,7 +223,9 @@ function main() {
           'elementar medido tem um bloco ```json {"pe", "alr", "der"} logo abaixo do seu cabeçalho na\n' +
           '"### Memória de cálculo" — o item é o NOME do campo ou do arquivo lógico, sem comentário, e as\n' +
           'listas têm o tamanho do ALR e do DER da tabela. O porquê fica em prosa, fora do bloco. E o\n' +
-          'processo elementar `principal` leva o nome da feature, sem alteração nem variação\n' +
+          'processo elementar `principal` leva o nome da feature, sem alteração nem variação; com mais de\n' +
+          'um principal, cada um é forma de uso da mesma função, declarada em "variante" no bloco — outra\n' +
+          'ação é outra feature: não promova o PE a principal, pare e avise que falta a feature\n' +
           '(node scripts/valida-enumeracao-contagem.mjs <arquivo>).\n\n' +
           `${en.stdout || ''}${en.stderr || ''}`.trim(),
         );

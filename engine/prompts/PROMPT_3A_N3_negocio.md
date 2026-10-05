@@ -136,6 +136,24 @@ contexto, o ticket é a **origem** desta feature. Antes de bifurcar entre Modo A
 - Confirme com o usuário se esta sessão cobre **um critério, vários ou todos**
   os do ticket (um ticket pode virar mais de uma feature — a `## Features` da AIM
   diz quais).
+- **História não é feature — decomponha antes de escrever.** A história do cliente
+  costuma reunir várias ações, e quem decide quais features existem é a análise, não a
+  história (vale também quando ela chega colada, sem AIM). Antes do primeiro N3, liste
+  as ações que o ticket contém — uma por linha: ator · verbo · entidade · quando ·
+  resultado observável — e proponha **uma feature por ação**. Não crie uma feature por
+  história, nem dê à feature o título da história. Nome com verbo agrupador
+  ("gerenciar", "manter") ou com dois verbos ligados por "e" é sinal de pacote
+  (`engine/FEATURE-DEFINITION.md` → *História não é feature*; o gate reprova). **O PO
+  aprova o quadro de ações antes de o primeiro N3 ser escrito**; a história entra na
+  `## Origem` de todas as features que saíram dela, cada uma com os critérios que cobre.
+
+> "O ticket **[STRYxxxxxxx]** reúne estas ações — proponho uma feature para cada:
+>
+> | Ator | Verbo | Entidade | Quando | Resultado observável | Feature proposta |
+> |---|---|---|---|---|---|
+> | [ator] | [verbo] | [entidade] | [momento] | [o que se observa] | [Verbo + Entidade] |
+>
+> Confirma o quadro? Só depois escrevo os N3."
 
 > "Esta feature tem origem no ticket **[STRYxxxxxxx]**. Vou registrá-lo na
 > seção `## Origem` e desdobrar cada critério de aceite em regra de negócio,

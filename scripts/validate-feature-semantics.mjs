@@ -28,7 +28,9 @@
 //   FD-1  primeiro segmento do arquivo é verbo no infinitivo (canônico → ✓; forma de
 //         infinitivo não catalogada → aviso; termo bloqueado ou não-verbo → erro)
 //   FD-2  título começa com o MESMO verbo do arquivo (acentos ignorados)
-//   FD-3  atomicidade: nome/título não encadeiam dois verbos canônicos
+//   FD-3  atomicidade: nome/título não encadeiam duas ações — verbo canônico, verbo
+//         agrupador (bloqueado) ou, no título, qualquer infinitivo depois de "e"/"ou";
+//         título igual ao da história de origem (`HISTnn — …` em ## Origem) → aviso
 //   FD-4  termo bloqueado na posição do verbo (agrupador/nominalização/artefato/NFR)
 //         → erro com o encaminhamento da tabela
 //   FD-5  (via FD-4) não é campo/regra/tela/mensagem/NFR nomeado como feature
@@ -307,6 +309,11 @@ function effectiveVocab(base, ov) {
 // ------------------------------------------------------------------- helpers
 // Forma de infinitivo pt-BR (heurística p/ verbo ainda não catalogado → aviso).
 const looksInfinitive = (t) => /^[a-z]{2,}(ar|er|ir)$/.test(t);
+// Substantivos e adjetivos com cara de infinitivo: depois de "e"/"ou" no título, não são
+// uma segunda ação ("Emitir Laudo e Parecer").
+const NAO_VERBO = new Set(['titular', 'familiar', 'auxiliar', 'militar', 'escolar', 'preliminar', 'complementar',
+  'regular', 'particular', 'popular', 'similar', 'exemplar', 'celular', 'parecer', 'poder', 'dever', 'lazer',
+  'mulher', 'lugar', 'lider', 'master', 'super']);
 
 // Conjunto de verbos distintos = exatamente um par de alternância catalogado?
 // (toggle de estado binário — ativar/desativar — é UMA feature; isenta FD-3.)
@@ -495,9 +502,11 @@ function validate(file, vocab) {
     if (!entityTokens.length) {
       errors.push('[FD-1] Nome sem entidade após o verbo — a feature é um verbo + UMA entidade (`f-[verbo]-[entidade]`).');
     }
-    // FD-3 — dois verbos canônicos no slug = duas ações num arquivo só.
+    // FD-3 — dois verbos no slug = duas ações num arquivo só. Conta o verbo canônico e o
+    // verbo agrupador bloqueado (`gerenciar`, `manter`): "anexar-gerenciar" passava porque
+    // só os canônicos contavam.
     // Exceção: um par de alternância (ativar/desativar) é UM toggle, uma feature.
-    const slugVerbSet = new Set(tokens.map(norm).filter((t) => verbs.has(t)));
+    const slugVerbSet = new Set(tokens.map(norm).filter((t) => verbs.has(t) || (blocked.has(t) && looksInfinitive(t))));
     if (slugVerbSet.size > 1 && !isTogglePair(slugVerbSet, vocab.togglePairs)) {
       errors.push(
         `[FD-3] Nome encadeia mais de uma ação (${[...slugVerbSet].join(', ')}) — cada verbo é uma feature própria (um N3 por ação).`,
@@ -526,11 +535,27 @@ function validate(file, vocab) {
         `[FD-2] Título "${trunc(title)}" não começa com verbo no infinitivo — o nome de uma feature é "[Verbo] [entidade]" (ex.: "Cadastrar cliente").`,
       );
     }
-    const titleVerbSet = new Set(words.filter((w) => verbs.has(w)));
+    const titleVerbSet = new Set(words.filter((w) => verbs.has(w) || (blocked.has(w) && looksInfinitive(w))));
+    // o segundo infinitivo depois de "e"/"ou" é outra ação, esteja ou não no vocabulário
+    words.forEach((w, k) => {
+      const prox = words[k + 1] || '';
+      if ((w === 'e' || w === 'ou') && looksInfinitive(prox) && !NAO_VERBO.has(prox)) titleVerbSet.add(prox);
+    });
     if (titleVerbSet.size > 1 && !isTogglePair(titleVerbSet, vocab.togglePairs)) {
       errors.push(
         `[FD-3] Título encadeia mais de uma ação (${[...titleVerbSet].join(', ')}) — se cada parte entrega valor sozinha, são features separadas.`,
       );
+    }
+    // História não é feature (aviso): título igual ao da história de origem. A história do
+    // cliente costuma reunir várias ações; quem a copia como feature herda o pacote.
+    const tituloNorm = words.join(' ');
+    for (const l of sectionSlice(lines, 'Origem') || []) {
+      const m = [...l.matchAll(/\b((?:HIST|HU|US)[\s-]?\d+)\s+[—–-]\s+([^|·]+)/gi)].find((x) => titleWords(x[2]).join(' ') === tituloNorm);
+      if (!m) continue;
+      warnings.push(
+        `[FD-3] O título repete o da história de origem (${m[1]}) — história não é feature: confira se ela não reúne mais de uma ação (uma feature por ação; a história entra na Origem de cada uma). Ver engine/FEATURE-DEFINITION.md → História não é feature.`,
+      );
+      break;
     }
     // FD-6 (coerência, aviso) — a entidade do arquivo aparece no título/descrição?
     if (entityTokens.length) {

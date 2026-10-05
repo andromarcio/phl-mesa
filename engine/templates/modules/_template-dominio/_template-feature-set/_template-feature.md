@@ -488,7 +488,10 @@ Feature: [Nome da feature em linguagem natural]
   NOMES — é o que a planilha de entrega copia para as colunas Descrição) e, se houver,
   `nao_contados` (vai à Observação). As listas têm o tamanho do ALR e do DER da tabela;
   os dois `+1` do DER entram como "Mensagem" e "Ação". Na linha de 0 PF, o bloco é
-  `{"pe": …, "motivo": "por que não conta"}`. O porquê de cada leitura fica em prosa,
+  `{"pe": …, "motivo": "por que não conta"}`. Com mais de um principal, o bloco de cada
+  um leva `"variante"` — canal, sistema, tipo do objeto, formato ou completude —: o
+  segundo principal é forma de uso da mesma função; outra ação é outra feature (falta a
+  feature, não o principal). O porquê de cada leitura fica em prosa,
   abaixo do bloco. Conferência: node scripts/valida-enumeracao-contagem.mjs (gate F11 do
   spec-guard, ao gravar).
   SÓ O NOME NA LISTA: cada DER é uma informação que o usuário vê ou informa, escrita com

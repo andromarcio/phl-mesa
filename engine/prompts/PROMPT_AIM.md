@@ -191,14 +191,23 @@ vez de criar uma nova.
      3A em modo A).
    - Ainda não existem? → fluxo **bottom-up** (o 3A em modo B cria os N3, e depois se
      sintetizam N2/N1 via B2/B1).
-2. **Quebre o ticket em features**, mapeando cada critério de aceite à feature que o
-   realiza. Nomeie as features no infinitivo (`Verbo + Entidade`), conforme o MASTER.
+2. **Quebre o ticket em features — história não é feature.** O ticket descreve a
+   necessidade como o cliente a enxerga e costuma reunir várias ações; quem decide quais
+   features existem é esta análise, não o texto do ticket. Liste as **ações** que ele
+   contém — ator · verbo · entidade · quando · resultado observável — e proponha **uma
+   feature por ação**, mapeando cada critério de aceite à feature que o realiza. Não crie
+   uma feature por história nem dê à feature o título dela: nome com verbo agrupador
+   ("gerenciar", "manter") ou com dois verbos ligados por "e" é pacote, e sai contado com
+   vários processos elementares principais de ações diferentes
+   (`engine/FEATURE-DEFINITION.md` → *História não é feature*; os gates reprovam).
+   Nomeie as features no infinitivo (`Verbo + Entidade`), conforme o MASTER.
    Distinga **criação** de feature nova × **alteração** de feature existente (que segue
    pelo PROMPT_4A/4B).
 
 Apresente a proposta:
 
-> "Este ticket se materializa em:
+> "Este ticket reúne [N] ações — [ator · verbo · entidade · quando, uma por linha] — e
+> se materializa em uma feature para cada:
 >
 > | Feature (N3) | Major Feature Set · Feature Set | Operação | Critérios cobertos |
 > |---|---|---|---|

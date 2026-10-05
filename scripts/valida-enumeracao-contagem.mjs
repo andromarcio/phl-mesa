@@ -21,7 +21,10 @@
 //
 //   chaves: pe (o nome da linha da tabela) · alr · der (listas de nomes) ·
 //           nao_contados (opcional: o que ficou de fora — vira comentário da célula) ·
-//           motivo (obrigatório na linha de 0 PF, e só nela: por que não conta)
+//           motivo (obrigatório na linha de 0 PF, e só nela: por que não conta) ·
+//           variante (obrigatória no principal de feature com mais de um principal, e só
+//           nele: canal · sistema · tipo do objeto · formato · completude — ou a lista
+//           deles, quando a variante combina dois: a API de Pessoa Física é canal e tipo)
 //
 // O que reprova: bloco ausente ou órfão (sem linha na tabela), JSON inválido, chave fora
 // da lista, ALR/DER da tabela diferente do tamanho da lista, item repetido e item que não
@@ -40,6 +43,16 @@
 // um é o nome da feature e a variante entre parênteses: "Exportar Convênios (XLSX)". O
 // acessório tem nome próprio (SIZING.md → *Nome do PE*).
 //
+// E o segundo principal só existe como forma de uso da MESMA função (decisão do PO,
+// 2026-10-05): outro canal, outro sistema, outro tipo do objeto, outro formato, ou a mesma
+// tela salva incompleta (rascunho). O bloco de cada um declara qual, em `"variante"`.
+// Achado real: `CHM-ELB-06` — Anexar e Gerenciar Documentos do Processo, do portal-compras,
+// nasceu de uma história do cliente e trazia quatro principais — (anexar), (alterar),
+// (excluir), (retirada pelo interessado) —, que este validador aceitava como aceita
+// "(API)": só conferia a forma. Variante que é ação — o rótulo começa por verbo — reprova:
+// outra ação é outra feature, e o que falta é a feature (FEATURE-DEFINITION.md → *História
+// não é feature*).
+//
 // Uso:  node scripts/valida-enumeracao-contagem.mjs [arquivo f-*.md | pasta] …
 //       (sem argumentos: todo `modules/**/f-*.md`)
 
@@ -48,10 +61,17 @@ import { join } from 'node:path';
 
 const ROOT = process.cwd();
 const rel = (p) => p.replace(`${ROOT}/`, '').replace(/\\/g, '/');
-const CHAVES = new Set(['pe', 'alr', 'der', 'nao_contados', 'motivo']);
+const CHAVES = new Set(['pe', 'alr', 'der', 'nao_contados', 'motivo', 'variante']);
+const VARIANTES = ['canal', 'sistema', 'tipo do objeto', 'formato', 'completude'];
+// Substantivos e adjetivos com cara de infinitivo — rótulo de tipo do objeto, não ação.
+const NAO_VERBO = new Set(['titular', 'familiar', 'auxiliar', 'militar', 'escolar', 'preliminar', 'complementar',
+  'regular', 'particular', 'popular', 'similar', 'exemplar', 'celular', 'parecer', 'poder', 'dever', 'lazer',
+  'mulher', 'lugar', 'lider', 'master', 'super']);
 const norm = (s) => String(s).replace(/[`*]/g, '').normalize('NFD').replace(/[̀-ͯ]/g, '')
   .toLowerCase().replace(/\s+/g, ' ').trim();
 const celulas = (l) => l.trim().replace(/^\|/, '').replace(/\|$/, '').split('|').map((c) => c.trim());
+// o rótulo da variante começa por verbo no infinitivo: é ação, não forma de uso
+const ehAcao = (rotulo) => { const p = norm(rotulo).split(' ')[0]; return /^[a-z]{2,}(ar|er|ir)$/.test(p) && !NAO_VERBO.has(p); };
 
 function problemaDoItem(s) {
   if (typeof s !== 'string' || !s.trim()) return 'vazio';
@@ -124,7 +144,21 @@ function confere(arq) {
   if (principais.length > 1) {
     for (const p of principais.filter((x) => !(x.startsWith(`${feature} (`) && /^\([^()]+\)$/.test(x.slice(feature.length + 1)))))
       erros.push(`"${p}": com mais de um principal, cada um leva o nome da feature e a variante entre parênteses — "${feature} (<variante>)".`);
+    // a variante é forma de uso da mesma função, e o bloco diz qual; ação é outra feature
+    for (const p of principais.filter((x) => x.startsWith(`${feature} (`) && x.endsWith(')'))) {
+      const b = blocos.get(norm(p));
+      if (!b) continue; // sem bloco: já acusado abaixo
+      const rotulo = p.slice(feature.length + 2, -1);
+      const tipos = b.variante === undefined ? null : [].concat(b.variante).map((t) => (typeof t === 'string' ? norm(t) : ''));
+      if (tipos && (!tipos.length || tipos.some((t) => !VARIANTES.includes(t))))
+        erros.push(`"${p}": variante "${[].concat(b.variante).join(', ')}" fora da lista — ${VARIANTES.join(', ')}.`);
+      else if (ehAcao(rotulo) && !(tipos || []).includes('completude'))
+        erros.push(`"${p}": "${rotulo}" é ação, não variante — o segundo principal só existe como forma de uso da mesma função (canal, sistema, tipo do objeto, formato) ou por completude (salvar rascunho). Outra ação é outra feature: falta a feature (engine/FEATURE-DEFINITION.md → História não é feature).`);
+      else if (!tipos)
+        erros.push(`"${p}": com mais de um principal, o bloco declara o tipo da variante — \`"variante"\`: ${VARIANTES.join(', ')}. Se "${rotulo}" é outra ação, não é variante: falta a feature.`);
+    }
   }
+  const comVariante = new Set(principais.length > 1 ? principais.map(norm) : []);
 
   const repetidos = medidas.map((c) => norm(c[iPE])).filter((n, k, a) => a.indexOf(n) !== k);
   for (const n of new Set(repetidos)) erros.push(`"${medidas.find((c) => norm(c[iPE]) === n)[iPE]}": o mesmo nome em mais de uma linha da tabela — cada processo elementar tem nome próprio, que é como o bloco o encontra.`);
@@ -138,8 +172,9 @@ function confere(arq) {
       continue;
     }
     const fora = Object.keys(b).filter((k) => !CHAVES.has(k));
-    if (fora.length) erros.push(`"${pe}": chave(s) fora do formato: ${fora.join(', ')} — use pe, alr, der, nao_contados, motivo.`);
+    if (fora.length) erros.push(`"${pe}": chave(s) fora do formato: ${fora.join(', ')} — use pe, alr, der, nao_contados, motivo, variante.`);
     if (b.nao_contados !== undefined && typeof b.nao_contados !== 'string') erros.push(`"${pe}": \`nao_contados\` é texto.`);
+    if (b.variante !== undefined && !comVariante.has(norm(pe))) erros.push(`"${pe}": \`variante\` só vale no principal de feature com mais de um principal.`);
     if (pf === 0) {
       if (typeof b.motivo !== 'string' || !b.motivo.trim()) erros.push(`"${pe}": linha de 0 PF sem \`motivo\` — é ele que a planilha mostra.`);
       if ((b.alr || []).length || (b.der || []).length) erros.push(`"${pe}": linha de 0 PF com \`alr\`/\`der\` — o que não conta não se enumera.`);
@@ -175,7 +210,7 @@ for (const a of arquivos) {
   for (const e of erros) console.log(`    ${e}`);
 }
 if (total) {
-  console.log(`\n${total} problema(s) em ${comErro} N3. A enumeração de ALR e DER é um bloco \`\`\`json por processo elementar na \`### Memória de cálculo\` — o item é o nome do campo ou do arquivo lógico, sem comentário; o porquê fica em prosa. O processo elementar principal leva o nome da feature. Migrar a memória antiga: python3 scripts/migra-enumeracao.py`);
+  console.log(`\n${total} problema(s) em ${comErro} N3. A enumeração de ALR e DER é um bloco \`\`\`json por processo elementar na \`### Memória de cálculo\` — o item é o nome do campo ou do arquivo lógico, sem comentário; o porquê fica em prosa. O processo elementar principal leva o nome da feature; com mais de um principal, cada bloco diz em \`"variante"\` que forma de uso é (${VARIANTES.join(', ')}) — outra ação é outra feature. Migrar a memória antiga: python3 scripts/migra-enumeracao.py`);
   process.exit(1);
 }
-console.log(`✓ ${arquivos.length} N3 conferido(s): a enumeração de ALR e DER de cada processo elementar medido é um bloco válido, do tamanho da tabela, e o principal leva o nome da feature.`);
+console.log(`✓ ${arquivos.length} N3 conferido(s): a enumeração de ALR e DER de cada processo elementar medido é um bloco válido, do tamanho da tabela, o principal leva o nome da feature e o segundo principal é forma de uso declarada.`);

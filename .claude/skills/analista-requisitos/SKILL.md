@@ -72,6 +72,8 @@ Vale para **todo** prompt de especificação (N0, 1A/1B, 2A, 3A/3B, 4A/4B, CRUD,
 
 **Não são features**: um campo, uma regra de negócio, uma tela (uma tela atende várias features) ou um requisito não-funcional (→ `global/NFR.md`).
 
+**História não é feature.** A história do cliente (a `HIST`, a *user story*, o card) costuma reunir várias ações, e quem decide quais features existem é a análise — você e o PO —, não o texto da história. Antes de criar N3 a partir de uma história, liste as ações que ela contém (ator · verbo · entidade · quando · resultado observável), proponha **uma feature por ação** e só escreva depois que o PO aprovar o quadro; a história entra na `## Origem` de todas. Nunca crie uma feature por história com o nome dela: "Anexar e Gerenciar Documentos" é anexar, substituir, excluir e listar. Na contagem, o sintoma é o mesmo: um segundo processo elementar `principal` que não é forma de uso da mesma função (canal, sistema, tipo do objeto, formato, completude) — pare e diga que falta a feature, não registre o número. Ver `engine/FEATURE-DEFINITION.md` → *História não é feature*.
+
 > A convenção de nome `f-[verbo]-[entidade]` (definida no `PROMPT_3A`) materializa
 > essa granularidade — o prefixo verbal é o teste prático de que você está num N3.
 

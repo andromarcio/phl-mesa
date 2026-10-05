@@ -134,7 +134,13 @@ Para **cada N3 no escopo**, usando a skill `apf-cpm`:
    `valida-contagem-consolidada`. **O `principal` leva o mesmo nome da feature** — o título
    do N3, sem sufixo, sinônimo nem variação; com mais de um principal (um por formato, por
    canal), cada um é o nome da feature e a variante entre parênteses: `Exportar Convênios
-   (XLSX)`. O acessório tem nome próprio. Nome diferente reprova no gate F11.
+   (XLSX)`. O acessório tem nome próprio. Nome diferente reprova no gate F11. **O segundo
+   principal só existe como forma de uso da mesma função** — outro canal, outro sistema,
+   outro tipo do objeto, outro formato, ou a mesma tela por completude (rascunho) —, e o
+   bloco de cada um declara qual em `"variante"`. Se o PE a mais tem verbo próprio (anexar
+   × excluir), não é variante: **pare a contagem e avise o PO — falta a feature**
+   (`FEATURE-DEFINITION.md` → *História não é feature*). Não registre o número nem promova
+   o PE a principal para fechar a tabela; o F11 reprova.
 4. **Contar ALR — ALIs/AIEs lidos ou mantidos pela transação, em quatro fontes:**
    - **(a)** a coluna **Entidade** da tabela `## Campos` — as entidades distintas ali são
      arquivos lógicos referenciados. `externo: [Sistema]` = AIE; **`dado de código` não
@@ -253,7 +259,9 @@ Por que cada ALR:
   `"Mensagem"` e `"Ação"` — na lista consultada, só `"Ação"`.
 - As listas têm **exatamente** o tamanho do ALR e do DER da tabela. Chaves do bloco: `pe`
   (o nome da linha da tabela) · `alr` · `der` · `nao_contados` (opcional) · `motivo` (só na
-  linha de 0 PF). Conferência ao gravar: gate **F11**
+  linha de 0 PF) · `variante` (só no principal de feature com mais de um principal:
+  `canal`, `sistema`, `tipo do objeto`, `formato` ou `completude`, ou a lista deles quando a
+  variante combina dois). Conferência ao gravar: gate **F11**
   (`node scripts/valida-enumeracao-contagem.mjs <N3>`).
 - O ALR sai das quatro fontes do Passo 1 (item 4) — a coluna `Entidade` de `## Campos`
   (entidades distintas), as entidades-fonte de `## Derivações`, `## Dados lidos e

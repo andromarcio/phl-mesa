@@ -28,7 +28,9 @@ observável**. A forma canônica do nome é **um verbo no infinitivo + uma entid
 Decomposição da definição — cada parte é um teste:
 
 - **Uma ação** — um único verbo. Se o nome precisa de "e"/"ou" para ligar dois verbos
-  ("cadastrar **e** editar cliente"), são **duas** features.
+  ("cadastrar **e** editar cliente"), são **duas** features. Verbo agrupador
+  ("gerenciar", "manter") esconde várias ações do mesmo jeito — ver *História não é
+  feature*.
 - **De negócio** — alguém de negócio raciocina sobre ela e a reconhece como algo que o
   sistema *faz por ele*. "Criar índice no banco" não passa; "importar arquivo de
   retorno" passa.
@@ -55,8 +57,8 @@ e rodam mesmo quando a Descrição reprova no FD-8.
 |---|---|---|---|
 | FD-1 | **Nomeada por verbo no infinitivo** | Arquivo `f-[verbo]-[entidade](-[adjetivo]).md`; o primeiro segmento consta do vocabulário canônico (ou é infinitivo bem-formado ainda não catalogado → aviso) | Automática |
 | FD-2 | **Título conta a mesma ação** | Título `# [Verbo] [entidade…]` começa com o **mesmo verbo** do nome do arquivo (acentos ignorados) | Automática |
-| FD-3 | **Atômica — uma ação só** | Nome do arquivo e título não encadeiam **dois** verbos canônicos ("gerar e enviar boleto" → duas features). **Exceção: pares de alternância** (`ativar/desativar`, `bloquear/desbloquear`) são **um** toggle — uma feature (ver "Pares de alternância (toggle)") | Automática |
-| FD-4 | **Não é agrupador** | O termo na posição do verbo não é substantivo de área ("cadastro", "gestão", "painel" → isso é **Feature Set/N2**) | Automática |
+| FD-3 | **Atômica — uma ação só** | Nome do arquivo e título não encadeiam **duas** ações ("gerar e enviar boleto" → duas features). Conta como ação o verbo canônico, o verbo agrupador bloqueado ("anexar e **gerenciar** documentos") e, no título, qualquer infinitivo depois de "e"/"ou", esteja ou não no vocabulário. Título igual ao da história de origem (`HISTnn — …` em `## Origem`) gera **aviso** (ver "História não é feature"). **Exceção: pares de alternância** (`ativar/desativar`, `bloquear/desbloquear`) são **um** toggle — uma feature (ver "Pares de alternância (toggle)") | Automática |
+| FD-4 | **Não é agrupador** | O termo na posição do verbo não é substantivo de área ("cadastro", "gestão", "painel" → isso é **Feature Set/N2**) nem verbo agrupador ("gerenciar", "manter", "administrar", "controlar" → uma feature por ação) | Automática |
 | FD-5 | **Não é outro artefato** | Não é campo, regra, tela, mensagem ou NFR nomeado como feature (ver tabela de bloqueados e encaminhamentos) | Automática + humana |
 | FD-6 | **Resultado observável** | `## Cenários` tem pelo menos um cenário Gherkin e **todo** cenário tem `Então/Then` | Automática (presença) + humana (qualidade) |
 | FD-7 | **Regras são invariantes** | Nenhum item de `## Regras de negócio` carrega reação do sistema ("não salva", "exibe mensagem", "conforme o Design System") — reação é cenário. Item que descreve estrutura/comportamento de tela (abas, botões, filtros, ordenação) gera **aviso**: apresentação vive em `## Comportamento de tela` | Automática (padrões) + humana |
@@ -118,6 +120,28 @@ Este arquivo decide **o que é uma feature** — a unidade de especificação, d
 
 - **Não apague uma feature porque ela dá zero PF.** Uma feature legítima pode ter tamanho funcional nulo — é o caso das ações sobre estado efêmero de sessão (terceiro caso do teste 5). Zero ali é o resultado correto da contagem, não uma lacuna a corrigir: a `## Métricas de tamanho` registra `0 PF` e a memória de cálculo diz por quê; a feature segue especificada, porque teste e rastreabilidade continuam precisando dela.
 - **Não invente persistência porque decidiu que é feature.** Se um dado é gravado ou não é **fato do sistema** — apura-se no código, na migration ou com o PO —, nunca conclusão tirada da granularidade da spec. Inverter a direção cria entidade no data-model, ALI na contagem e DER nas transações vizinhas em cima de uma inferência; e o desmonte não sai de graça, porque `## Changelog` é histórico e não se reescreve.
+
+## História não é feature
+
+A história do cliente — a `HIST`, a *user story*, o card — descreve uma necessidade do jeito que o cliente a enxerga, e costuma reunir várias ações: "anexar e gerenciar documentos" é anexar, substituir, excluir e listar. **Quem decide quais features existem é a análise, não a história.** Copiar a história como feature — uma por história, com o nome dela — produz um pacote: várias ações num N3 só, que na contagem passa a carregar vários processos elementares principais de verbos diferentes.
+
+**Antes de criar N3 a partir de uma história, decomponha.** Liste as ações que ela contém, uma por linha, e só então proponha as features. O PO aprova o quadro antes de qualquer N3 ser escrito:
+
+| Ator | Verbo | Entidade | Quando | Resultado observável | Feature proposta |
+|---|---|---|---|---|---|
+| Comprador | anexar | documento do processo | na elaboração | o documento passa a constar do processo | `Anexar Documento do Processo` |
+| Comprador | substituir | documento do processo | a qualquer momento | só o arquivo novo fica vigente | `Substituir Documento do Processo` |
+| Interessado | registrar | retirada de documento | depois da publicação | a retirada entra na relação do processo | `Registrar Retirada de Documento` |
+
+Cada linha com ator, momento ou resultado próprio é uma feature — confira com o *Teste rápido*. A história entra na `## Origem` de **todas** as features que saíram dela, cada uma com os critérios que cobre; a união dos critérios das features é o conjunto de critérios da história.
+
+**Sinais de pacote**, do mais barato ao mais caro de consertar:
+
+- o nome da feature é o título da história — o gate avisa (FD-3);
+- o nome usa verbo agrupador (`gerenciar`, `manter`, `administrar`, `controlar`) ou liga dois verbos com "e" — o gate reprova (FD-3, FD-4);
+- a contagem pede um segundo processo elementar `principal` que não é forma de uso da mesma função — o gate de enumeração reprova (`scripts/valida-enumeracao-contagem.mjs`; `SIZING.md` → *Papel do PE em relação à feature*). Nesse ponto **pare a contagem**: o que falta é a feature, e o número não se registra enquanto ela não existir.
+
+Caso que motivou a regra (2026-10-05, portal-compras): os N3 do Feature Set `CHM-ELB` nasceram um por história, e `CHM-ELB-06` — Anexar e Gerenciar Documentos do Processo foi contado com quatro principais — anexar, alterar, excluir e a retirada pelo interessado, que é de outro ator, em outro momento e em outra tela. O nome passou no gate porque `gerenciar` não era verbo canônico nem termo bloqueado, e a contagem passou porque o validador só conferia a forma `Feature (variante)`.
 
 ## Vocabulário de verbos canônicos
 
@@ -325,6 +349,10 @@ da terceira coluna. (Grafia sem acento — a comparação normaliza acentos.)
 | `manutencao` | área/agrupador | Feature Set (N2); cada ação vira uma feature |
 | `controle` | área/agrupador | Feature Set (N2) |
 | `administracao` | área/agrupador | Feature Set (N2) ou Major Feature Set (N1) |
+| `gerenciar` | verbo agrupador — esconde várias ações | uma feature por ação (`f-cadastrar-…`, `f-editar-…`, `f-excluir-…`); o conjunto é o Feature Set (N2) — ver "História não é feature" |
+| `manter` | verbo agrupador — esconde várias ações | uma feature por ação; o conjunto é o Feature Set (N2) (`PROMPT_CRUD`) |
+| `administrar` | verbo agrupador — esconde várias ações | uma feature por ação; o conjunto é o Feature Set (N2) |
+| `controlar` | verbo agrupador — esconde várias ações | uma feature por ação; o conjunto é o Feature Set (N2) |
 | `modulo` | agrupador | Major Feature Set (N1) ou Feature Set (N2) |
 | `area` | agrupador | Major Feature Set (N1) ou Feature Set (N2) |
 | `painel` | tela que atende várias features | N2 (Telas) + uma feature `consultar/acompanhar` por ação |
@@ -546,7 +574,9 @@ cada N3 gravado, junto com o gate estrutural (`validate-doc.mjs`).
 
 **Coberto deterministicamente** (independe de LLM): FD-1 a FD-9 conforme a tabela de
 critérios — verbo no infinitivo catalogado, título coerente com o arquivo, atomicidade
-(um verbo só), termos bloqueados (agrupador/nominalização/artefato/NFR), presença de
+(um verbo só: nem dois canônicos, nem verbo agrupador, nem um segundo infinitivo depois
+de "e"/"ou"; título igual ao da história de origem gera aviso), termos bloqueados
+(agrupador/nominalização/artefato/NFR), presença de
 cenário com `Então/Then` em todos os cenários, regras sem cauda de reação e Descrição
 com entrega declarada: sem placeholder, tamanho de 1–2 frases, sem termos vagos ou
 técnicos (tabela acima), com menção a uma ação do vocabulário (aviso quando ausente) e
